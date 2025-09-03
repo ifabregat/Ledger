@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Basic types — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/basic-types.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/basic-types.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Basic types</span>
+  </h1>
+
+<p>In this chapter we will learn more about Elixir basic types: integers, floats, booleans, atoms, and strings. Other data types, such as lists and tuples, will be explored in the next chapter.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w">          </span><span class="c1"># integer</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mh">0x1F</span><span class="w">       </span><span class="c1"># integer</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mf">1.0</span><span class="w">        </span><span class="c1"># float</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w">       </span><span class="c1"># boolean</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="ss">:atom</span><span class="w">      </span><span class="c1"># atom / symbol</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;elixir&quot;</span><span class="w">   </span><span class="c1"># string</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9716516099-1">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="9716516099-1">]</span><span class="w">  </span><span class="c1"># list</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9716516099-2">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="9716516099-2">}</span><span class="w">  </span><span class="c1"># tuple</span></code></pre><h2 id="basic-arithmetic" class="section-heading">
+  <a href="#basic-arithmetic" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Basic arithmetic</span>
+</h2>
+<p>Open up <code class="inline">iex</code> and type the following expressions:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="mi">3</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">5</span><span class="w">
+</span><span class="mi">25</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">10</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="mf">5.0</span></code></pre><p>Notice that <code class="inline">10 / 2</code> returned a float <code class="inline">5.0</code> instead of an integer <code class="inline">5</code>. This is expected. In Elixir, the operator <code class="inline">/</code> always returns a float. If you want to do integer division or get the division remainder, you can invoke the <code class="inline">div</code> and <code class="inline">rem</code> functions:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">div</span><span class="p" data-group-id="5476064478-1">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="5476064478-1">)</span><span class="w">
+</span><span class="mi">5</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">div</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="mi">5</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">rem</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="w">
+</span><span class="mi">1</span></code></pre><p>Notice that Elixir allows you to drop the parentheses when invoking functions that expect one or more arguments. This feature gives a cleaner syntax when writing declarations and control-flow constructs. However, Elixir developers generally prefer to use parentheses.</p><p>Elixir also supports shortcut notations for entering binary, octal, and hexadecimal numbers:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mb">0b1010</span><span class="w">
+</span><span class="mi">10</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mo">0o777</span><span class="w">
+</span><span class="mi">511</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mh">0x1F</span><span class="w">
+</span><span class="mi">31</span></code></pre><p>Float numbers require a dot followed by at least one digit and also support <code class="inline">e</code> for scientific notation:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mf">1.0</span><span class="w">
+</span><span class="mf">1.0</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mf">1.0e-10</span><span class="w">
+</span><span class="mf">1.0e-10</span></code></pre><p>Floats in Elixir are 64-bit precision.</p><p>You can invoke the <code class="inline">round</code> function to get the closest integer to a given float, or the <code class="inline">trunc</code> function to get the integer part of a float.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">round</span><span class="p" data-group-id="9525179729-1">(</span><span class="mf">3.58</span><span class="p" data-group-id="9525179729-1">)</span><span class="w">
+</span><span class="mi">4</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">trunc</span><span class="p" data-group-id="9525179729-2">(</span><span class="mf">3.58</span><span class="p" data-group-id="9525179729-2">)</span><span class="w">
+</span><span class="mi">3</span></code></pre><p>Finally, we work with different data types, we will learn Elixir provides several predicate functions to check for the type of a value. For example, the <code class="inline">is_integer</code> can be used to check if a value is an integer or not:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">is_integer</span><span class="p" data-group-id="7175470520-1">(</span><span class="mi">1</span><span class="p" data-group-id="7175470520-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_integer</span><span class="p" data-group-id="7175470520-2">(</span><span class="mf">2.0</span><span class="p" data-group-id="7175470520-2">)</span><span class="w">
+</span><span class="no">false</span></code></pre><p>You can also use <code class="inline">is_float</code> or <code class="inline">is_number</code> to check, respectively, if an argument is a float, or either an integer or float.</p><h2 id="identifying-functions-and-documentation" class="section-heading">
+  <a href="#identifying-functions-and-documentation" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Identifying functions and documentation</span>
+</h2>
+<p>Before we move on to the next data type, let's talk about how Elixir identifies functions.</p><p>Functions in Elixir are identified by both their name and their arity. The arity of a function describes the number of arguments that the function takes. From this point on we will use both the function name and its arity to describe functions throughout the documentation. <a href="Kernel.html#trunc/1"><code class="inline">trunc/1</code></a> identifies the function which is named <code class="inline">trunc</code> and takes <code class="inline">1</code> argument, whereas <code class="inline">trunc/2</code> identifies a different (nonexistent) function with the same name but with an arity of <code class="inline">2</code>.</p><p>We can also use this syntax to access documentation. The Elixir shell defines the <code class="inline">h</code> function, which you can use to access documentation for any function. For example, typing <code class="inline">h trunc/1</code> is going to print the documentation for the <a href="Kernel.html#trunc/1"><code class="inline">trunc/1</code></a> function:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">h</span><span class="w"> </span><span class="n">trunc</span><span class="o">/</span><span class="mi">1</span><span class="w">
+                             </span><span class="kd">def</span><span class="w"> </span><span class="nf">trunc</span><span class="p" data-group-id="7521985046-1">(</span><span class="p" data-group-id="7521985046-1">)</span><span class="w">
+
+</span><span class="nc">Returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">number</span><span class="o">.</span></code></pre><p><code class="inline">h trunc/1</code> works because it is defined in the <a href="Kernel.html"><code class="inline">Kernel</code></a> module. All functions in the <a href="Kernel.html"><code class="inline">Kernel</code></a> module are automatically imported into our namespace. Most often you will also include the module name when looking up the documentation for a given function:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">h</span><span class="w"> </span><span class="nc">Kernel</span><span class="o">.</span><span class="n">trunc</span><span class="o">/</span><span class="mi">1</span><span class="w">
+                             </span><span class="kd">def</span><span class="w"> </span><span class="nf">trunc</span><span class="p" data-group-id="2200432240-1">(</span><span class="p" data-group-id="2200432240-1">)</span><span class="w">
+
+</span><span class="nc">Returns</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">integer</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">number</span><span class="o">.</span></code></pre><p>You can use the module+function to lookup for anything, including operators (try <code class="inline">h Kernel.+/2</code>). Invoking <code class="inline">h</code> without arguments displays the documentation for <a href="https://hexdocs.pm/iex/IEx.Helpers.html"><code class="inline">IEx.Helpers</code></a>, which is where <code class="inline">h</code> and other functionality is defined.</p><h2 id="booleans-and-nil" class="section-heading">
+  <a href="#booleans-and-nil" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Booleans and <code class="inline">nil</code></span>
+</h2>
+<p>Elixir supports <code class="inline">true</code> and <code class="inline">false</code> as booleans:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="no">false</span><span class="w">
+</span><span class="no">false</span></code></pre><p>Elixir also provides three boolean operators: <a href="Kernel.html#or/2"><code class="inline">or/2</code></a>, <a href="Kernel.html#and/2"><code class="inline">and/2</code></a>, and <a href="Kernel.html#not/1"><code class="inline">not/1</code></a>. These operators are strict in the sense that they expect something that evaluates to a boolean (<code class="inline">true</code> or <code class="inline">false</code>) as their first argument:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="no">true</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">false</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="n">is_boolean</span><span class="p" data-group-id="9010339477-1">(</span><span class="no">true</span><span class="p" data-group-id="9010339477-1">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Providing a non-boolean will raise an exception:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="no">true</span><span class="w">
+</span><span class="gt">** (BadBooleanError) expected a boolean on left-side of &quot;and&quot;, got: 1</span></code></pre><p><code class="inline">or</code> and <code class="inline">and</code> are short-circuit operators. They only execute the right side if the left side is not enough to determine the result:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="no">false</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="k">raise</span><span class="p" data-group-id="0948895058-1">(</span><span class="s">&quot;This error will never be raised&quot;</span><span class="p" data-group-id="0948895058-1">)</span><span class="w">
+</span><span class="no">false</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="k">raise</span><span class="p" data-group-id="0948895058-2">(</span><span class="s">&quot;This error will never be raised&quot;</span><span class="p" data-group-id="0948895058-2">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Elixir also provides the concept of <code class="inline">nil</code>, to indicate the absence of a value, and a set of logical operators that also manipulate <code class="inline">nil</code>: <a href="Kernel.html#%7C%7C/2"><code class="inline">||/2</code></a>, <a href="Kernel.html#&&/2"><code class="inline">&amp;&amp;/2</code></a>, and <a href="Kernel.html#!/1"><code class="inline">!/1</code></a>. For these operators, <code class="inline">false</code> and <code class="inline">nil</code> are considered &quot;falsy&quot;, all other values are considered &quot;truthy&quot;:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># or</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="no">true</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">false</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mi">11</span><span class="w">
+</span><span class="mi">11</span><span class="w">
+
+</span><span class="c1"># and</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">nil</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="mi">13</span><span class="w">
+</span><span class="no">nil</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="mi">17</span><span class="w">
+</span><span class="mi">17</span><span class="w">
+
+</span><span class="c1"># not</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="o">!</span><span class="no">true</span><span class="w">
+</span><span class="no">false</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="o">!</span><span class="mi">1</span><span class="w">
+</span><span class="no">false</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="o">!</span><span class="no">nil</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Similarly, values like <code class="inline">0</code> and <code class="inline">&quot;&quot;</code>, which some other programming languages consider to be &quot;falsy&quot;, are also &quot;truthy&quot; in Elixir.</p><h2 id="atoms" class="section-heading">
+  <a href="#atoms" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Atoms</span>
+</h2>
+<p>An atom is a constant whose value is its own name. Some other languages call these symbols. They are often useful to enumerate over distinct values, such as:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="ss">:apple</span><span class="w">
+</span><span class="ss">:apple</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="ss">:orange</span><span class="w">
+</span><span class="ss">:orange</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="ss">:watermelon</span><span class="w">
+</span><span class="ss">:watermelon</span></code></pre><p>Atoms are equal if their names are equal.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="ss">:apple</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:apple</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="ss">:apple</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:orange</span><span class="w">
+</span><span class="no">false</span></code></pre><p>Often they are used to express the state of an operation, by using values such as <code class="inline">:ok</code> and <code class="inline">:error</code>.</p><p>The booleans <code class="inline">true</code> and <code class="inline">false</code> are also atoms:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="no">true</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:true</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_atom</span><span class="p" data-group-id="8093581142-1">(</span><span class="no">false</span><span class="p" data-group-id="8093581142-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_boolean</span><span class="p" data-group-id="8093581142-2">(</span><span class="ss">:false</span><span class="p" data-group-id="8093581142-2">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Elixir allows you to skip the leading <code class="inline">:</code> for the atoms <code class="inline">false</code>, <code class="inline">true</code> and <code class="inline">nil</code>.</p><h2 id="strings" class="section-heading">
+  <a href="#strings" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Strings</span>
+</h2>
+<p>Strings in Elixir are delimited by double quotes, and they are encoded in UTF-8:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;hellö&quot;</span><span class="w">
+</span><span class="s">&quot;hellö&quot;</span></code></pre><blockquote><p>Note: if you are running on Windows, there is a chance your terminal does not use UTF-8 by default. You can change the encoding of your current session by running <code class="inline">chcp 65001</code> before entering IEx.</p></blockquote><p>You can concatenate two strings with the <a href="Kernel.html#%3C%3E/2"><code class="inline">&lt;&gt;/2</code></a> operator:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;hello &quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot;world!&quot;</span><span class="w">
+</span><span class="s">&quot;hello world!&quot;</span></code></pre><p>Elixir also supports string interpolation:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;hello </span><span class="si" data-group-id="4826022713-1">#{</span><span class="n">string</span><span class="si" data-group-id="4826022713-1">}</span><span class="s">!&quot;</span><span class="w">
+</span><span class="s">&quot;hello world!&quot;</span></code></pre><p>String concatenation requires both sides to be strings but interpolation supports any data type that may be converted to a string:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;i am </span><span class="si" data-group-id="9783802271-1">#{</span><span class="n">number</span><span class="si" data-group-id="9783802271-1">}</span><span class="s"> years old!&quot;</span><span class="w">
+</span><span class="s">&quot;i am 42 years old!&quot;</span></code></pre><p>Strings can have line breaks in them. You can introduce them using escape sequences:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;hello</span><span class="gp unselectable">
+...&gt; </span><span class="s">world&quot;</span><span class="w">
+</span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">world&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">world&quot;</span><span class="w">
+</span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">world&quot;</span></code></pre><p>You can print a string using the <a href="IO.html#puts/1"><code class="inline">IO.puts/1</code></a> function from the <a href="IO.html"><code class="inline">IO</code></a> module:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">IO</span><span class="o">.</span><span class="n">puts</span><span class="p" data-group-id="0653061727-1">(</span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">world&quot;</span><span class="p" data-group-id="0653061727-1">)</span><span class="w">
+</span><span class="n">hello</span><span class="w">
+</span><span class="n">world</span><span class="w">
+</span><span class="ss">:ok</span></code></pre><p>Notice that the <a href="IO.html#puts/1"><code class="inline">IO.puts/1</code></a> function returns the atom <code class="inline">:ok</code> after printing.</p><p>Strings in Elixir are represented internally by contiguous sequences of bytes known as binaries:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="8169321527-1">(</span><span class="s">&quot;hellö&quot;</span><span class="p" data-group-id="8169321527-1">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>We can also get the number of bytes in a string:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">byte_size</span><span class="p" data-group-id="0518970725-1">(</span><span class="s">&quot;hellö&quot;</span><span class="p" data-group-id="0518970725-1">)</span><span class="w">
+</span><span class="mi">6</span></code></pre><p>Notice that the number of bytes in that string is 6, even though it has 5 graphemes. That's because the grapheme &quot;ö&quot; takes 2 bytes to be represented in UTF-8. We can get the actual length of the string, based on the number of graphemes, by using the <a href="String.html#length/1"><code class="inline">String.length/1</code></a> function:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">length</span><span class="p" data-group-id="5001689173-1">(</span><span class="s">&quot;hellö&quot;</span><span class="p" data-group-id="5001689173-1">)</span><span class="w">
+</span><span class="mi">5</span></code></pre><p>The <a href="String.html"><code class="inline">String</code></a> module contains a bunch of functions that operate on strings as defined in the Unicode standard:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">upcase</span><span class="p" data-group-id="9682889467-1">(</span><span class="s">&quot;hellö&quot;</span><span class="p" data-group-id="9682889467-1">)</span><span class="w">
+</span><span class="s">&quot;HELLÖ&quot;</span></code></pre><h2 id="structural-comparison" class="section-heading">
+  <a href="#structural-comparison" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Structural comparison</span>
+</h2>
+<p>Elixir also provides <code class="inline">==</code>, <code class="inline">!=</code>, <code class="inline">&lt;=</code>, <code class="inline">&gt;=</code>, <code class="inline">&lt;</code> and <code class="inline">&gt;</code> as comparison operators. We can compare numbers:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="no">true</span></code></pre><p>But also atoms, strings, booleans, etc:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;foo&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;foo&quot;</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;foo&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;bar&quot;</span><span class="w">
+</span><span class="no">false</span></code></pre><p>Integers and floats compare the same if they have the same value:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">2.0</span><span class="w">
+</span><span class="no">false</span></code></pre><p>However, you can use the strict comparison operator <code class="inline">===</code> and <code class="inline">!==</code> if you want to distinguish between integers and floats (that's the only difference between these operators):</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+</span><span class="no">false</span></code></pre><p>The comparison operators in Elixir can compare across any data type. We say these operators perform <em>structural comparison</em>. For more information, you can read our documentation on <a href="Kernel.html#module-structural-comparison">Structural vs Semantic comparisons</a>.</p><p>Elixir also provides data-types for expressing collections, such as lists and tuples, which we learn next. When we talk about concurrency and fault-tolerance via processes, we will also discuss ports, pids, and references, but that will come on later chapters. Let's move forward.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="introduction.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Introduction
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="lists-and-tuples.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Lists and tuples
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

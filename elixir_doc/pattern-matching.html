@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Pattern matching — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/pattern-matching.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/pattern-matching.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Pattern matching</span>
+  </h1>
+
+<p>In this chapter, we will learn why the <code class="inline">=</code> operator in Elixir is called the match operator and how to use it to pattern match inside data structures. We will learn about the pin operator <code class="inline">^</code> used to access previously bound values.</p><h2 id="the-match-operator" class="section-heading">
+  <a href="#the-match-operator" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">The match operator</span>
+</h2>
+<p>We have used the <code class="inline">=</code> operator a couple times to assign variables in Elixir:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w">
+</span><span class="mi">1</span></code></pre><p>In Elixir, the <code class="inline">=</code> operator is actually called <em>the match operator</em>. Let's see why:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mi">2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: 1</span></code></pre><p>Notice that <code class="inline">1 = x</code> is a valid expression, and it matched because both the left and right side are equal to 1. When the sides do not match, a <a href="MatchError.html"><code class="inline">MatchError</code></a> is raised.</p><p>A variable can only be assigned on the left side of <code class="inline">=</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">unknown</span><span class="w">
+</span><span class="gt">** (CompileError) iex:1: undefined variable &quot;unknown&quot;</span></code></pre><h2 id="pattern-matching" class="section-heading">
+  <a href="#pattern-matching" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Pattern matching</span>
+</h2>
+<p>The match operator is not only used to match against simple values, but it is also useful for destructuring more complex data types. For example, we can pattern match on tuples:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="6221092842-1">{</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p" data-group-id="6221092842-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="6221092842-2">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p" data-group-id="6221092842-2">}</span><span class="w">
+</span><span class="p" data-group-id="6221092842-3">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p" data-group-id="6221092842-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">a</span><span class="w">
+</span><span class="ss">:hello</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">b</span><span class="w">
+</span><span class="s">&quot;world&quot;</span></code></pre><p>A pattern match error will occur if the sides can't be matched, for example if the tuples have different sizes:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="6965503985-1">{</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p" data-group-id="6965503985-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="6965503985-2">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p" data-group-id="6965503985-2">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: {:hello, &quot;world&quot;}</span></code></pre><p>And also when comparing different types, for example if matching a tuple on the left side with a list on the right side:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1956126952-1">{</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p" data-group-id="1956126952-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="1956126952-2">[</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p" data-group-id="1956126952-2">]</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: [:hello, &quot;world&quot;, 42]</span></code></pre><p>More interestingly, we can match on specific values. The example below asserts that the left side will only match the right side when the right side is a tuple that starts with the atom <code class="inline">:ok</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="5668368737-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p" data-group-id="5668368737-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5668368737-2">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mi">13</span><span class="p" data-group-id="5668368737-2">}</span><span class="w">
+</span><span class="p" data-group-id="5668368737-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="mi">13</span><span class="p" data-group-id="5668368737-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">result</span><span class="w">
+</span><span class="mi">13</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="5668368737-4">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p" data-group-id="5668368737-4">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5668368737-5">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:oops</span><span class="p" data-group-id="5668368737-5">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: {:error, :oops}</span></code></pre><p>We can pattern match on lists:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="5627531616-1">[</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p" data-group-id="5627531616-1">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5627531616-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="5627531616-2">]</span><span class="w">
+</span><span class="p" data-group-id="5627531616-3">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="5627531616-3">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">a</span><span class="w">
+</span><span class="mi">1</span></code></pre><p>A list also supports matching on its own head and tail:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1700136922-1">[</span><span class="n">head</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">tail</span><span class="p" data-group-id="1700136922-1">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="1700136922-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="1700136922-2">]</span><span class="w">
+</span><span class="p" data-group-id="1700136922-3">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="1700136922-3">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">head</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">tail</span><span class="w">
+</span><span class="p" data-group-id="1700136922-4">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="1700136922-4">]</span></code></pre><p>Similar to the <a href="Kernel.html#hd/1"><code class="inline">hd/1</code></a> and <a href="Kernel.html#tl/1"><code class="inline">tl/1</code></a> functions, we can't match an empty list with a head and tail pattern:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="0792780205-1">[</span><span class="n">head</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">tail</span><span class="p" data-group-id="0792780205-1">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="0792780205-2">[</span><span class="p" data-group-id="0792780205-2">]</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: []</span></code></pre><p>The <code class="inline">[head | tail]</code> format is not only used on pattern matching but also for prepending items to a list:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="4259574191-1">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="4259574191-1">]</span><span class="w">
+</span><span class="p" data-group-id="4259574191-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="4259574191-2">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="4259574191-3">[</span><span class="mi">0</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">list</span><span class="p" data-group-id="4259574191-3">]</span><span class="w">
+</span><span class="p" data-group-id="4259574191-4">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="4259574191-4">]</span></code></pre><p>Pattern matching allows developers to easily destructure data types such as tuples and lists. As we will see in the following chapters, it is one of the foundations of recursion in Elixir and applies to other types as well, like maps and binaries.</p><h2 id="the-pin-operator" class="section-heading">
+  <a href="#the-pin-operator" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">The pin operator</span>
+</h2>
+<p>Variables in Elixir can be rebound:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="mi">2</span></code></pre><p>However, there are times when we don't want variables to be rebound.</p><p>Use the pin operator <code class="inline">^</code> when you want to pattern match against a variable's <em>existing value</em> rather than rebinding the variable.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="o">^</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: 2</span></code></pre><p>Because we have pinned <code class="inline">x</code> when it was bound to the value of <code class="inline">1</code>, it is equivalent to the following:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="mi">1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: 2</span></code></pre><p>Notice that we even see the exact same error message.</p><p>We can use the pin operator inside other pattern matches, such as tuples or lists:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="3631042368-1">[</span><span class="o">^</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="3631042368-1">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3631042368-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="3631042368-2">]</span><span class="w">
+</span><span class="p" data-group-id="3631042368-3">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="3631042368-3">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="3631042368-4">{</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="o">^</span><span class="n">x</span><span class="p" data-group-id="3631042368-4">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3631042368-5">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="3631042368-5">}</span><span class="w">
+</span><span class="p" data-group-id="3631042368-6">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="3631042368-6">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">y</span><span class="w">
+</span><span class="mi">2</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="3631042368-7">{</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="o">^</span><span class="n">x</span><span class="p" data-group-id="3631042368-7">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3631042368-8">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="3631042368-8">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: {2, 2}</span></code></pre><p>Because <code class="inline">x</code> was bound to the value of <code class="inline">1</code> when it was pinned, this last example could have been written as:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="6411003364-1">{</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="6411003364-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="6411003364-2">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="6411003364-2">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: {2, 2}</span></code></pre><p>If a variable is mentioned more than once in a pattern, all references must bind to the same value:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="2176116894-1">{</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p" data-group-id="2176116894-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2176116894-2">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="2176116894-2">}</span><span class="w">
+</span><span class="p" data-group-id="2176116894-3">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="2176116894-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="2176116894-4">{</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p" data-group-id="2176116894-4">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2176116894-5">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="2176116894-5">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: {1, 2}</span></code></pre><p>In some cases, you don't care about a particular value in a pattern. It is a common practice to bind those values to the underscore, <code class="inline">_</code>. For example, if only the head of the list matters to us, we can assign the tail to underscore:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8079808468-1">[</span><span class="n">head</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="bp">_</span><span class="p" data-group-id="8079808468-1">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="8079808468-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8079808468-2">]</span><span class="w">
+</span><span class="p" data-group-id="8079808468-3">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8079808468-3">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">head</span><span class="w">
+</span><span class="mi">1</span></code></pre><p>The variable <code class="inline">_</code> is special in that it can never be read from. Trying to read from it gives a compile error:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="bp">_</span><span class="w">
+</span><span class="gt">** (CompileError) iex:1: invalid use of _. &quot;_&quot; represents a value to be ignored in a pattern and cannot be used in expressions</span></code></pre><p>Although pattern matching allows us to build powerful constructs, its usage is limited. For instance, you cannot make function calls on the left side of a match. The following example is invalid:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">length</span><span class="p" data-group-id="6814875766-1">(</span><span class="p" data-group-id="6814875766-2">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6814875766-3">[</span><span class="mi">2</span><span class="p" data-group-id="6814875766-3">]</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="6814875766-2">]</span><span class="p" data-group-id="6814875766-1">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="w">
+</span><span class="gt">** (CompileError) iex:1: cannot invoke remote function :erlang.length/1 inside match</span></code></pre><p>This finishes our introduction to pattern matching. As we will see in the next chapter, pattern matching is very common in many language constructs and they can be further augmented with guards.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="lists-and-tuples.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Lists and tuples
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="case-cond-and-if.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+case, cond, and if
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Agent — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/Agent.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="modules" class="page-module">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+    <span translate="no">Agent</span> 
+    <small class="app-vsn" translate="no">(Elixir v1.17.3)</small>
+
+  </h1>
+
+
+    <section id="moduledoc">
+<p>Agents are a simple abstraction around state.</p><p>Often in Elixir there is a need to share or store state that
+must be accessed from different processes or by the same process
+at different points in time.</p><p>The <a href="Agent.html"><code class="inline">Agent</code></a> module provides a basic server implementation that
+allows state to be retrieved and updated via a simple API.</p><h2 id="module-examples" class="section-heading">
+  <a href="#module-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<p>For example, the following agent implements a counter:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Counter</span><span class="w"> </span><span class="k" data-group-id="8441506702-1">do</span><span class="w">
+  </span><span class="kn">use</span><span class="w"> </span><span class="nc">Agent</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="8441506702-2">(</span><span class="n">initial_value</span><span class="p" data-group-id="8441506702-2">)</span><span class="w"> </span><span class="k" data-group-id="8441506702-3">do</span><span class="w">
+    </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="8441506702-4">(</span><span class="k" data-group-id="8441506702-5">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">initial_value</span><span class="w"> </span><span class="k" data-group-id="8441506702-5">end</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="bp">__MODULE__</span><span class="p" data-group-id="8441506702-4">)</span><span class="w">
+  </span><span class="k" data-group-id="8441506702-3">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">value</span><span class="w"> </span><span class="k" data-group-id="8441506702-6">do</span><span class="w">
+    </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="8441506702-7">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="ni">&amp;1</span><span class="p" data-group-id="8441506702-7">)</span><span class="w">
+  </span><span class="k" data-group-id="8441506702-6">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">increment</span><span class="w"> </span><span class="k" data-group-id="8441506702-8">do</span><span class="w">
+    </span><span class="nc">Agent</span><span class="o">.</span><span class="n">update</span><span class="p" data-group-id="8441506702-9">(</span><span class="bp">__MODULE__</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="p" data-group-id="8441506702-10">(</span><span class="ni">&amp;1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8441506702-10">)</span><span class="p" data-group-id="8441506702-9">)</span><span class="w">
+  </span><span class="k" data-group-id="8441506702-8">end</span><span class="w">
+</span><span class="k" data-group-id="8441506702-1">end</span></code></pre><p>Usage would be:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Counter</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="4330179745-1">(</span><span class="mi">0</span><span class="p" data-group-id="4330179745-1">)</span><span class="w">
+</span><span class="c1">#=&gt; {:ok, #PID&lt;0.123.0&gt;}</span><span class="w">
+
+</span><span class="nc">Counter</span><span class="o">.</span><span class="n">value</span><span class="p" data-group-id="4330179745-2">(</span><span class="p" data-group-id="4330179745-2">)</span><span class="w">
+</span><span class="c1">#=&gt; 0</span><span class="w">
+
+</span><span class="nc">Counter</span><span class="o">.</span><span class="n">increment</span><span class="p" data-group-id="4330179745-3">(</span><span class="p" data-group-id="4330179745-3">)</span><span class="w">
+</span><span class="c1">#=&gt; :ok</span><span class="w">
+
+</span><span class="nc">Counter</span><span class="o">.</span><span class="n">increment</span><span class="p" data-group-id="4330179745-4">(</span><span class="p" data-group-id="4330179745-4">)</span><span class="w">
+</span><span class="c1">#=&gt; :ok</span><span class="w">
+
+</span><span class="nc">Counter</span><span class="o">.</span><span class="n">value</span><span class="p" data-group-id="4330179745-5">(</span><span class="p" data-group-id="4330179745-5">)</span><span class="w">
+</span><span class="c1">#=&gt; 2</span></code></pre><p>Thanks to the agent server process, the counter can be safely incremented
+concurrently.</p><blockquote><h4 class="info"><code class="inline">use Agent</code></h4><p>When you <code class="inline">use Agent</code>, the <a href="Agent.html"><code class="inline">Agent</code></a> module will define a
+<a href="#child_spec/1"><code class="inline">child_spec/1</code></a> function, so your module can be used
+as a child in a supervision tree.</p></blockquote><p>Agents provide a segregation between the client and server APIs (similar to
+<a href="GenServer.html"><code class="inline">GenServer</code></a>s). In particular, the functions passed as arguments to the calls to
+<a href="Agent.html"><code class="inline">Agent</code></a> functions are invoked inside the agent (the server). This distinction
+is important because you may want to avoid expensive operations inside the
+agent, as they will effectively block the agent until the request is
+fulfilled.</p><p>Consider these two examples:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># Compute in the agent/server</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">get_something</span><span class="p" data-group-id="2427876359-1">(</span><span class="n">agent</span><span class="p" data-group-id="2427876359-1">)</span><span class="w"> </span><span class="k" data-group-id="2427876359-2">do</span><span class="w">
+  </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="2427876359-3">(</span><span class="n">agent</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="2427876359-4">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">do_something_expensive</span><span class="p" data-group-id="2427876359-5">(</span><span class="n">state</span><span class="p" data-group-id="2427876359-5">)</span><span class="w"> </span><span class="k" data-group-id="2427876359-4">end</span><span class="p" data-group-id="2427876359-3">)</span><span class="w">
+</span><span class="k" data-group-id="2427876359-2">end</span><span class="w">
+
+</span><span class="c1"># Compute in the agent/client</span><span class="w">
+</span><span class="kd">def</span><span class="w"> </span><span class="nf">get_something</span><span class="p" data-group-id="2427876359-6">(</span><span class="n">agent</span><span class="p" data-group-id="2427876359-6">)</span><span class="w"> </span><span class="k" data-group-id="2427876359-7">do</span><span class="w">
+  </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="2427876359-8">(</span><span class="n">agent</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="ni">&amp;1</span><span class="p" data-group-id="2427876359-8">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="n">do_something_expensive</span><span class="p" data-group-id="2427876359-9">(</span><span class="p" data-group-id="2427876359-9">)</span><span class="w">
+</span><span class="k" data-group-id="2427876359-7">end</span></code></pre><p>The first function blocks the agent. The second function copies all the state
+to the client and then executes the operation in the client. One aspect to
+consider is whether the data is large enough to require processing in the server,
+at least initially, or small enough to be sent to the client cheaply. Another
+factor is whether the data needs to be processed atomically: getting the
+state and calling <code class="inline">do_something_expensive(state)</code> outside of the agent means
+that the agent's state can be updated in the meantime. This is specially
+important in case of updates as computing the new state in the client rather
+than in the server can lead to race conditions if multiple clients are trying
+to update the same state to different values.</p><h2 id="module-how-to-supervise" class="section-heading">
+  <a href="#module-how-to-supervise" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">How to supervise</span>
+</h2>
+<p>An <a href="Agent.html"><code class="inline">Agent</code></a> is most commonly started under a supervision tree.
+When we invoke <code class="inline">use Agent</code>, it automatically defines a <a href="#child_spec/1"><code class="inline">child_spec/1</code></a>
+function that allows us to start the agent directly under a supervisor.
+To start an agent under a supervisor with an initial counter of 0,
+one may do:</p><pre><code class="makeup elixir" translate="no"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5297468101-1">[</span><span class="w">
+  </span><span class="p" data-group-id="5297468101-2">{</span><span class="nc">Counter</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="5297468101-2">}</span><span class="w">
+</span><span class="p" data-group-id="5297468101-1">]</span><span class="w">
+
+</span><span class="nc">Supervisor</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="5297468101-3">(</span><span class="n">children</span><span class="p">,</span><span class="w"> </span><span class="ss">strategy</span><span class="p">:</span><span class="w"> </span><span class="ss">:one_for_all</span><span class="p" data-group-id="5297468101-3">)</span></code></pre><p>While one could also simply pass the <code class="inline">Counter</code> as a child to the supervisor,
+such as:</p><pre><code class="makeup elixir" translate="no"><span class="n">children</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="8182621260-1">[</span><span class="w">
+  </span><span class="nc">Counter</span><span class="w"> </span><span class="c1"># Same as {Counter, []}</span><span class="w">
+</span><span class="p" data-group-id="8182621260-1">]</span><span class="w">
+
+</span><span class="nc">Supervisor</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="8182621260-2">(</span><span class="n">children</span><span class="p">,</span><span class="w"> </span><span class="ss">strategy</span><span class="p">:</span><span class="w"> </span><span class="ss">:one_for_all</span><span class="p" data-group-id="8182621260-2">)</span></code></pre><p>The definition above wouldn't work for this particular example,
+as it would attempt to start the counter with an initial value
+of an empty list. However, this may be a viable option in your
+own agents. A common approach is to use a keyword list, as that
+would allow setting the initial value and giving a name to the
+counter process, for example:</p><pre><code class="makeup elixir" translate="no"><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="p" data-group-id="3293492934-1">(</span><span class="n">opts</span><span class="p" data-group-id="3293492934-1">)</span><span class="w"> </span><span class="k" data-group-id="3293492934-2">do</span><span class="w">
+  </span><span class="p" data-group-id="3293492934-3">{</span><span class="n">initial_value</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="p" data-group-id="3293492934-3">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Keyword</span><span class="o">.</span><span class="n">pop</span><span class="p" data-group-id="3293492934-4">(</span><span class="n">opts</span><span class="p">,</span><span class="w"> </span><span class="ss">:initial_value</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="3293492934-4">)</span><span class="w">
+  </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="3293492934-5">(</span><span class="k" data-group-id="3293492934-6">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">initial_value</span><span class="w"> </span><span class="k" data-group-id="3293492934-6">end</span><span class="p">,</span><span class="w"> </span><span class="n">opts</span><span class="p" data-group-id="3293492934-5">)</span><span class="w">
+</span><span class="k" data-group-id="3293492934-2">end</span></code></pre><p>and then you can use <code class="inline">Counter</code>, <code class="inline">{Counter, name: :my_counter}</code> or
+even <code class="inline">{Counter, initial_value: 0, name: :my_counter}</code> as a child
+specification.</p><p><code class="inline">use Agent</code> also accepts a list of options which configures the
+child specification and therefore how it runs under a supervisor.
+The generated <a href="#child_spec/1"><code class="inline">child_spec/1</code></a> can be customized with the following options:</p><ul><li><code class="inline">:id</code> - the child specification identifier, defaults to the current module</li><li><code class="inline">:restart</code> - when the child should be restarted, defaults to <code class="inline">:permanent</code></li><li><code class="inline">:shutdown</code> - how to shut down the child, either immediately or by giving it time to shut down</li></ul><p>For example:</p><pre><code class="makeup elixir" translate="no"><span class="kn">use</span><span class="w"> </span><span class="nc">Agent</span><span class="p">,</span><span class="w"> </span><span class="ss">restart</span><span class="p">:</span><span class="w"> </span><span class="ss">:transient</span><span class="p">,</span><span class="w"> </span><span class="ss">shutdown</span><span class="p">:</span><span class="w"> </span><span class="mi">10_000</span></code></pre><p>See the &quot;Child specification&quot; section in the <a href="Supervisor.html"><code class="inline">Supervisor</code></a> module for more
+detailed information. The <code class="inline">@doc</code> annotation immediately preceding
+<code class="inline">use Agent</code> will be attached to the generated <a href="#child_spec/1"><code class="inline">child_spec/1</code></a> function.</p><h2 id="module-name-registration" class="section-heading">
+  <a href="#module-name-registration" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Name registration</span>
+</h2>
+<p>An agent is bound to the same name registration rules as GenServers.
+Read more about it in the <a href="GenServer.html"><code class="inline">GenServer</code></a> documentation.</p><h2 id="module-a-word-on-distributed-agents" class="section-heading">
+  <a href="#module-a-word-on-distributed-agents" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">A word on distributed agents</span>
+</h2>
+<p>It is important to consider the limitations of distributed agents. Agents
+provide two APIs, one that works with anonymous functions and another
+that expects an explicit module, function, and arguments.</p><p>In a distributed setup with multiple nodes, the API that accepts anonymous
+functions only works if the caller (client) and the agent have the same
+version of the caller module.</p><p>Keep in mind this issue also shows up when performing &quot;rolling upgrades&quot;
+with agents. By rolling upgrades we mean the following situation: you wish
+to deploy a new version of your software by <em>shutting down</em> some of your
+nodes and replacing them with nodes running a new version of the software.
+In this setup, part of your environment will have one version of a given
+module and the other part another version (the newer one) of the same module.</p><p>The best solution is to simply use the explicit module, function, and arguments
+APIs when working with distributed agents.</p><h2 id="module-hot-code-swapping" class="section-heading">
+  <a href="#module-hot-code-swapping" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Hot code swapping</span>
+</h2>
+<p>An agent can have its code hot swapped live by simply passing a module,
+function, and arguments tuple to the update instruction. For example, imagine
+you have an agent named <code class="inline">:sample</code> and you want to convert its inner state
+from a keyword list to a map. It can be done with the following
+instruction:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="6007116268-1">{</span><span class="ss">:update</span><span class="p">,</span><span class="w"> </span><span class="ss">:sample</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6007116268-2">{</span><span class="ss">:advanced</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6007116268-3">{</span><span class="nc">Enum</span><span class="p">,</span><span class="w"> </span><span class="ss">:into</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6007116268-4">[</span><span class="p" data-group-id="6007116268-5">%{</span><span class="p" data-group-id="6007116268-5">}</span><span class="p" data-group-id="6007116268-4">]</span><span class="p" data-group-id="6007116268-3">}</span><span class="p" data-group-id="6007116268-2">}</span><span class="p" data-group-id="6007116268-1">}</span></code></pre><p>The agent's state will be added to the given list of arguments (<code class="inline">[%{}]</code>) as
+the first argument.</p>
+    </section>
+
+</div>
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Summary</span>
+    </h1>
+<div class="summary-types summary">
+  <h2>
+    <a href="#types">Types</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:agent/0" data-no-tooltip translate="no">agent()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>The agent reference</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:name/0" data-no-tooltip translate="no">name()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>The agent name</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:on_start/0" data-no-tooltip translate="no">on_start()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Return values of <code class="inline">start*</code> functions</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#t:state/0" data-no-tooltip translate="no">state()</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>The agent state</p></div>
+
+    </div>
+
+</div>
+<div class="summary-functions summary">
+  <h2>
+    <a href="#functions">Functions</a>
+  </h2>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#cast/2" data-no-tooltip translate="no">cast(agent, fun)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Performs a cast (<em>fire and forget</em>) operation on the agent state.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#cast/4" data-no-tooltip translate="no">cast(agent, module, fun, args)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Performs a cast (<em>fire and forget</em>) operation on the agent state.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#child_spec/1" data-no-tooltip translate="no">child_spec(arg)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Returns a specification to start an agent under a supervisor.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#get/3" data-no-tooltip translate="no">get(agent, fun, timeout \\ 5000)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Gets an agent value via the given anonymous function.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#get/5" data-no-tooltip translate="no">get(agent, module, fun, args, timeout \\ 5000)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Gets an agent value via the given function.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#get_and_update/3" data-no-tooltip translate="no">get_and_update(agent, fun, timeout \\ 5000)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Gets and updates the agent state in one operation via the given anonymous
+function.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#get_and_update/5" data-no-tooltip translate="no">get_and_update(agent, module, fun, args, timeout \\ 5000)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Gets and updates the agent state in one operation via the given function.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#start/2" data-no-tooltip translate="no">start(fun, options \\ [])</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Starts an agent process without links (outside of a supervision tree).</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#start/4" data-no-tooltip translate="no">start(module, fun, args, options \\ [])</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Starts an agent without links with the given module, function, and arguments.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#start_link/2" data-no-tooltip translate="no">start_link(fun, options \\ [])</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Starts an agent linked to the current process with the given function.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#start_link/4" data-no-tooltip translate="no">start_link(module, fun, args, options \\ [])</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Starts an agent linked to the current process.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#stop/3" data-no-tooltip translate="no">stop(agent, reason \\ :normal, timeout \\ :infinity)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Synchronously stops the agent with the given <code class="inline">reason</code>.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#update/3" data-no-tooltip translate="no">update(agent, fun, timeout \\ 5000)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Updates the agent state via the given anonymous function.</p></div>
+
+    </div>
+
+    <div class="summary-row">
+      <div class="summary-signature">
+        <a href="#update/5" data-no-tooltip translate="no">update(agent, module, fun, args, timeout \\ 5000)</a>
+
+      </div>
+
+        <div class="summary-synopsis"><p>Updates the agent state via the given function.</p></div>
+
+    </div>
+
+</div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Types</span>
+    </h1>
+    <div class="types-list">
+<section class="detail" id="t:agent/0">
+
+  <div class="detail-header">
+    <a href="#t:agent/0" class="detail-link" data-no-tooltip title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">agent()</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L189" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> agent() :: <a href="typespecs.html#basic-types">pid</a>() | {<a href="typespecs.html#basic-types">atom</a>(), <a href="typespecs.html#built-in-types">node</a>()} | <a href="#t:name/0">name</a>()</pre>
+
+      </div>
+
+<p>The agent reference</p>
+  </section>
+</section>
+<section class="detail" id="t:name/0">
+
+  <div class="detail-header">
+    <a href="#t:name/0" class="detail-link" data-no-tooltip title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">name()</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L186" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> name() :: <a href="typespecs.html#basic-types">atom</a>() | {:global, <a href="typespecs.html#built-in-types">term</a>()} | {:via, <a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>The agent name</p>
+  </section>
+</section>
+<section class="detail" id="t:on_start/0">
+
+  <div class="detail-header">
+    <a href="#t:on_start/0" class="detail-link" data-no-tooltip title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">on_start()</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L183" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> on_start() :: {:ok, <a href="typespecs.html#basic-types">pid</a>()} | {:error, {:already_started, <a href="typespecs.html#basic-types">pid</a>()} | <a href="typespecs.html#built-in-types">term</a>()}</pre>
+
+      </div>
+
+<p>Return values of <code class="inline">start*</code> functions</p>
+  </section>
+</section>
+<section class="detail" id="t:state/0">
+
+  <div class="detail-header">
+    <a href="#t:state/0" class="detail-link" data-no-tooltip title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">state()</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L192" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> state() :: <a href="typespecs.html#built-in-types">term</a>()</pre>
+
+      </div>
+
+<p>The agent state</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+      </a>
+      <span class="text">Functions</span>
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="cast/2">
+
+  <div class="detail-header">
+    <a href="#cast/2" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">cast(agent, fun)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L467" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> cast(<a href="#t:agent/0">agent</a>(), (<a href="#t:state/0">state</a>() -&gt; <a href="#t:state/0">state</a>())) :: :ok</pre>
+
+      </div>
+
+<p>Performs a cast (<em>fire and forget</em>) operation on the agent state.</p><p>The function <code class="inline">fun</code> is sent to the <code class="inline">agent</code> which invokes the function
+passing the agent state. The return value of <code class="inline">fun</code> becomes the new
+state of the agent.</p><p>Note that <code class="inline">cast</code> returns <code class="inline">:ok</code> immediately, regardless of whether <code class="inline">agent</code> (or
+the node it should live on) exists.</p><h2 id="cast/2-examples" class="section-heading">
+  <a href="#cast/2-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="4023019185-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="4023019185-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="4023019185-2">(</span><span class="k" data-group-id="4023019185-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="4023019185-3">end</span><span class="p" data-group-id="4023019185-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">cast</span><span class="p" data-group-id="4023019185-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="4023019185-5">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="4023019185-5">end</span><span class="p" data-group-id="4023019185-4">)</span><span class="w">
+</span><span class="ss">:ok</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="4023019185-6">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="4023019185-7">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="4023019185-7">end</span><span class="p" data-group-id="4023019185-6">)</span><span class="w">
+</span><span class="mi">43</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="cast/4">
+
+  <div class="detail-header">
+    <a href="#cast/4" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">cast(agent, module, fun, args)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L488" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> cast(<a href="#t:agent/0">agent</a>(), <a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#basic-types">atom</a>(), [<a href="typespecs.html#built-in-types">term</a>()]) :: :ok</pre>
+
+      </div>
+
+<p>Performs a cast (<em>fire and forget</em>) operation on the agent state.</p><p>Same as <a href="#cast/2"><code class="inline">cast/2</code></a> but a module, function, and arguments are expected
+instead of an anonymous function. The state is added as first
+argument to the given list of arguments.</p><h2 id="cast/4-examples" class="section-heading">
+  <a href="#cast/4-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9822028533-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="9822028533-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="9822028533-2">(</span><span class="k" data-group-id="9822028533-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="9822028533-3">end</span><span class="p" data-group-id="9822028533-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">cast</span><span class="p" data-group-id="9822028533-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="nc">Kernel</span><span class="p">,</span><span class="w"> </span><span class="ss">:+</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9822028533-5">[</span><span class="mi">12</span><span class="p" data-group-id="9822028533-5">]</span><span class="p" data-group-id="9822028533-4">)</span><span class="w">
+</span><span class="ss">:ok</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="9822028533-6">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="9822028533-7">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="9822028533-7">end</span><span class="p" data-group-id="9822028533-6">)</span><span class="w">
+</span><span class="mi">54</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="child_spec/1">
+
+  <div class="detail-header">
+    <a href="#child_spec/1" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">child_spec(arg)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L200" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(since 1.5.0)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Returns a specification to start an agent under a supervisor.</p><p>See the &quot;Child specification&quot; section in the <a href="Supervisor.html"><code class="inline">Supervisor</code></a> module for more detailed information.</p>
+  </section>
+</section>
+<section class="detail" id="get/3">
+
+    <span id="get/2"></span>
+
+  <div class="detail-header">
+    <a href="#get/3" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get(agent, fun, timeout \\ 5000)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L340" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> get(<a href="#t:agent/0">agent</a>(), (<a href="#t:state/0">state</a>() -&gt; a), <a href="typespecs.html#built-in-types">timeout</a>()) :: a when a: var</pre>
+
+      </div>
+
+<p>Gets an agent value via the given anonymous function.</p><p>The function <code class="inline">fun</code> is sent to the <code class="inline">agent</code> which invokes the function
+passing the agent state. The result of the function invocation is
+returned from this function.</p><p><code class="inline">timeout</code> is an integer greater than zero which specifies how many
+milliseconds are allowed before the agent executes the function and returns
+the result value, or the atom <code class="inline">:infinity</code> to wait indefinitely. If no result
+is received within the specified time, the function call fails and the caller
+exits.</p><h2 id="get/3-examples" class="section-heading">
+  <a href="#get/3-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7757878429-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="7757878429-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="7757878429-2">(</span><span class="k" data-group-id="7757878429-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="7757878429-3">end</span><span class="p" data-group-id="7757878429-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="7757878429-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="7757878429-5">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="7757878429-5">end</span><span class="p" data-group-id="7757878429-4">)</span><span class="w">
+</span><span class="mi">42</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="get/5">
+
+    <span id="get/4"></span>
+
+  <div class="detail-header">
+    <a href="#get/5" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get(agent, module, fun, args, timeout \\ 5000)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L352" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> get(<a href="#t:agent/0">agent</a>(), <a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#basic-types">atom</a>(), [<a href="typespecs.html#built-in-types">term</a>()], <a href="typespecs.html#built-in-types">timeout</a>()) :: <a href="typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Gets an agent value via the given function.</p><p>Same as <a href="#get/3"><code class="inline">get/3</code></a> but a module, function, and arguments are expected
+instead of an anonymous function. The state is added as first
+argument to the given list of arguments.</p>
+  </section>
+</section>
+<section class="detail" id="get_and_update/3">
+
+    <span id="get_and_update/2"></span>
+
+  <div class="detail-header">
+    <a href="#get_and_update/3" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get_and_update(agent, fun, timeout \\ 5000)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L381" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> get_and_update(<a href="#t:agent/0">agent</a>(), (<a href="#t:state/0">state</a>() -&gt; {a, <a href="#t:state/0">state</a>()}), <a href="typespecs.html#built-in-types">timeout</a>()) :: a when a: var</pre>
+
+      </div>
+
+<p>Gets and updates the agent state in one operation via the given anonymous
+function.</p><p>The function <code class="inline">fun</code> is sent to the <code class="inline">agent</code> which invokes the function
+passing the agent state. The function must return a tuple with two
+elements, the first being the value to return (that is, the &quot;get&quot; value)
+and the second one being the new state of the agent.</p><p><code class="inline">timeout</code> is an integer greater than zero which specifies how many
+milliseconds are allowed before the agent executes the function and returns
+the result value, or the atom <code class="inline">:infinity</code> to wait indefinitely. If no result
+is received within the specified time, the function call fails and the caller
+exits.</p><h2 id="get_and_update/3-examples" class="section-heading">
+  <a href="#get_and_update/3-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8978577207-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="8978577207-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="8978577207-2">(</span><span class="k" data-group-id="8978577207-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="8978577207-3">end</span><span class="p" data-group-id="8978577207-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get_and_update</span><span class="p" data-group-id="8978577207-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8978577207-5">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8978577207-6">{</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8978577207-6">}</span><span class="w"> </span><span class="k" data-group-id="8978577207-5">end</span><span class="p" data-group-id="8978577207-4">)</span><span class="w">
+</span><span class="mi">42</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="8978577207-7">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8978577207-8">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="8978577207-8">end</span><span class="p" data-group-id="8978577207-7">)</span><span class="w">
+</span><span class="mi">43</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="get_and_update/5">
+
+    <span id="get_and_update/4"></span>
+
+  <div class="detail-header">
+    <a href="#get_and_update/5" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get_and_update(agent, module, fun, args, timeout \\ 5000)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L393" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> get_and_update(<a href="#t:agent/0">agent</a>(), <a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#basic-types">atom</a>(), [<a href="typespecs.html#built-in-types">term</a>()], <a href="typespecs.html#built-in-types">timeout</a>()) :: <a href="typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Gets and updates the agent state in one operation via the given function.</p><p>Same as <a href="#get_and_update/3"><code class="inline">get_and_update/3</code></a> but a module, function, and arguments are expected
+instead of an anonymous function. The state is added as first
+argument to the given list of arguments.</p>
+  </section>
+</section>
+<section class="detail" id="start/2">
+
+    <span id="start/1"></span>
+
+  <div class="detail-header">
+    <a href="#start/2" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">start(fun, options \\ [])</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L305" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> start((-&gt; <a href="typespecs.html#built-in-types">term</a>()), <a href="GenServer.html#t:options/0">GenServer.options</a>()) :: <a href="#t:on_start/0">on_start</a>()</pre>
+
+      </div>
+
+<p>Starts an agent process without links (outside of a supervision tree).</p><p>See <a href="#start_link/2"><code class="inline">start_link/2</code></a> for more information.</p><h2 id="start/2-examples" class="section-heading">
+  <a href="#start/2-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8382788131-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="8382788131-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start</span><span class="p" data-group-id="8382788131-2">(</span><span class="k" data-group-id="8382788131-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="8382788131-3">end</span><span class="p" data-group-id="8382788131-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="8382788131-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="8382788131-5">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="8382788131-5">end</span><span class="p" data-group-id="8382788131-4">)</span><span class="w">
+</span><span class="mi">42</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="start/4">
+
+    <span id="start/3"></span>
+
+  <div class="detail-header">
+    <a href="#start/4" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">start(module, fun, args, options \\ [])</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L315" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> start(<a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#basic-types">atom</a>(), [<a href="typespecs.html#basic-types">any</a>()], <a href="GenServer.html#t:options/0">GenServer.options</a>()) :: <a href="#t:on_start/0">on_start</a>()</pre>
+
+      </div>
+
+<p>Starts an agent without links with the given module, function, and arguments.</p><p>See <a href="#start_link/4"><code class="inline">start_link/4</code></a> for more information.</p>
+  </section>
+</section>
+<section class="detail" id="start_link/2">
+
+    <span id="start_link/1"></span>
+
+  <div class="detail-header">
+    <a href="#start_link/2" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">start_link(fun, options \\ [])</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L276" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> start_link((-&gt; <a href="typespecs.html#built-in-types">term</a>()), <a href="GenServer.html#t:options/0">GenServer.options</a>()) :: <a href="#t:on_start/0">on_start</a>()</pre>
+
+      </div>
+
+<p>Starts an agent linked to the current process with the given function.</p><p>This is often used to start the agent as part of a supervision tree.</p><p>Once the agent is spawned, the given function <code class="inline">fun</code> is invoked in the server
+process, and should return the initial agent state. Note that <a href="#start_link/2"><code class="inline">start_link/2</code></a>
+does not return until the given function has returned.</p><h2 id="start_link/2-options" class="section-heading">
+  <a href="#start_link/2-options" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Options</span>
+</h2>
+<p>The <code class="inline">:name</code> option is used for registration as described in the module
+documentation.</p><p>If the <code class="inline">:timeout</code> option is present, the agent is allowed to spend at most
+the given number of milliseconds on initialization or it will be terminated
+and the start function will return <code class="inline">{:error, :timeout}</code>.</p><p>If the <code class="inline">:debug</code> option is present, the corresponding function in the
+<a href="https://www.erlang.org/doc/apps/stdlib/sys.html"><code class="inline">:sys</code> module</a> will be invoked.</p><p>If the <code class="inline">:spawn_opt</code> option is present, its value will be passed as options
+to the underlying process as in <a href="Process.html#spawn/4"><code class="inline">Process.spawn/4</code></a>.</p><h2 id="start_link/2-return-values" class="section-heading">
+  <a href="#start_link/2-return-values" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Return values</span>
+</h2>
+<p>If the server is successfully created and initialized, the function returns
+<code class="inline">{:ok, pid}</code>, where <code class="inline">pid</code> is the PID of the server. If an agent with the
+specified name already exists, the function returns
+<code class="inline">{:error, {:already_started, pid}}</code> with the PID of that process.</p><p>If the given function callback fails, the function returns <code class="inline">{:error, reason}</code>.</p><h2 id="start_link/2-examples" class="section-heading">
+  <a href="#start_link/2-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1377956068-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="1377956068-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="1377956068-2">(</span><span class="k" data-group-id="1377956068-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="1377956068-3">end</span><span class="p" data-group-id="1377956068-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="1377956068-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="1377956068-5">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="1377956068-5">end</span><span class="p" data-group-id="1377956068-4">)</span><span class="w">
+</span><span class="mi">42</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1377956068-6">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1377956068-7">{</span><span class="n">exception</span><span class="p">,</span><span class="w"> </span><span class="c">_stacktrace</span><span class="p" data-group-id="1377956068-7">}</span><span class="p" data-group-id="1377956068-6">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start</span><span class="p" data-group-id="1377956068-8">(</span><span class="k" data-group-id="1377956068-9">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="w"> </span><span class="k" data-group-id="1377956068-9">end</span><span class="p" data-group-id="1377956068-8">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">exception</span><span class="w">
+</span><span class="p" data-group-id="1377956068-10">%</span><span class="nc" data-group-id="1377956068-10">RuntimeError</span><span class="p" data-group-id="1377956068-10">{</span><span class="ss">message</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="p" data-group-id="1377956068-10">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="start_link/4">
+
+    <span id="start_link/3"></span>
+
+  <div class="detail-header">
+    <a href="#start_link/4" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">start_link(module, fun, args, options \\ [])</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L288" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> start_link(<a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#basic-types">atom</a>(), [<a href="typespecs.html#basic-types">any</a>()], <a href="GenServer.html#t:options/0">GenServer.options</a>()) :: <a href="#t:on_start/0">on_start</a>()</pre>
+
+      </div>
+
+<p>Starts an agent linked to the current process.</p><p>Same as <a href="#start_link/2"><code class="inline">start_link/2</code></a> but a module, function, and arguments are expected
+instead of an anonymous function; <code class="inline">fun</code> in <code class="inline">module</code> will be called with the
+given arguments <code class="inline">args</code> to initialize the state.</p>
+  </section>
+</section>
+<section class="detail" id="stop/3">
+
+    <span id="stop/1"></span>
+
+    <span id="stop/2"></span>
+
+  <div class="detail-header">
+    <a href="#stop/3" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">stop(agent, reason \\ :normal, timeout \\ :infinity)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L511" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> stop(<a href="#t:agent/0">agent</a>(), reason :: <a href="typespecs.html#built-in-types">term</a>(), <a href="typespecs.html#built-in-types">timeout</a>()) :: :ok</pre>
+
+      </div>
+
+<p>Synchronously stops the agent with the given <code class="inline">reason</code>.</p><p>It returns <code class="inline">:ok</code> if the agent terminates with the given
+reason. If the agent terminates with another reason, the call will
+exit.</p><p>This function keeps OTP semantics regarding error reporting.
+If the reason is any other than <code class="inline">:normal</code>, <code class="inline">:shutdown</code> or
+<code class="inline">{:shutdown, _}</code>, an error report will be logged.</p><h2 id="stop/3-examples" class="section-heading">
+  <a href="#stop/3-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="2894522830-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="2894522830-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="2894522830-2">(</span><span class="k" data-group-id="2894522830-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="2894522830-3">end</span><span class="p" data-group-id="2894522830-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">stop</span><span class="p" data-group-id="2894522830-4">(</span><span class="n">pid</span><span class="p" data-group-id="2894522830-4">)</span><span class="w">
+</span><span class="ss">:ok</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="update/3">
+
+    <span id="update/2"></span>
+
+  <div class="detail-header">
+    <a href="#update/3" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">update(agent, fun, timeout \\ 5000)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L422" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> update(<a href="#t:agent/0">agent</a>(), (<a href="#t:state/0">state</a>() -&gt; <a href="#t:state/0">state</a>()), <a href="typespecs.html#built-in-types">timeout</a>()) :: :ok</pre>
+
+      </div>
+
+<p>Updates the agent state via the given anonymous function.</p><p>The function <code class="inline">fun</code> is sent to the <code class="inline">agent</code> which invokes the function
+passing the agent state. The return value of <code class="inline">fun</code> becomes the new
+state of the agent.</p><p>This function always returns <code class="inline">:ok</code>.</p><p><code class="inline">timeout</code> is an integer greater than zero which specifies how many
+milliseconds are allowed before the agent executes the function and returns
+the result value, or the atom <code class="inline">:infinity</code> to wait indefinitely. If no result
+is received within the specified time, the function call fails and the caller
+exits.</p><h2 id="update/3-examples" class="section-heading">
+  <a href="#update/3-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1798146996-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="1798146996-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="1798146996-2">(</span><span class="k" data-group-id="1798146996-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="1798146996-3">end</span><span class="p" data-group-id="1798146996-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">update</span><span class="p" data-group-id="1798146996-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="1798146996-5">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="1798146996-5">end</span><span class="p" data-group-id="1798146996-4">)</span><span class="w">
+</span><span class="ss">:ok</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="1798146996-6">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="1798146996-7">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="1798146996-7">end</span><span class="p" data-group-id="1798146996-6">)</span><span class="w">
+</span><span class="mi">43</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="update/5">
+
+    <span id="update/4"></span>
+
+  <div class="detail-header">
+    <a href="#update/5" class="detail-link" data-no-tooltip title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">update(agent, module, fun, args, timeout \\ 5000)</h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/lib/agent.ex#L443" class="icon-action" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> update(<a href="#t:agent/0">agent</a>(), <a href="typespecs.html#built-in-types">module</a>(), <a href="typespecs.html#basic-types">atom</a>(), [<a href="typespecs.html#built-in-types">term</a>()], <a href="typespecs.html#built-in-types">timeout</a>()) :: :ok</pre>
+
+      </div>
+
+<p>Updates the agent state via the given function.</p><p>Same as <a href="#update/3"><code class="inline">update/3</code></a> but a module, function, and arguments are expected
+instead of an anonymous function. The state is added as first
+argument to the given list of arguments.</p><h2 id="update/5-examples" class="section-heading">
+  <a href="#update/5-examples" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Examples</span>
+</h2>
+<pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="6813608338-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="6813608338-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="6813608338-2">(</span><span class="k" data-group-id="6813608338-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="k" data-group-id="6813608338-3">end</span><span class="p" data-group-id="6813608338-2">)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">update</span><span class="p" data-group-id="6813608338-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="nc">Kernel</span><span class="p">,</span><span class="w"> </span><span class="ss">:+</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6813608338-5">[</span><span class="mi">12</span><span class="p" data-group-id="6813608338-5">]</span><span class="p" data-group-id="6813608338-4">)</span><span class="w">
+</span><span class="ss">:ok</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="6813608338-6">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="6813608338-7">fn</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="k" data-group-id="6813608338-7">end</span><span class="p" data-group-id="6813608338-6">)</span><span class="w">
+</span><span class="mi">54</span></code></pre>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

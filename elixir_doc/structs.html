@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Structs — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/structs.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/structs.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Structs</span>
+  </h1>
+
+<p>We learned about maps <a href="keywords-and-maps.html">in earlier chapters</a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="4134357966-1">%{</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="4134357966-1">}</span><span class="w">
+</span><span class="p" data-group-id="4134357966-2">%{</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="4134357966-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="p" data-group-id="4134357966-3">[</span><span class="ss">:a</span><span class="p" data-group-id="4134357966-3">]</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="4134357966-4">%{</span><span class="n">map</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="4134357966-4">}</span><span class="w">
+</span><span class="p" data-group-id="4134357966-5">%{</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="4134357966-5">}</span></code></pre><p>Structs are extensions built on top of maps that provide compile-time checks and default values.</p><h2 id="defining-structs" class="section-heading">
+  <a href="#defining-structs" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Defining structs</span>
+</h2>
+<p>To define a struct, the <a href="Kernel.html#defstruct/1"><code class="inline">defstruct/1</code></a> construct is used:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">User</span><span class="w"> </span><span class="k" data-group-id="0965459331-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kd">defstruct</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="0965459331-1">end</span></code></pre><p>The keyword list used with <code class="inline">defstruct</code> defines what fields the struct will have along with their default values. Structs take the name of the module they're defined in. In the example above, we defined a struct named <code class="inline">User</code>.</p><p>We can now create <code class="inline">User</code> structs by using a syntax similar to the one used to create maps:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="4587089836-1">%</span><span class="nc" data-group-id="4587089836-1">User</span><span class="p" data-group-id="4587089836-1">{</span><span class="p" data-group-id="4587089836-1">}</span><span class="w">
+</span><span class="p" data-group-id="4587089836-2">%</span><span class="nc" data-group-id="4587089836-2">User</span><span class="p" data-group-id="4587089836-2">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="4587089836-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="4587089836-3">%</span><span class="nc" data-group-id="4587089836-3">User</span><span class="p" data-group-id="4587089836-3">{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jane&quot;</span><span class="p" data-group-id="4587089836-3">}</span><span class="w">
+</span><span class="p" data-group-id="4587089836-4">%</span><span class="nc" data-group-id="4587089836-4">User</span><span class="p" data-group-id="4587089836-4">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jane&quot;</span><span class="p" data-group-id="4587089836-4">}</span></code></pre><p>Structs provide <em>compile-time</em> guarantees that only the fields defined through <code class="inline">defstruct</code> will be allowed to exist in a struct:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="3511244389-1">%</span><span class="nc" data-group-id="3511244389-1">User</span><span class="p" data-group-id="3511244389-1">{</span><span class="ss">oops</span><span class="p">:</span><span class="w"> </span><span class="ss">:field</span><span class="p" data-group-id="3511244389-1">}</span><span class="w">
+</span><span class="gt">** (KeyError) key :oops not found expanding struct: User.__struct__/1</span></code></pre><h2 id="accessing-and-updating-structs" class="section-heading">
+  <a href="#accessing-and-updating-structs" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Accessing and updating structs</span>
+</h2>
+<p>Structs share the same syntax for accessing and updating fields as maps of fixed keys:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">john</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="4047564026-1">%</span><span class="nc" data-group-id="4047564026-1">User</span><span class="p" data-group-id="4047564026-1">{</span><span class="p" data-group-id="4047564026-1">}</span><span class="w">
+</span><span class="p" data-group-id="4047564026-2">%</span><span class="nc" data-group-id="4047564026-2">User</span><span class="p" data-group-id="4047564026-2">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="4047564026-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">john</span><span class="o">.</span><span class="n">name</span><span class="w">
+</span><span class="s">&quot;John&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">jane</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="4047564026-3">%{</span><span class="n">john</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jane&quot;</span><span class="p" data-group-id="4047564026-3">}</span><span class="w">
+</span><span class="p" data-group-id="4047564026-4">%</span><span class="nc" data-group-id="4047564026-4">User</span><span class="p" data-group-id="4047564026-4">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Jane&quot;</span><span class="p" data-group-id="4047564026-4">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="4047564026-5">%{</span><span class="n">jane</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="ss">oops</span><span class="p">:</span><span class="w"> </span><span class="ss">:field</span><span class="p" data-group-id="4047564026-5">}</span><span class="w">
+</span><span class="gt">** (KeyError) key :oops not found in: %User{age: 27, name: &quot;Jane&quot;}</span></code></pre><p>When using the update syntax (<code class="inline">|</code>), Elixir is aware that no new keys will be added to the struct, allowing the maps underneath to share their structure in memory. In the example above, both <code class="inline">john</code> and <code class="inline">jane</code> share the same key structure in memory.</p><p>Structs can also be used in pattern matching, both for matching on the value of specific keys as well as for ensuring that the matching value is a struct of the same type as the matched value.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7964870090-1">%</span><span class="nc" data-group-id="7964870090-1">User</span><span class="p" data-group-id="7964870090-1">{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="n">name</span><span class="p" data-group-id="7964870090-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">john</span><span class="w">
+</span><span class="p" data-group-id="7964870090-2">%</span><span class="nc" data-group-id="7964870090-2">User</span><span class="p" data-group-id="7964870090-2">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="7964870090-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">name</span><span class="w">
+</span><span class="s">&quot;John&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7964870090-3">%</span><span class="nc" data-group-id="7964870090-3">User</span><span class="p" data-group-id="7964870090-3">{</span><span class="p" data-group-id="7964870090-3">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="7964870090-4">%{</span><span class="p" data-group-id="7964870090-4">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: %{}</span></code></pre><h2 id="structs-are-bare-maps-underneath" class="section-heading">
+  <a href="#structs-are-bare-maps-underneath" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Structs are bare maps underneath</span>
+</h2>
+<p>Structs are simply maps with a &quot;special&quot; field named <code class="inline">__struct__</code> that holds the name of the struct:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">is_map</span><span class="p" data-group-id="7040862645-1">(</span><span class="n">john</span><span class="p" data-group-id="7040862645-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">john</span><span class="o">.</span><span class="c">__struct__</span><span class="w">
+</span><span class="nc">User</span></code></pre><p>However, structs do not inherit any of the protocols that maps do. For example, you can neither enumerate nor access a struct:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">john</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3992904141-1">%</span><span class="nc" data-group-id="3992904141-1">User</span><span class="p" data-group-id="3992904141-1">{</span><span class="p" data-group-id="3992904141-1">}</span><span class="w">
+</span><span class="p" data-group-id="3992904141-2">%</span><span class="nc" data-group-id="3992904141-2">User</span><span class="p" data-group-id="3992904141-2">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="3992904141-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">john</span><span class="p" data-group-id="3992904141-3">[</span><span class="ss">:name</span><span class="p" data-group-id="3992904141-3">]</span><span class="w">
+</span><span class="gt">** (UndefinedFunctionError) function User.fetch/2 is undefined (User does not implement the Access behaviour)
+             User.fetch(%User{age: 27, name: &quot;John&quot;}, :name)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Enum</span><span class="o">.</span><span class="n">each</span><span class="p" data-group-id="3992904141-4">(</span><span class="n">john</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="3992904141-5">fn</span><span class="w"> </span><span class="p" data-group-id="3992904141-6">{</span><span class="n">field</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p" data-group-id="3992904141-6">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">IO</span><span class="o">.</span><span class="n">puts</span><span class="p" data-group-id="3992904141-7">(</span><span class="n">value</span><span class="p" data-group-id="3992904141-7">)</span><span class="w"> </span><span class="k" data-group-id="3992904141-5">end</span><span class="p" data-group-id="3992904141-4">)</span><span class="w">
+</span><span class="gt">** (Protocol.UndefinedError) protocol Enumerable not implemented for %User{age: 27, name: &quot;John&quot;} of type User (a struct)</span></code></pre><p>Structs alongside protocols provide one of the most important features for Elixir developers: data polymorphism. That's what we will explore in the next chapter.</p><h2 id="default-values-and-required-keys" class="section-heading">
+  <a href="#default-values-and-required-keys" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Default values and required keys</span>
+</h2>
+<p>If you don't specify a default key value when defining a struct, <code class="inline">nil</code> will be assumed:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Product</span><span class="w"> </span><span class="k" data-group-id="9162335619-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kd">defstruct</span><span class="w"> </span><span class="p" data-group-id="9162335619-2">[</span><span class="ss">:name</span><span class="p" data-group-id="9162335619-2">]</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="9162335619-1">end</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9162335619-3">%</span><span class="nc" data-group-id="9162335619-3">Product</span><span class="p" data-group-id="9162335619-3">{</span><span class="p" data-group-id="9162335619-3">}</span><span class="w">
+</span><span class="p" data-group-id="9162335619-4">%</span><span class="nc" data-group-id="9162335619-4">Product</span><span class="p" data-group-id="9162335619-4">{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="p" data-group-id="9162335619-4">}</span></code></pre><p>You can define a structure combining both fields with explicit default values, and implicit <code class="inline">nil</code> values. In this case you must first specify the fields which implicitly default to nil:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">User</span><span class="w"> </span><span class="k" data-group-id="2818941493-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kd">defstruct</span><span class="w"> </span><span class="p" data-group-id="2818941493-2">[</span><span class="ss">:email</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p" data-group-id="2818941493-2">]</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="2818941493-1">end</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="2818941493-3">%</span><span class="nc" data-group-id="2818941493-3">User</span><span class="p" data-group-id="2818941493-3">{</span><span class="p" data-group-id="2818941493-3">}</span><span class="w">
+</span><span class="p" data-group-id="2818941493-4">%</span><span class="nc" data-group-id="2818941493-4">User</span><span class="p" data-group-id="2818941493-4">{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">email</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="2818941493-4">}</span></code></pre><p>Doing it in reverse order will raise a syntax error:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">User</span><span class="w"> </span><span class="k" data-group-id="3146376922-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kd">defstruct</span><span class="w"> </span><span class="p" data-group-id="3146376922-2">[</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">:email</span><span class="p" data-group-id="3146376922-2">]</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="3146376922-1">end</span><span class="w">
+</span><span class="gt">** (SyntaxError) iex:107: unexpected expression after keyword list. Keyword lists must always come last in lists and maps.</span></code></pre><p>You can also enforce that certain keys have to be specified when creating the struct via the <code class="inline">@enforce_keys</code> module attribute:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">Car</span><span class="w"> </span><span class="k" data-group-id="8951854043-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="na">@enforce_keys</span><span class="w"> </span><span class="p" data-group-id="8951854043-2">[</span><span class="ss">:make</span><span class="p" data-group-id="8951854043-2">]</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="kd">defstruct</span><span class="w"> </span><span class="p" data-group-id="8951854043-3">[</span><span class="ss">:model</span><span class="p">,</span><span class="w"> </span><span class="ss">:make</span><span class="p" data-group-id="8951854043-3">]</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="8951854043-1">end</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8951854043-4">%</span><span class="nc" data-group-id="8951854043-4">Car</span><span class="p" data-group-id="8951854043-4">{</span><span class="p" data-group-id="8951854043-4">}</span><span class="w">
+</span><span class="gt">** (ArgumentError) the following keys must also be given when building struct Car: [:make]
+    expanding struct: Car.__struct__/1</span></code></pre><p>Enforcing keys provides a simple compile-time guarantee to aid developers when building structs. It is not enforced on updates and it does not provide any sort of value-validation.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="module-attributes.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Module attributes
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="protocols.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Protocols
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

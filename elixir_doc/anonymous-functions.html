@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Anonymous functions — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/anonymous-functions.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/anonymous-functions.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Anonymous functions</span>
+  </h1>
+
+<p>Anonymous functions allow us to store and pass executable code around as if it was an integer or a string. Let's learn more.</p><h2 id="defining-anonymous-functions" class="section-heading">
+  <a href="#defining-anonymous-functions" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Defining anonymous functions</span>
+</h2>
+<p>Anonymous functions in Elixir are delimited by the keywords <code class="inline">fn</code> and <code class="inline">end</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k" data-group-id="7545314843-1">fn</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="k" data-group-id="7545314843-1">end</span><span class="w">
+</span><span class="p" data-group-id="7545314843-2">#</span><span class="nc" data-group-id="7545314843-2">Function</span><span class="p" data-group-id="7545314843-2">&lt;</span><span class="mf">12.71889879</span><span class="o">/</span><span class="mi">2</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">:erl_eval</span><span class="o">.</span><span class="n">expr</span><span class="o">/</span><span class="mi">5</span><span class="p" data-group-id="7545314843-2">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">add</span><span class="o">.</span><span class="p" data-group-id="7545314843-3">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="7545314843-3">)</span><span class="w">
+</span><span class="mi">3</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_function</span><span class="p" data-group-id="7545314843-4">(</span><span class="n">add</span><span class="p" data-group-id="7545314843-4">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>In the example above, we defined an anonymous function that receives two arguments, <code class="inline">a</code> and <code class="inline">b</code>, and returns the result of <code class="inline">a + b</code>. The arguments are always on the left-hand side of <code class="inline">-&gt;</code> and the code to be executed on the right-hand side. The anonymous function is stored in the variable <code class="inline">add</code>.</p><p>We can invoke anonymous functions by passing arguments to it. Note that a dot (<code class="inline">.</code>) between the variable and parentheses is required to invoke an anonymous function. The dot makes it clear when you are calling an anonymous function, stored in the variable <code class="inline">add</code>, opposed to a function named <code class="inline">add/2</code>. For example, if you have an anonymous function stored in the variable <code class="inline">is_atom</code>, there is no ambiguity between <code class="inline">is_atom.(:foo)</code> and <code class="inline">is_atom(:foo)</code>. If both used the same <code class="inline">is_atom(:foo)</code> syntax, the only way to know the actual behavior of <code class="inline">is_atom(:foo)</code> would be by scanning all code thus far for a possible definition of the <code class="inline">is_atom</code> variable. This scanning hurts maintainability as it requires developers to track additional context in their head when reading and writing code.</p><p>Anonymous functions in Elixir are also identified by the number of arguments they receive. We can check if a function is of any given arity by using <a href="Kernel.html#is_function/2"><code class="inline">is_function/2</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="c1"># check if add is a function that expects exactly 2 arguments</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_function</span><span class="p" data-group-id="1601690729-1">(</span><span class="n">add</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="1601690729-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="c1"># check if add is a function that expects exactly 1 argument</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_function</span><span class="p" data-group-id="1601690729-2">(</span><span class="n">add</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="1601690729-2">)</span><span class="w">
+</span><span class="no">false</span></code></pre><h2 id="closures" class="section-heading">
+  <a href="#closures" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Closures</span>
+</h2>
+<p>Anonymous functions can also access variables that are in scope when the function is defined. This is typically referred to as closures, as they close over their scope. Let's define a new anonymous function that uses the <code class="inline">add</code> anonymous function we have previously defined:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">double</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k" data-group-id="7732084458-1">fn</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">add</span><span class="o">.</span><span class="p" data-group-id="7732084458-2">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p" data-group-id="7732084458-2">)</span><span class="w"> </span><span class="k" data-group-id="7732084458-1">end</span><span class="w">
+</span><span class="p" data-group-id="7732084458-3">#</span><span class="nc" data-group-id="7732084458-3">Function</span><span class="p" data-group-id="7732084458-3">&lt;</span><span class="mf">6.71889879</span><span class="o">/</span><span class="mi">1</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">:erl_eval</span><span class="o">.</span><span class="n">expr</span><span class="o">/</span><span class="mi">5</span><span class="p" data-group-id="7732084458-3">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">double</span><span class="o">.</span><span class="p" data-group-id="7732084458-4">(</span><span class="mi">2</span><span class="p" data-group-id="7732084458-4">)</span><span class="w">
+</span><span class="mi">4</span></code></pre><p>A variable assigned inside a function does not affect its surrounding environment:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="mi">42</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="5373149161-1">(</span><span class="k" data-group-id="5373149161-2">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k" data-group-id="5373149161-2">end</span><span class="p" data-group-id="5373149161-1">)</span><span class="o">.</span><span class="p" data-group-id="5373149161-3">(</span><span class="p" data-group-id="5373149161-3">)</span><span class="w">
+</span><span class="mi">0</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w">
+</span><span class="mi">42</span></code></pre><h2 id="clauses-and-guards" class="section-heading">
+  <a href="#clauses-and-guards" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Clauses and guards</span>
+</h2>
+<p>Similar to <a href="Kernel.SpecialForms.html#case/2"><code class="inline">case/2</code></a>, we can pattern match on the arguments of anonymous functions as well as define multiple clauses and guards:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k" data-group-id="0718496414-1">fn</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">when</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="0718496414-1">end</span><span class="w">
+</span><span class="p" data-group-id="0718496414-2">#</span><span class="nc" data-group-id="0718496414-2">Function</span><span class="p" data-group-id="0718496414-2">&lt;</span><span class="mf">12.71889879</span><span class="o">/</span><span class="mi">2</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">:erl_eval</span><span class="o">.</span><span class="n">expr</span><span class="o">/</span><span class="mi">5</span><span class="p" data-group-id="0718496414-2">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">f</span><span class="o">.</span><span class="p" data-group-id="0718496414-3">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="0718496414-3">)</span><span class="w">
+</span><span class="mi">4</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">f</span><span class="o">.</span><span class="p" data-group-id="0718496414-4">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="0718496414-4">)</span><span class="w">
+</span><span class="o">-</span><span class="mi">3</span></code></pre><p>The number of arguments in each anonymous function clause needs to be the same, otherwise an error is raised.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">f2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k" data-group-id="3092197205-1">fn</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="ow">when</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">z</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="3092197205-1">end</span><span class="w">
+</span><span class="gt">** (CompileError) iex:1: cannot mix clauses with different arities in anonymous functions</span></code></pre><h2 id="the-capture-operator" class="section-heading">
+  <a href="#the-capture-operator" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">The capture operator</span>
+</h2>
+<p>Throughout this guide, we have been using the notation <code class="inline">name/arity</code> to refer to functions. It happens that this notation can actually be used to capture an existing function into a data-type we can pass around, similar to how anonymous functions behave.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">is_atom</span><span class="o">/</span><span class="mi">1</span><span class="w">
+</span><span class="o">&amp;</span><span class="nc">:erlang</span><span class="o">.</span><span class="n">is_atom</span><span class="o">/</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_function</span><span class="p" data-group-id="1648874494-1">(</span><span class="n">fun</span><span class="p" data-group-id="1648874494-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="o">.</span><span class="p" data-group-id="1648874494-2">(</span><span class="ss">:hello</span><span class="p" data-group-id="1648874494-2">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="o">.</span><span class="p" data-group-id="1648874494-3">(</span><span class="mi">123</span><span class="p" data-group-id="1648874494-3">)</span><span class="w">
+</span><span class="no">false</span></code></pre><p>As you can see, once a function is captured, we can pass it as argument or invoke it using the anonymous function notation. The returned value above also hints we can capture functions defined in modules:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="nc">String</span><span class="o">.</span><span class="n">length</span><span class="o">/</span><span class="mi">1</span><span class="w">
+</span><span class="o">&amp;</span><span class="nc">String</span><span class="o">.</span><span class="n">length</span><span class="o">/</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="o">.</span><span class="p" data-group-id="1596270868-1">(</span><span class="s">&quot;hello&quot;</span><span class="p" data-group-id="1596270868-1">)</span><span class="w">
+</span><span class="mi">5</span></code></pre><p>You can also capture operators:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="o">+</span><span class="o">/</span><span class="mi">2</span><span class="w">
+</span><span class="o">&amp;</span><span class="ss">:erlang</span><span class="o">.</span><span class="o">+</span><span class="o">/</span><span class="mi">2</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">add</span><span class="o">.</span><span class="p" data-group-id="0207090621-1">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="0207090621-1">)</span><span class="w">
+</span><span class="mi">3</span></code></pre><p>The capture syntax can also be used as a shortcut for creating functions. This is handy when you want to create functions that are mostly wrapping existing functions or operators:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="p" data-group-id="7158224766-1">(</span><span class="ni">&amp;1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="7158224766-1">)</span><span class="w">
+</span><span class="p" data-group-id="7158224766-2">#</span><span class="nc" data-group-id="7158224766-2">Function</span><span class="p" data-group-id="7158224766-2">&lt;</span><span class="mf">6.71889879</span><span class="o">/</span><span class="mi">1</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">:erl_eval</span><span class="o">.</span><span class="n">expr</span><span class="o">/</span><span class="mi">5</span><span class="p" data-group-id="7158224766-2">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">fun</span><span class="o">.</span><span class="p" data-group-id="7158224766-3">(</span><span class="mi">1</span><span class="p" data-group-id="7158224766-3">)</span><span class="w">
+</span><span class="mi">2</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">fun2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="s">&quot;Good </span><span class="si" data-group-id="7158224766-4">#{</span><span class="ni">&amp;1</span><span class="si" data-group-id="7158224766-4">}</span><span class="s">&quot;</span><span class="w">
+</span><span class="p" data-group-id="7158224766-5">#</span><span class="nc" data-group-id="7158224766-5">Function</span><span class="p" data-group-id="7158224766-5">&lt;</span><span class="mf">6.127694169</span><span class="o">/</span><span class="mi">1</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">:erl_eval</span><span class="o">.</span><span class="n">expr</span><span class="o">/</span><span class="mi">5</span><span class="p" data-group-id="7158224766-5">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">fun2</span><span class="o">.</span><span class="p" data-group-id="7158224766-6">(</span><span class="s">&quot;morning&quot;</span><span class="p" data-group-id="7158224766-6">)</span><span class="w">
+</span><span class="s">&quot;Good morning&quot;</span></code></pre><p>The <code class="inline">&amp;1</code> represents the first argument passed into the function. <code class="inline">&amp;(&amp;1 + 1)</code> above is exactly the same as <code class="inline">fn x -&gt; x + 1 end</code>. You can read more about the capture operator <code class="inline">&amp;</code> in <a href="Kernel.SpecialForms.html#&/1">its documentation</a>.</p><p>Next let's revisit some of the data-types we learned in the past and dig deeper into how they work.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="case-cond-and-if.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+case, cond, and if
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="binaries-strings-and-charlists.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Binaries, strings, and charlists
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

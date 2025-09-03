@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Processes — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/processes.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/processes.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Processes</span>
+  </h1>
+
+<p>In Elixir, all code runs inside processes. Processes are isolated from each other, run concurrent to one another and communicate via message passing. Processes are not only the basis for concurrency in Elixir, but they also provide the means for building distributed and fault-tolerant programs.</p><p>Elixir's processes should not be confused with operating system processes. Processes in Elixir are extremely lightweight in terms of memory and CPU (even compared to threads as used in many other programming languages). Because of this, it is not uncommon to have tens or even hundreds of thousands of processes running simultaneously.</p><p>In this chapter, we will learn about the basic constructs for spawning new processes, as well as sending and receiving messages between processes.</p><h2 id="spawning-processes" class="section-heading">
+  <a href="#spawning-processes" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Spawning processes</span>
+</h2>
+<p>The basic mechanism for spawning new processes is the auto-imported <a href="Kernel.html#spawn/1"><code class="inline">spawn/1</code></a> function:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">spawn</span><span class="p" data-group-id="9761711302-1">(</span><span class="k" data-group-id="9761711302-2">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k" data-group-id="9761711302-2">end</span><span class="p" data-group-id="9761711302-1">)</span><span class="w">
+</span><span class="p" data-group-id="9761711302-3">#</span><span class="nc" data-group-id="9761711302-3">PID</span><span class="p" data-group-id="9761711302-3">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">43</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="9761711302-3">&gt;</span></code></pre><p><a href="Kernel.html#spawn/1"><code class="inline">spawn/1</code></a> takes a function which it will execute in another process.</p><p>Notice <a href="Kernel.html#spawn/1"><code class="inline">spawn/1</code></a> returns a PID (process identifier). At this point, the process you spawned is very likely dead. The spawned process will execute the given function and exit after the function is done:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">pid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">spawn</span><span class="p" data-group-id="4462784372-1">(</span><span class="k" data-group-id="4462784372-2">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k" data-group-id="4462784372-2">end</span><span class="p" data-group-id="4462784372-1">)</span><span class="w">
+</span><span class="p" data-group-id="4462784372-3">#</span><span class="nc" data-group-id="4462784372-3">PID</span><span class="p" data-group-id="4462784372-3">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">44</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="4462784372-3">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Process</span><span class="o">.</span><span class="n">alive?</span><span class="p" data-group-id="4462784372-4">(</span><span class="n">pid</span><span class="p" data-group-id="4462784372-4">)</span><span class="w">
+</span><span class="no">false</span></code></pre><blockquote><p>Note: you will likely get different process identifiers than the ones we are showing in our snippets.</p></blockquote><p>We can retrieve the PID of the current process by calling <a href="Kernel.html#self/0"><code class="inline">self/0</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">self</span><span class="p" data-group-id="0311982636-1">(</span><span class="p" data-group-id="0311982636-1">)</span><span class="w">
+</span><span class="p" data-group-id="0311982636-2">#</span><span class="nc" data-group-id="0311982636-2">PID</span><span class="p" data-group-id="0311982636-2">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">41</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="0311982636-2">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Process</span><span class="o">.</span><span class="n">alive?</span><span class="p" data-group-id="0311982636-3">(</span><span class="n">self</span><span class="p" data-group-id="0311982636-4">(</span><span class="p" data-group-id="0311982636-4">)</span><span class="p" data-group-id="0311982636-3">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Processes get much more interesting when we are able to send and receive messages.</p><h2 id="sending-and-receiving-messages" class="section-heading">
+  <a href="#sending-and-receiving-messages" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Sending and receiving messages</span>
+</h2>
+<p>We can send messages to a process with <a href="Kernel.html#send/2"><code class="inline">send/2</code></a> and receive them with <a href="Kernel.SpecialForms.html#receive/1"><code class="inline">receive/1</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">send</span><span class="p" data-group-id="8303652057-1">(</span><span class="n">self</span><span class="p" data-group-id="8303652057-2">(</span><span class="p" data-group-id="8303652057-2">)</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8303652057-3">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p" data-group-id="8303652057-3">}</span><span class="p" data-group-id="8303652057-1">)</span><span class="w">
+</span><span class="p" data-group-id="8303652057-4">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;world&quot;</span><span class="p" data-group-id="8303652057-4">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="k">receive</span><span class="w"> </span><span class="k" data-group-id="8303652057-5">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="p" data-group-id="8303652057-6">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p" data-group-id="8303652057-6">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">msg</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="p" data-group-id="8303652057-7">{</span><span class="ss">:world</span><span class="p">,</span><span class="w"> </span><span class="c">_msg</span><span class="p" data-group-id="8303652057-7">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;won&#39;t match&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="8303652057-5">end</span><span class="w">
+</span><span class="s">&quot;world&quot;</span></code></pre><p>When a message is sent to a process, the message is stored in the process mailbox. The <a href="Kernel.SpecialForms.html#receive/1"><code class="inline">receive/1</code></a> block goes through the current process mailbox searching for a message that matches any of the given patterns. <a href="Kernel.SpecialForms.html#receive/1"><code class="inline">receive/1</code></a> supports guards and many clauses, such as <a href="Kernel.SpecialForms.html#case/2"><code class="inline">case/2</code></a>.</p><p>The process that sends the message does not block on <a href="Kernel.html#send/2"><code class="inline">send/2</code></a>, it puts the message in the recipient's mailbox and continues. In particular, a process can send messages to itself.</p><p>If there is no message in the mailbox matching any of the patterns, the current process will wait until a matching message arrives. A timeout can also be specified:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="k">receive</span><span class="w"> </span><span class="k" data-group-id="5813623537-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="p" data-group-id="5813623537-2">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="p" data-group-id="5813623537-2">}</span><span class="w">  </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">msg</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="5813623537-1">after</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="mi">1_000</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;nothing after 1s&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="5813623537-1">end</span><span class="w">
+</span><span class="s">&quot;nothing after 1s&quot;</span></code></pre><p>A timeout of 0 can be given when you already expect the message to be in the mailbox.</p><p>Let's put it all together and send messages between processes:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="5667885283-1">(</span><span class="p" data-group-id="5667885283-1">)</span><span class="w">
+</span><span class="p" data-group-id="5667885283-2">#</span><span class="nc" data-group-id="5667885283-2">PID</span><span class="p" data-group-id="5667885283-2">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">41</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="5667885283-2">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">spawn</span><span class="p" data-group-id="5667885283-3">(</span><span class="k" data-group-id="5667885283-4">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">send</span><span class="p" data-group-id="5667885283-5">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="5667885283-6">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="5667885283-7">(</span><span class="p" data-group-id="5667885283-7">)</span><span class="p" data-group-id="5667885283-6">}</span><span class="p" data-group-id="5667885283-5">)</span><span class="w"> </span><span class="k" data-group-id="5667885283-4">end</span><span class="p" data-group-id="5667885283-3">)</span><span class="w">
+</span><span class="p" data-group-id="5667885283-8">#</span><span class="nc" data-group-id="5667885283-8">PID</span><span class="p" data-group-id="5667885283-8">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">48</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="5667885283-8">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="k">receive</span><span class="w"> </span><span class="k" data-group-id="5667885283-9">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="p" data-group-id="5667885283-10">{</span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="5667885283-10">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="s">&quot;Got hello from </span><span class="si" data-group-id="5667885283-11">#{</span><span class="n">inspect</span><span class="w"> </span><span class="n">pid</span><span class="si" data-group-id="5667885283-11">}</span><span class="s">&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="5667885283-9">end</span><span class="w">
+</span><span class="s">&quot;Got hello from #PID&lt;0.48.0&gt;&quot;</span></code></pre><p>The <a href="Kernel.html#inspect/1"><code class="inline">inspect/1</code></a> function is used to convert a data structure's internal representation into a string, typically for printing. Notice that when the <code class="inline">receive</code> block gets executed the sender process we have spawned may already be dead, as its only instruction was to send a message.</p><p>While in the shell, you may find the helper <code class="inline">flush/0</code> quite useful. It flushes and prints all the messages in the mailbox.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">send</span><span class="p" data-group-id="6920308154-1">(</span><span class="n">self</span><span class="p" data-group-id="6920308154-2">(</span><span class="p" data-group-id="6920308154-2">)</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p" data-group-id="6920308154-1">)</span><span class="w">
+</span><span class="ss">:hello</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">flush</span><span class="p" data-group-id="6920308154-3">(</span><span class="p" data-group-id="6920308154-3">)</span><span class="w">
+</span><span class="ss">:hello</span><span class="w">
+</span><span class="ss">:ok</span></code></pre><h2 id="links" class="section-heading">
+  <a href="#links" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Links</span>
+</h2>
+<p>The majority of times we spawn processes in Elixir, we spawn them as linked processes. Before we show an example with <a href="Kernel.html#spawn_link/1"><code class="inline">spawn_link/1</code></a>, let's see what happens when a process started with <a href="Kernel.html#spawn/1"><code class="inline">spawn/1</code></a> fails:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">spawn</span><span class="p" data-group-id="1759330318-1">(</span><span class="k" data-group-id="1759330318-2">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="w"> </span><span class="k" data-group-id="1759330318-2">end</span><span class="p" data-group-id="1759330318-1">)</span><span class="w">
+</span><span class="p" data-group-id="1759330318-3">#</span><span class="nc" data-group-id="1759330318-3">PID</span><span class="p" data-group-id="1759330318-3">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">58</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="1759330318-3">&gt;</span><span class="w">
+
+</span><span class="p" data-group-id="1759330318-4">[</span><span class="n">error</span><span class="p" data-group-id="1759330318-4">]</span><span class="w"> </span><span class="nc">Process</span><span class="w"> </span><span class="p" data-group-id="1759330318-5">#</span><span class="nc" data-group-id="1759330318-5">PID</span><span class="p" data-group-id="1759330318-5">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">58</span><span class="o">.</span><span class="mi">00</span><span class="p" data-group-id="1759330318-5">&gt;</span><span class="w"> </span><span class="n">raised</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">exception</span><span class="w">
+</span><span class="gt">** (RuntimeError) oops
+    (stdlib) erl_eval.erl:668: :erl_eval.do_apply/6</span></code></pre><p>It merely logged an error but the parent process is still running. That's because processes are isolated. If we want the failure in one process to propagate to another one, we should link them. This can be done with <a href="Kernel.html#spawn_link/1"><code class="inline">spawn_link/1</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">self</span><span class="p" data-group-id="5581800613-1">(</span><span class="p" data-group-id="5581800613-1">)</span><span class="w">
+</span><span class="p" data-group-id="5581800613-2">#</span><span class="nc" data-group-id="5581800613-2">PID</span><span class="p" data-group-id="5581800613-2">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">41</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="5581800613-2">&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">spawn_link</span><span class="p" data-group-id="5581800613-3">(</span><span class="k" data-group-id="5581800613-4">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="w"> </span><span class="k" data-group-id="5581800613-4">end</span><span class="p" data-group-id="5581800613-3">)</span><span class="w">
+
+</span><span class="gt">** (EXIT from #PID&lt;0.41.0&gt;) evaluator process exited with reason: an exception was raised:
+    ** (RuntimeError) oops
+        (stdlib) erl_eval.erl:668: :erl_eval.do_apply/6</span><span class="w">
+
+</span><span class="p" data-group-id="5581800613-5">[</span><span class="n">error</span><span class="p" data-group-id="5581800613-5">]</span><span class="w"> </span><span class="nc">Process</span><span class="w"> </span><span class="p" data-group-id="5581800613-6">#</span><span class="nc" data-group-id="5581800613-6">PID</span><span class="p" data-group-id="5581800613-6">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">289</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="5581800613-6">&gt;</span><span class="w"> </span><span class="n">raised</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">exception</span><span class="w">
+</span><span class="gt">** (RuntimeError) oops
+    (stdlib) erl_eval.erl:668: :erl_eval.do_apply/6</span></code></pre><p>Because processes are linked, we now see a message saying the parent process, which is the shell process, has received an EXIT signal from another process causing the shell to terminate. IEx detects this situation and starts a new shell session.</p><p>Linking can also be done manually by calling <a href="Process.html#link/1"><code class="inline">Process.link/1</code></a>. We recommend that you take a look at the <a href="Process.html"><code class="inline">Process</code></a> module for other functionality provided by processes.</p><p>Processes and links play an important role when building fault-tolerant systems. Elixir processes are isolated and don't share anything by default. Therefore, a failure in a process will never crash or corrupt the state of another process. Links, however, allow processes to establish a relationship in case of failure. We often link our processes to supervisors which will detect when a process dies and start a new process in its place.</p><p>While other languages would require us to catch/handle exceptions, in Elixir we are actually fine with letting processes fail because we expect supervisors to properly restart our systems. &quot;Failing fast&quot; (sometimes referred as &quot;let it crash&quot;) is a common philosophy when writing Elixir software!</p><p><a href="Kernel.html#spawn/1"><code class="inline">spawn/1</code></a> and <a href="Kernel.html#spawn_link/1"><code class="inline">spawn_link/1</code></a> are the basic primitives for creating processes in Elixir. Although we have used them exclusively so far, most of the time we are going to use abstractions that build on top of them. Let's see the most common one, called tasks.</p><h2 id="tasks" class="section-heading">
+  <a href="#tasks" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Tasks</span>
+</h2>
+<p>Tasks build on top of the spawn functions to provide better error reports and introspection:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">Task</span><span class="o">.</span><span class="n">start</span><span class="p" data-group-id="6365768255-1">(</span><span class="k" data-group-id="6365768255-2">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">raise</span><span class="w"> </span><span class="s">&quot;oops&quot;</span><span class="w"> </span><span class="k" data-group-id="6365768255-2">end</span><span class="p" data-group-id="6365768255-1">)</span><span class="w">
+</span><span class="p" data-group-id="6365768255-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="6365768255-4">#</span><span class="nc" data-group-id="6365768255-4">PID</span><span class="p" data-group-id="6365768255-4">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">55</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="6365768255-4">&gt;</span><span class="p" data-group-id="6365768255-3">}</span><span class="w">
+
+</span><span class="mi">15</span><span class="p">:</span><span class="mi">22</span><span class="p">:</span><span class="mf">33.046</span><span class="w"> </span><span class="p" data-group-id="6365768255-5">[</span><span class="n">error</span><span class="p" data-group-id="6365768255-5">]</span><span class="w"> </span><span class="nc">Task</span><span class="w"> </span><span class="p" data-group-id="6365768255-6">#</span><span class="nc" data-group-id="6365768255-6">PID</span><span class="p" data-group-id="6365768255-6">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">55</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="6365768255-6">&gt;</span><span class="w"> </span><span class="n">started</span><span class="w"> </span><span class="n">from</span><span class="w"> </span><span class="p" data-group-id="6365768255-7">#</span><span class="nc" data-group-id="6365768255-7">PID</span><span class="p" data-group-id="6365768255-7">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">53</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="6365768255-7">&gt;</span><span class="w"> </span><span class="n">terminating</span><span class="w">
+</span><span class="gt">** (RuntimeError) oops
+    (stdlib) erl_eval.erl:668: :erl_eval.do_apply/6
+    (elixir) lib/task/supervised.ex:85: Task.Supervised.do_apply/2
+    (stdlib) proc_lib.erl:247: :proc_lib.init_p_do_apply/3</span><span class="w">
+</span><span class="ss">Function</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6365768255-8">#</span><span class="nc" data-group-id="6365768255-8">Function</span><span class="p" data-group-id="6365768255-8">&lt;</span><span class="mf">20.99386804</span><span class="o">/</span><span class="mi">0</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">:erl_eval</span><span class="o">.</span><span class="n">expr</span><span class="o">/</span><span class="mi">5</span><span class="p" data-group-id="6365768255-8">&gt;</span><span class="w">
+    </span><span class="ss">Args</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="6365768255-9">[</span><span class="p" data-group-id="6365768255-9">]</span></code></pre><p>Instead of <a href="Kernel.html#spawn/1"><code class="inline">spawn/1</code></a> and <a href="Kernel.html#spawn_link/1"><code class="inline">spawn_link/1</code></a>, we use <a href="Task.html#start/1"><code class="inline">Task.start/1</code></a> and <a href="Task.html#start_link/1"><code class="inline">Task.start_link/1</code></a> which return <code class="inline">{:ok, pid}</code> rather than just the PID. This is what enables tasks to be used in supervision trees. Furthermore, <a href="Task.html"><code class="inline">Task</code></a> provides convenience functions, like <a href="Task.html#async/1"><code class="inline">Task.async/1</code></a> and <a href="Task.html#await/1"><code class="inline">Task.await/1</code></a>, and functionality to ease distribution.</p><p>We will explore tasks and other abstractions around processes in the <a href="introduction-to-mix.html">&quot;Mix and OTP guide&quot;</a>.</p><h2 id="state" class="section-heading">
+  <a href="#state" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">State</span>
+</h2>
+<p>We haven't talked about state so far. If you are building an application that requires state, for example, to keep your application configuration, or you need to parse a file and keep it in memory, where would you store it?</p><p>Processes are the most common answer to this question. We can write processes that loop infinitely, maintain state, and send and receive messages. As an example, let's write a module that starts new processes that work as a key-value store in a file named <code class="inline">kv.exs</code>:</p><pre><code class="makeup elixir" translate="no"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">KV</span><span class="w"> </span><span class="k" data-group-id="8920443286-1">do</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">start_link</span><span class="w"> </span><span class="k" data-group-id="8920443286-2">do</span><span class="w">
+    </span><span class="nc">Task</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="8920443286-3">(</span><span class="k" data-group-id="8920443286-4">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">loop</span><span class="p" data-group-id="8920443286-5">(</span><span class="p" data-group-id="8920443286-6">%{</span><span class="p" data-group-id="8920443286-6">}</span><span class="p" data-group-id="8920443286-5">)</span><span class="w"> </span><span class="k" data-group-id="8920443286-4">end</span><span class="p" data-group-id="8920443286-3">)</span><span class="w">
+  </span><span class="k" data-group-id="8920443286-2">end</span><span class="w">
+
+  </span><span class="kd">defp</span><span class="w"> </span><span class="nf">loop</span><span class="p" data-group-id="8920443286-7">(</span><span class="n">map</span><span class="p" data-group-id="8920443286-7">)</span><span class="w"> </span><span class="k" data-group-id="8920443286-8">do</span><span class="w">
+    </span><span class="k">receive</span><span class="w"> </span><span class="k" data-group-id="8920443286-9">do</span><span class="w">
+      </span><span class="p" data-group-id="8920443286-10">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">caller</span><span class="p" data-group-id="8920443286-10">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">send</span><span class="p" data-group-id="8920443286-11">(</span><span class="n">caller</span><span class="p">,</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="8920443286-12">(</span><span class="n">map</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p" data-group-id="8920443286-12">)</span><span class="p" data-group-id="8920443286-11">)</span><span class="w">
+        </span><span class="n">loop</span><span class="p" data-group-id="8920443286-13">(</span><span class="n">map</span><span class="p" data-group-id="8920443286-13">)</span><span class="w">
+      </span><span class="p" data-group-id="8920443286-14">{</span><span class="ss">:put</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p" data-group-id="8920443286-14">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+        </span><span class="n">loop</span><span class="p" data-group-id="8920443286-15">(</span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="8920443286-16">(</span><span class="n">map</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p" data-group-id="8920443286-16">)</span><span class="p" data-group-id="8920443286-15">)</span><span class="w">
+    </span><span class="k" data-group-id="8920443286-9">end</span><span class="w">
+  </span><span class="k" data-group-id="8920443286-8">end</span><span class="w">
+</span><span class="k" data-group-id="8920443286-1">end</span></code></pre><p>Note that the <code class="inline">start_link</code> function starts a new process that runs the <code class="inline">loop/1</code> function, starting with an empty map. The <code class="inline">loop/1</code> (private) function then waits for messages and performs the appropriate action for each message. We made <code class="inline">loop/1</code> private by using <code class="inline">defp</code> instead of <code class="inline">def</code>. In the case of a <code class="inline">:get</code> message, it sends a message back to the caller and calls <code class="inline">loop/1</code> again, to wait for a new message. While the <code class="inline">:put</code> message actually invokes <code class="inline">loop/1</code> with a new version of the map, with the given <code class="inline">key</code> and <code class="inline">value</code> stored.</p><p>Let's give it a try by running <code class="inline">iex kv.exs</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="0006131538-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="0006131538-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">KV</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="0006131538-2">(</span><span class="p" data-group-id="0006131538-2">)</span><span class="w">
+</span><span class="p" data-group-id="0006131538-3">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0006131538-4">#</span><span class="nc" data-group-id="0006131538-4">PID</span><span class="p" data-group-id="0006131538-4">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">62</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="0006131538-4">&gt;</span><span class="p" data-group-id="0006131538-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">send</span><span class="p" data-group-id="0006131538-5">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0006131538-6">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="0006131538-7">(</span><span class="p" data-group-id="0006131538-7">)</span><span class="p" data-group-id="0006131538-6">}</span><span class="p" data-group-id="0006131538-5">)</span><span class="w">
+</span><span class="p" data-group-id="0006131538-8">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0006131538-9">#</span><span class="nc" data-group-id="0006131538-9">PID</span><span class="p" data-group-id="0006131538-9">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">41</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="0006131538-9">&gt;</span><span class="p" data-group-id="0006131538-8">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">flush</span><span class="p" data-group-id="0006131538-10">(</span><span class="p" data-group-id="0006131538-10">)</span><span class="w">
+</span><span class="no">nil</span><span class="w">
+</span><span class="ss">:ok</span></code></pre><p>At first, the process map has no keys, so sending a <code class="inline">:get</code> message and then flushing the current process inbox returns <code class="inline">nil</code>. Let's send a <code class="inline">:put</code> message and try it again:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">send</span><span class="p" data-group-id="9147947731-1">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9147947731-2">{</span><span class="ss">:put</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="ss">:world</span><span class="p" data-group-id="9147947731-2">}</span><span class="p" data-group-id="9147947731-1">)</span><span class="w">
+</span><span class="p" data-group-id="9147947731-3">{</span><span class="ss">:put</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="ss">:world</span><span class="p" data-group-id="9147947731-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">send</span><span class="p" data-group-id="9147947731-4">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9147947731-5">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="9147947731-6">(</span><span class="p" data-group-id="9147947731-6">)</span><span class="p" data-group-id="9147947731-5">}</span><span class="p" data-group-id="9147947731-4">)</span><span class="w">
+</span><span class="p" data-group-id="9147947731-7">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="9147947731-8">#</span><span class="nc" data-group-id="9147947731-8">PID</span><span class="p" data-group-id="9147947731-8">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">41</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="9147947731-8">&gt;</span><span class="p" data-group-id="9147947731-7">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">flush</span><span class="p" data-group-id="9147947731-9">(</span><span class="p" data-group-id="9147947731-9">)</span><span class="w">
+</span><span class="ss">:world</span><span class="w">
+</span><span class="ss">:ok</span></code></pre><p>Notice how the process is keeping a state and we can get and update this state by sending the process messages. In fact, any process that knows the <code class="inline">pid</code> above will be able to send it messages and manipulate the state.</p><p>It is also possible to register the <code class="inline">pid</code>, giving it a name, and allowing everyone that knows the name to send it messages:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">Process</span><span class="o">.</span><span class="n">register</span><span class="p" data-group-id="7347764118-1">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="ss">:kv</span><span class="p" data-group-id="7347764118-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">send</span><span class="p" data-group-id="7347764118-2">(</span><span class="ss">:kv</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7347764118-3">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="n">self</span><span class="p" data-group-id="7347764118-4">(</span><span class="p" data-group-id="7347764118-4">)</span><span class="p" data-group-id="7347764118-3">}</span><span class="p" data-group-id="7347764118-2">)</span><span class="w">
+</span><span class="p" data-group-id="7347764118-5">{</span><span class="ss">:get</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7347764118-6">#</span><span class="nc" data-group-id="7347764118-6">PID</span><span class="p" data-group-id="7347764118-6">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">41</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="7347764118-6">&gt;</span><span class="p" data-group-id="7347764118-5">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">flush</span><span class="p" data-group-id="7347764118-7">(</span><span class="p" data-group-id="7347764118-7">)</span><span class="w">
+</span><span class="ss">:world</span><span class="w">
+</span><span class="ss">:ok</span></code></pre><p>Using processes to maintain state and name registration are very common patterns in Elixir applications. However, most of the time, we won't implement those patterns manually as above, but by using one of the many abstractions that ship with Elixir. For example, Elixir provides <a href="Agent.html"><code class="inline">Agent</code></a>s, which are simple abstractions around state. Our code above could be directly written as:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1070166977-1">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">pid</span><span class="p" data-group-id="1070166977-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nc">Agent</span><span class="o">.</span><span class="n">start_link</span><span class="p" data-group-id="1070166977-2">(</span><span class="k" data-group-id="1070166977-3">fn</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="1070166977-4">%{</span><span class="p" data-group-id="1070166977-4">}</span><span class="w"> </span><span class="k" data-group-id="1070166977-3">end</span><span class="p" data-group-id="1070166977-2">)</span><span class="w">
+</span><span class="p" data-group-id="1070166977-5">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="1070166977-6">#</span><span class="nc" data-group-id="1070166977-6">PID</span><span class="p" data-group-id="1070166977-6">&lt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">72</span><span class="o">.</span><span class="mi">0</span><span class="p" data-group-id="1070166977-6">&gt;</span><span class="p" data-group-id="1070166977-5">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">update</span><span class="p" data-group-id="1070166977-7">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="1070166977-8">fn</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="1070166977-9">(</span><span class="n">map</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p">,</span><span class="w"> </span><span class="ss">:world</span><span class="p" data-group-id="1070166977-9">)</span><span class="w"> </span><span class="k" data-group-id="1070166977-8">end</span><span class="p" data-group-id="1070166977-7">)</span><span class="w">
+</span><span class="ss">:ok</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Agent</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="1070166977-10">(</span><span class="n">pid</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="1070166977-11">fn</span><span class="w"> </span><span class="n">map</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">Map</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="1070166977-12">(</span><span class="n">map</span><span class="p">,</span><span class="w"> </span><span class="ss">:hello</span><span class="p" data-group-id="1070166977-12">)</span><span class="w"> </span><span class="k" data-group-id="1070166977-11">end</span><span class="p" data-group-id="1070166977-10">)</span><span class="w">
+</span><span class="ss">:world</span></code></pre><p>A <code class="inline">:name</code> option could also be given to <a href="Agent.html#start_link/2"><code class="inline">Agent.start_link/2</code></a> and it would be automatically registered. Besides agents, Elixir provides an API for building generic servers (called <a href="GenServer.html"><code class="inline">GenServer</code></a>), registries, and more, all powered by processes underneath. Those, along with supervision trees, will be explored with more detail in the <a href="introduction-to-mix.html">&quot;Mix and OTP guide&quot;</a>, which will build a complete Elixir application from start to finish.</p><p>For now, let's move on and explore the world of I/O in Elixir.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="enumerable-and-streams.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Enumerables and Streams
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="io-and-the-file-system.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+IO and the file system
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

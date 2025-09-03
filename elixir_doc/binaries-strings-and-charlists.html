@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Binaries, strings, and charlists — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/binaries-strings-and-charlists.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/binaries-strings-and-charlists.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Binaries, strings, and charlists</span>
+  </h1>
+
+<p>In <a href="basic-types.html">&quot;Basic types&quot;</a>, we learned a bit about strings and we used the <a href="Kernel.html#is_binary/1"><code class="inline">is_binary/1</code></a> function for checks:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="w">
+</span><span class="s">&quot;hello&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="8298835186-1">(</span><span class="n">string</span><span class="p" data-group-id="8298835186-1">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>In this chapter, we will gain clarity on what exactly binaries are and how they relate to strings. We will also learn about charlists, <code class="inline">~c&quot;like this&quot;</code>, which are often used for interoperability with Erlang.</p><p>Although strings are one of the most common data types in computer languages, they are subtly complex and are often misunderstood. To understand strings in Elixir, let's first discuss <a href="https://en.wikipedia.org/wiki/Unicode">Unicode</a> and character encodings, specifically the <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.</p><h2 id="unicode-and-code-points" class="section-heading">
+  <a href="#unicode-and-code-points" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Unicode and Code Points</span>
+</h2>
+<p>In order to facilitate meaningful communication between computers across multiple languages, a standard is required so that the ones and zeros on one machine mean the same thing when they are transmitted to another. The <a href="https://unicode.org/standard/standard.html">Unicode Standard</a> acts as an official registry of virtually all the characters we know: this includes characters from classical and historical texts, emoji, and formatting and control characters as well.</p><p>Unicode organizes all of the characters in its repertoire into code charts, and each character is given a unique numerical index. This numerical index is known as a <a href="https://en.wikipedia.org/wiki/Code_point">Code Point</a>.</p><p>In Elixir you can use a <code class="inline">?</code> in front of a character literal to reveal its code point:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="sc">?a</span><span class="w">
+</span><span class="mi">97</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="sc">?ł</span><span class="w">
+</span><span class="mi">322</span></code></pre><p>Note that most Unicode code charts will refer to a code point by its hexadecimal (hex) representation, e.g. <code class="inline">97</code> translates to <code class="inline">0061</code> in hex, and we can represent any Unicode character in an Elixir string by using the <code class="inline">\uXXXX</code> notation and the hex representation of its code point number:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;</span><span class="se">\u0061</span><span class="s">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;a&quot;</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="mh">0x0061</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">97</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sc">?a</span><span class="w">
+</span><span class="mi">97</span></code></pre><p>The hex representation will also help you look up information about a code point, e.g. <a href="https://codepoints.net/U+0061">https://codepoints.net/U+0061</a> has a data sheet all about the lower case <code class="inline">a</code>, a.k.a. code point 97.</p><h2 id="utf-8-and-encodings" class="section-heading">
+  <a href="#utf-8-and-encodings" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">UTF-8 and Encodings</span>
+</h2>
+<p>Now that we understand what the Unicode standard is and what code points are, we can finally talk about encodings. Whereas the code point is <strong>what</strong> we store, an encoding deals with <strong>how</strong> we store it: encoding is an implementation. In other words, we need a mechanism to convert the code point numbers into bytes so they can be stored in memory, written to disk, etc.</p><p>Elixir uses UTF-8 to encode its strings, which means that code points are encoded as a series of 8-bit bytes. UTF-8 is a <strong>variable width</strong> character encoding that uses one to four bytes to store each code point. It is capable of encoding all valid Unicode code points. Let's see an example:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;héllo&quot;</span><span class="w">
+</span><span class="s">&quot;héllo&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">length</span><span class="p" data-group-id="9681080104-1">(</span><span class="n">string</span><span class="p" data-group-id="9681080104-1">)</span><span class="w">
+</span><span class="mi">5</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">byte_size</span><span class="p" data-group-id="9681080104-2">(</span><span class="n">string</span><span class="p" data-group-id="9681080104-2">)</span><span class="w">
+</span><span class="mi">6</span></code></pre><p>Although the string above has 5 characters, it uses 6 bytes, as two bytes are used to represent the character <code class="inline">é</code>.</p><blockquote><p>Note: if you are running on Windows, there is a chance your terminal does not use UTF-8 by default. You can change the encoding of your current session by running <code class="inline">chcp 65001</code> before entering <code class="inline">iex</code> (<code class="inline">iex.bat</code>).</p></blockquote><p>Besides defining characters, UTF-8 also provides a notion of graphemes. Graphemes may consist of multiple characters that are often perceived as one. For example, the <a href="https://emojipedia.org/woman-firefighter/">woman firefighter emoji</a> is represented as the combination of three characters: the woman emoji (👩), a hidden zero-width joiner, and the fire engine emoji (🚒):</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">codepoints</span><span class="p" data-group-id="3819884464-1">(</span><span class="s">&quot;👩‍🚒&quot;</span><span class="p" data-group-id="3819884464-1">)</span><span class="w">
+</span><span class="p" data-group-id="3819884464-2">[</span><span class="s">&quot;👩&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;‍&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;🚒&quot;</span><span class="p" data-group-id="3819884464-2">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">graphemes</span><span class="p" data-group-id="3819884464-3">(</span><span class="s">&quot;👩‍🚒&quot;</span><span class="p" data-group-id="3819884464-3">)</span><span class="w">
+</span><span class="p" data-group-id="3819884464-4">[</span><span class="s">&quot;👩‍🚒&quot;</span><span class="p" data-group-id="3819884464-4">]</span></code></pre><p>However, Elixir is smart enough to know they are seen as a single character, and therefore the length is still one:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">length</span><span class="p" data-group-id="9315013136-1">(</span><span class="s">&quot;👩‍🚒&quot;</span><span class="p" data-group-id="9315013136-1">)</span><span class="w">
+</span><span class="mi">1</span></code></pre><blockquote><p>Note: if you can't see the emoji above in your terminal, you need to make sure your terminal supports emoji and that you are using a font that can render them.</p></blockquote><p>Although these rules may sound complicated, UTF-8 encoded documents are everywhere. This page itself is encoded in UTF-8. The encoding information is given to your browser which then knows how to render all of the bytes, characters, and graphemes accordingly.</p><p>If you want to see the exact bytes that a string would be stored in a file, a common trick is to concatenate the null byte <code class="inline">&lt;&lt;0&gt;&gt;</code> to it:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;hełło&quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="3173170085-1">&lt;&lt;</span><span class="mi">0</span><span class="p" data-group-id="3173170085-1">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="3173170085-2">&lt;&lt;</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">197</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span><span class="w"> </span><span class="mi">197</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span><span class="w"> </span><span class="mi">111</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="3173170085-2">&gt;&gt;</span></code></pre><p>Alternatively, you can view a string's binary representation by using <a href="IO.html#inspect/2"><code class="inline">IO.inspect/2</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">IO</span><span class="o">.</span><span class="n">inspect</span><span class="p" data-group-id="2862511027-1">(</span><span class="s">&quot;hełło&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">binaries</span><span class="p">:</span><span class="w"> </span><span class="ss">:as_binaries</span><span class="p" data-group-id="2862511027-1">)</span><span class="w">
+</span><span class="p" data-group-id="2862511027-2">&lt;&lt;</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">197</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span><span class="w"> </span><span class="mi">197</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">,</span><span class="w"> </span><span class="mi">111</span><span class="p" data-group-id="2862511027-2">&gt;&gt;</span></code></pre><p>We are getting a little bit ahead of ourselves. Let's talk about bitstrings to learn about what exactly the <code class="inline">&lt;&lt;&gt;&gt;</code> constructor means.</p><h2 id="bitstrings" class="section-heading">
+  <a href="#bitstrings" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Bitstrings</span>
+</h2>
+<p>Although we have covered code points and UTF-8 encoding, we still need to go a bit deeper into how exactly we store the encoded bytes, and this is where we introduce the <strong>bitstring</strong>. A bitstring is a fundamental data type in Elixir, denoted with the <a href="Kernel.SpecialForms.html#%3C%3C%3E%3E/1"><code class="inline">&lt;&lt;&gt;&gt;</code></a> syntax. <strong>A bitstring is a contiguous sequence of bits in memory.</strong></p><p>By default, 8 bits (i.e. 1 byte) is used to store each number in a bitstring, but you can manually specify the number of bits via a <code class="inline">::n</code> modifier to denote the size in <code class="inline">n</code> bits, or you can use the more verbose declaration <code class="inline">::size(n)</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9426899948-1">&lt;&lt;</span><span class="mi">42</span><span class="p" data-group-id="9426899948-1">&gt;&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="9426899948-2">&lt;&lt;</span><span class="mi">42</span><span class="o">::</span><span class="mi">8</span><span class="p" data-group-id="9426899948-2">&gt;&gt;</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9426899948-3">&lt;&lt;</span><span class="mi">3</span><span class="o">::</span><span class="mi">4</span><span class="p" data-group-id="9426899948-3">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="9426899948-4">&lt;&lt;</span><span class="mi">3</span><span class="o">::</span><span class="n">size</span><span class="p" data-group-id="9426899948-5">(</span><span class="mi">4</span><span class="p" data-group-id="9426899948-5">)</span><span class="p" data-group-id="9426899948-4">&gt;&gt;</span></code></pre><p>For example, the decimal number <code class="inline">3</code> when represented with 4 bits in base 2 would be <code class="inline">0011</code>, which is equivalent to the values <code class="inline">0</code>, <code class="inline">0</code>, <code class="inline">1</code>, <code class="inline">1</code>, each stored using 1 bit:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7105922223-1">&lt;&lt;</span><span class="mi">0</span><span class="o">::</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="o">::</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">::</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">::</span><span class="mi">1</span><span class="p" data-group-id="7105922223-1">&gt;&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="7105922223-2">&lt;&lt;</span><span class="mi">3</span><span class="o">::</span><span class="mi">4</span><span class="p" data-group-id="7105922223-2">&gt;&gt;</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Any value that exceeds what can be stored by the number of bits provisioned is truncated:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="5885647113-1">&lt;&lt;</span><span class="mi">1</span><span class="p" data-group-id="5885647113-1">&gt;&gt;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="5885647113-2">&lt;&lt;</span><span class="mi">257</span><span class="p" data-group-id="5885647113-2">&gt;&gt;</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Here, 257 in base 2 would be represented as <code class="inline">100000001</code>, but since we have reserved only 8 bits for its representation (by default), the left-most bit is ignored and the value becomes truncated to <code class="inline">00000001</code>, or simply <code class="inline">1</code> in decimal.</p><p>A complete reference for the bitstring constructor can be found in <a href="Kernel.SpecialForms.html#%3C%3C%3E%3E/1"><code class="inline">&lt;&lt;&gt;&gt;</code></a>'s documentation.</p><h2 id="binaries" class="section-heading">
+  <a href="#binaries" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Binaries</span>
+</h2>
+<p><strong>A binary is a bitstring where the number of bits is divisible by 8.</strong> That means that every binary is a bitstring, but not every bitstring is a binary. We can use the <a href="Kernel.html#is_bitstring/1"><code class="inline">is_bitstring/1</code></a> and <a href="Kernel.html#is_binary/1"><code class="inline">is_binary/1</code></a> functions to demonstrate this.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">is_bitstring</span><span class="p" data-group-id="1939710357-1">(</span><span class="p" data-group-id="1939710357-2">&lt;&lt;</span><span class="mi">3</span><span class="o">::</span><span class="mi">4</span><span class="p" data-group-id="1939710357-2">&gt;&gt;</span><span class="p" data-group-id="1939710357-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="1939710357-3">(</span><span class="p" data-group-id="1939710357-4">&lt;&lt;</span><span class="mi">3</span><span class="o">::</span><span class="mi">4</span><span class="p" data-group-id="1939710357-4">&gt;&gt;</span><span class="p" data-group-id="1939710357-3">)</span><span class="w">
+</span><span class="no">false</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_bitstring</span><span class="p" data-group-id="1939710357-5">(</span><span class="p" data-group-id="1939710357-6">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p" data-group-id="1939710357-6">&gt;&gt;</span><span class="p" data-group-id="1939710357-5">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="1939710357-7">(</span><span class="p" data-group-id="1939710357-8">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p" data-group-id="1939710357-8">&gt;&gt;</span><span class="p" data-group-id="1939710357-7">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="1939710357-9">(</span><span class="p" data-group-id="1939710357-10">&lt;&lt;</span><span class="mi">42</span><span class="o">::</span><span class="mi">16</span><span class="p" data-group-id="1939710357-10">&gt;&gt;</span><span class="p" data-group-id="1939710357-9">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>We can pattern match on binaries / bitstrings:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7409507852-1">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p" data-group-id="7409507852-1">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="7409507852-2">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="7409507852-2">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="7409507852-3">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="7409507852-3">&gt;&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w">
+</span><span class="mi">2</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7409507852-4">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p" data-group-id="7409507852-4">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="7409507852-5">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="7409507852-5">&gt;&gt;</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: &lt;&lt;0, 1, 2, 3&gt;&gt;</span></code></pre><p>Note that unless you explicitly use <code class="inline">::</code> modifiers, each entry in the binary pattern is expected to match a single byte (exactly 8 bits). If we want to match on a binary of unknown size, we can use the <code class="inline">binary</code> modifier at the end of the pattern:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="2933511691-1">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="o">::</span><span class="n">binary</span><span class="p" data-group-id="2933511691-1">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2933511691-2">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="2933511691-2">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="2933511691-3">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="2933511691-3">&gt;&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w">
+</span><span class="p" data-group-id="2933511691-4">&lt;&lt;</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="2933511691-4">&gt;&gt;</span></code></pre><p>There are a couple other modifiers that can be useful when doing pattern matches on binaries. The <code class="inline">binary-size(n)</code> modifier will match <code class="inline">n</code> bytes in a binary:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="7848850916-1">&lt;&lt;</span><span class="n">head</span><span class="o">::</span><span class="n">binary</span><span class="o">-</span><span class="n">size</span><span class="p" data-group-id="7848850916-2">(</span><span class="mi">2</span><span class="p" data-group-id="7848850916-2">)</span><span class="p">,</span><span class="w"> </span><span class="n">rest</span><span class="o">::</span><span class="n">binary</span><span class="p" data-group-id="7848850916-1">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="7848850916-3">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="7848850916-3">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="7848850916-4">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="7848850916-4">&gt;&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">head</span><span class="w">
+</span><span class="p" data-group-id="7848850916-5">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="7848850916-5">&gt;&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">rest</span><span class="w">
+</span><span class="p" data-group-id="7848850916-6">&lt;&lt;</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="7848850916-6">&gt;&gt;</span></code></pre><p><strong>A string is a UTF-8 encoded binary</strong>, where the code point for each character is encoded using 1 to 4 bytes. Thus every string is a binary, but due to the UTF-8 standard encoding rules, not every binary is a valid string.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="1632426621-1">(</span><span class="s">&quot;hello&quot;</span><span class="p" data-group-id="1632426621-1">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_binary</span><span class="p" data-group-id="1632426621-2">(</span><span class="p" data-group-id="1632426621-3">&lt;&lt;</span><span class="mi">239</span><span class="p">,</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span><span class="w"> </span><span class="mi">19</span><span class="p" data-group-id="1632426621-3">&gt;&gt;</span><span class="p" data-group-id="1632426621-2">)</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">valid?</span><span class="p" data-group-id="1632426621-4">(</span><span class="p" data-group-id="1632426621-5">&lt;&lt;</span><span class="mi">239</span><span class="p">,</span><span class="w"> </span><span class="mi">191</span><span class="p">,</span><span class="w"> </span><span class="mi">19</span><span class="p" data-group-id="1632426621-5">&gt;&gt;</span><span class="p" data-group-id="1632426621-4">)</span><span class="w">
+</span><span class="no">false</span></code></pre><p>The string concatenation operator <code class="inline">&lt;&gt;</code> is actually a binary concatenation operator:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;a&quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot;ha&quot;</span><span class="w">
+</span><span class="s">&quot;aha&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1364558815-1">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="1364558815-1">&gt;&gt;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="1364558815-2">&lt;&lt;</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="1364558815-2">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="1364558815-3">&lt;&lt;</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="1364558815-3">&gt;&gt;</span></code></pre><p>Given that strings are binaries, we can also pattern match on strings:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="6124631499-1">&lt;&lt;</span><span class="n">head</span><span class="p">,</span><span class="w"> </span><span class="n">rest</span><span class="o">::</span><span class="n">binary</span><span class="p" data-group-id="6124631499-1">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;banana&quot;</span><span class="w">
+</span><span class="s">&quot;banana&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">head</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">?b</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">rest</span><span class="w">
+</span><span class="s">&quot;anana&quot;</span></code></pre><p>However, remember that binary pattern matching works on <em>bytes</em>, so matching on the string like &quot;über&quot; with multibyte characters won't match on the <em>character</em>, it will match on the <em>first byte of that character</em>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">&quot;ü&quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="p" data-group-id="9920980795-1">&lt;&lt;</span><span class="mi">0</span><span class="p" data-group-id="9920980795-1">&gt;&gt;</span><span class="w">
+</span><span class="p" data-group-id="9920980795-2">&lt;&lt;</span><span class="mi">195</span><span class="p">,</span><span class="w"> </span><span class="mi">188</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="9920980795-2">&gt;&gt;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9920980795-3">&lt;&lt;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">rest</span><span class="o">::</span><span class="n">binary</span><span class="p" data-group-id="9920980795-3">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;über&quot;</span><span class="w">
+</span><span class="s">&quot;über&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">?ü</span><span class="w">
+</span><span class="no">false</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">rest</span><span class="w">
+</span><span class="p" data-group-id="9920980795-4">&lt;&lt;</span><span class="mi">188</span><span class="p">,</span><span class="w"> </span><span class="mi">98</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">114</span><span class="p" data-group-id="9920980795-4">&gt;&gt;</span></code></pre><p>Above, <code class="inline">x</code> matched on only the first byte of the multibyte <code class="inline">ü</code> character.</p><p>Therefore, when pattern matching on strings, it is important to use the <code class="inline">utf8</code> modifier:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8025918447-1">&lt;&lt;</span><span class="n">x</span><span class="o">::</span><span class="n">utf8</span><span class="p">,</span><span class="w"> </span><span class="n">rest</span><span class="o">::</span><span class="n">binary</span><span class="p" data-group-id="8025918447-1">&gt;&gt;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;über&quot;</span><span class="w">
+</span><span class="s">&quot;über&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="sc">?ü</span><span class="w">
+</span><span class="no">true</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">rest</span><span class="w">
+</span><span class="s">&quot;ber&quot;</span></code></pre><h2 id="charlists" class="section-heading">
+  <a href="#charlists" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Charlists</span>
+</h2>
+<p>Our tour of our bitstrings, binaries, and strings is nearly complete, but we have one more data type to explain: the charlist.</p><p><strong>A charlist is a list of integers where all the integers are valid code points.</strong> In practice, you will not come across them often, only in specific scenarios such as interfacing with older Erlang libraries that do not accept binaries as arguments.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">~c&quot;hello&quot;</span><span class="w">
+</span><span class="s">~c&quot;hello&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="0391848785-1">[</span><span class="sc">?h</span><span class="p">,</span><span class="w"> </span><span class="sc">?e</span><span class="p">,</span><span class="w"> </span><span class="sc">?l</span><span class="p">,</span><span class="w"> </span><span class="sc">?l</span><span class="p">,</span><span class="w"> </span><span class="sc">?o</span><span class="p" data-group-id="0391848785-1">]</span><span class="w">
+</span><span class="s">~c&quot;hello&quot;</span></code></pre><p>The <code class="inline">~c</code> sigil (we'll cover sigils later in the <a href="sigils.html">&quot;Sigils&quot;</a> chapter) indicates the fact that we are dealing with a charlist and not a regular string.</p><p>Instead of containing bytes, a charlist contains integer code points. However, the list is only printed as a sigil if all code points are within the ASCII range:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">~c&quot;hełło&quot;</span><span class="w">
+</span><span class="p" data-group-id="6832442673-1">[</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">322</span><span class="p">,</span><span class="w"> </span><span class="mi">322</span><span class="p">,</span><span class="w"> </span><span class="mi">111</span><span class="p" data-group-id="6832442673-1">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">is_list</span><span class="p" data-group-id="6832442673-2">(</span><span class="s">~c&quot;hełło&quot;</span><span class="p" data-group-id="6832442673-2">)</span><span class="w">
+</span><span class="no">true</span></code></pre><p>This is done to ease interoperability with Erlang, even though it may lead to some surprising behavior. For example, if you are storing a list of integers that happen to range between 0 and 127, by default IEx will interpret this as a charlist and it will display the corresponding ASCII characters.</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">heartbeats_per_minute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3672255524-1">[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">97</span><span class="p">,</span><span class="w"> </span><span class="mi">116</span><span class="p" data-group-id="3672255524-1">]</span><span class="w">
+</span><span class="s">~c&quot;cat&quot;</span></code></pre><p>You can always force charlists to be printed in their list representation by calling the <a href="Kernel.html#inspect/2"><code class="inline">inspect/2</code></a> function:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">inspect</span><span class="p" data-group-id="4650671580-1">(</span><span class="n">heartbeats_per_minute</span><span class="p">,</span><span class="w"> </span><span class="ss">charlists</span><span class="p">:</span><span class="w"> </span><span class="ss">:as_list</span><span class="p" data-group-id="4650671580-1">)</span><span class="w">
+</span><span class="s">&quot;[99, 97, 116]&quot;</span></code></pre><p>Furthermore, you can convert a charlist to a string and back by using the <a href="Kernel.html#to_string/1"><code class="inline">to_string/1</code></a> and <a href="Kernel.html#to_charlist/1"><code class="inline">to_charlist/1</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">to_charlist</span><span class="p" data-group-id="1279493845-1">(</span><span class="s">&quot;hełło&quot;</span><span class="p" data-group-id="1279493845-1">)</span><span class="w">
+</span><span class="p" data-group-id="1279493845-2">[</span><span class="mi">104</span><span class="p">,</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">322</span><span class="p">,</span><span class="w"> </span><span class="mi">322</span><span class="p">,</span><span class="w"> </span><span class="mi">111</span><span class="p" data-group-id="1279493845-2">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">to_string</span><span class="p" data-group-id="1279493845-3">(</span><span class="s">~c&quot;hełło&quot;</span><span class="p" data-group-id="1279493845-3">)</span><span class="w">
+</span><span class="s">&quot;hełło&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">to_string</span><span class="p" data-group-id="1279493845-4">(</span><span class="ss">:hello</span><span class="p" data-group-id="1279493845-4">)</span><span class="w">
+</span><span class="s">&quot;hello&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">to_string</span><span class="p" data-group-id="1279493845-5">(</span><span class="mi">1</span><span class="p" data-group-id="1279493845-5">)</span><span class="w">
+</span><span class="s">&quot;1&quot;</span></code></pre><p>The functions above are polymorphic, in other words, they accept many shapes: not only do they convert charlists to strings (and vice-versa), they can also convert integers, atoms, and so on.</p><p>String (binary) concatenation uses the <code class="inline">&lt;&gt;</code> operator but charlists, being lists, use the list concatenation operator <code class="inline">++</code>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="s">~c&quot;this &quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">~c&quot;fails&quot;</span><span class="w">
+</span><span class="gt">** (ArgumentError) expected binary argument in &lt;&gt; operator but got: ~c&quot;this &quot;
+    (elixir) lib/kernel.ex:1821: Kernel.wrap_concatenation/3
+    (elixir) lib/kernel.ex:1808: Kernel.extract_concatenations/2
+    (elixir) expanding macro: Kernel.&lt;&gt;/2
+    iex:1: (file)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">~c&quot;this &quot;</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="s">~c&quot;works&quot;</span><span class="w">
+</span><span class="s">~c&quot;this works&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;he&quot;</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="s">&quot;llo&quot;</span><span class="w">
+</span><span class="gt">** (ArgumentError) argument error
+    :erlang.++(&quot;he&quot;, &quot;llo&quot;)</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="s">&quot;he&quot;</span><span class="w"> </span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="s">&quot;llo&quot;</span><span class="w">
+</span><span class="s">&quot;hello&quot;</span></code></pre><p>With binaries, strings, and charlists out of the way, it is time to talk about key-value data structures.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="anonymous-functions.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Anonymous functions
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="keywords-and-maps.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Keyword lists and maps
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>

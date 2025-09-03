@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.34.2">
+    <meta name="project" content="Elixir v1.17.3">
+
+
+    <title>Keyword lists and maps — Elixir v1.17.3</title>
+    <link rel="stylesheet" href="dist/html-elixir-F2VRIOKR.css" />
+
+
+      <link rel="canonical" href="https://hexdocs.pm/elixir/keywords-and-maps.html" />
+
+    <script src="dist/handlebars.runtime-NWIB6V2M.js"></script>
+    <script src="dist/handlebars.templates-K7URE6B4.js"></script>
+    <script src="dist/sidebar_items-3D721A5F.js"></script>
+    <script src="docs_config.js"></script>
+    <script async src="dist/html-YIPIRHGU.js"></script>
+
+  </head>
+  <body data-type="extras" class="page-extra">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="body-wrapper">
+
+<button id="sidebar-menu" class="sidebar-button sidebar-toggle" aria-label="toggle sidebar" aria-controls="sidebar">
+  <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+</button>
+
+<nav id="sidebar" class="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectInfo">
+
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectImage">
+          <img src="assets/logo.png" alt="Elixir" />
+        </a>
+
+      <div>
+        <a href="https://elixir-lang.org/docs.html" class="sidebar-projectName" translate="no">
+Elixir
+        </a>
+        <div class="sidebar-projectVersion" translate="no">
+          v1.17.3
+        </div>
+      </div>
+    </div>
+    <ul id="sidebar-listNav" class="sidebar-listNav" role="tablist">
+      <li>
+        <button id="extras-list-tab-button" role="tab" data-type="extras" aria-controls="extras-tab-panel" aria-selected="true" tabindex="0">
+Pages
+        </button>
+      </li>
+
+        <li>
+          <button id="modules-list-tab-button" role="tab" data-type="modules" aria-controls="modules-tab-panel" aria-selected="false" tabindex="-1">
+            Modules
+          </button>
+        </li>
+
+
+    </ul>
+  </div>
+
+  <div id="extras-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="extras-list-tab-button">
+    <ul id="extras-full-list" class="full-list"></ul>
+  </div>
+
+    <div id="modules-tab-panel" class="sidebar-tabpanel" role="tabpanel" aria-labelledby="modules-list-tab-button" hidden>
+      <ul id="modules-full-list" class="full-list"></ul>
+    </div>
+
+
+</nav>
+
+<main class="content">
+  <output role="status" id="toast"></output>
+
+  <div id="content" class="content-inner">
+    <div class="top-search">
+      <div class="search-settings">
+        <form class="search-bar" action="search.html">
+          <label class="search-label">
+            <span class="sr-only">Search documentation of Elixir</span>
+            <input name="q" type="text" class="search-input" placeholder="Press / to search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+          </label>
+          <button type="submit" class="search-button" aria-label="Submit Search">
+            <i class="ri-search-2-line ri-lg" aria-hidden="true" title="Submit search"></i>
+          </button>
+          <button type="button" tabindex="-1" class="search-close-button" aria-hidden="true">
+            <i class="ri-close-line ri-lg" title="Cancel search"></i>
+          </button>
+        </form>
+        <div class="autocomplete">
+        </div>
+        <button class="icon-settings display-settings">
+          <i class="ri-settings-3-line"></i>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </div>
+
+<div id="top-content">
+  <h1>
+
+      <a href="https://github.com/elixir-lang/elixir/blob/v1.17.3/lib/elixir/pages/getting-started/keywords-and-maps.md#L1" title="View Source" class="icon-action" rel="help">
+        <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+        <span class="sr-only">View Source</span>
+      </a>
+
+
+    <span>Keyword lists and maps</span>
+  </h1>
+
+<p>Now let's talk about associative data structures. Associative data structures are able to associate a key to a certain value. Different languages call these different names like dictionaries, hashes, associative arrays, etc.</p><p>In Elixir, we have two main associative data structures: keyword lists and maps.</p><h2 id="keyword-lists" class="section-heading">
+  <a href="#keyword-lists" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Keyword lists</span>
+</h2>
+<p>Keyword lists are a data-structure used to pass options to functions. Imagine you want to split a string of numbers. We can use <a href="String.html#split/2"><code class="inline">String.split/2</code></a>:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">split</span><span class="p" data-group-id="6010871191-1">(</span><span class="s">&quot;1 2 3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p" data-group-id="6010871191-1">)</span><span class="w">
+</span><span class="p" data-group-id="6010871191-2">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p" data-group-id="6010871191-2">]</span></code></pre><p>However, what happens if there is an additional space between the numbers:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">split</span><span class="p" data-group-id="0387726555-1">(</span><span class="s">&quot;1  2  3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p" data-group-id="0387726555-1">)</span><span class="w">
+</span><span class="p" data-group-id="0387726555-2">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p" data-group-id="0387726555-2">]</span></code></pre><p>As you can see, there are now empty strings in our results. Luckily, the <a href="String.html#split/3"><code class="inline">String.split/3</code></a> function allows the <code class="inline">trim</code> option to be set to true:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">split</span><span class="p" data-group-id="7509178389-1">(</span><span class="s">&quot;1  2  3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="7509178389-2">[</span><span class="ss">trim</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="7509178389-2">]</span><span class="p" data-group-id="7509178389-1">)</span><span class="w">
+</span><span class="p" data-group-id="7509178389-3">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p" data-group-id="7509178389-3">]</span></code></pre><p><code class="inline">[trim: true]</code> is a keyword list. Furthermore, when a keyword list is the last argument of a function, we can skip the brackets and write:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">String</span><span class="o">.</span><span class="n">split</span><span class="p" data-group-id="7973486355-1">(</span><span class="s">&quot;1  2  3&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">trim</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="7973486355-1">)</span><span class="w">
+</span><span class="p" data-group-id="7973486355-2">[</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3&quot;</span><span class="p" data-group-id="7973486355-2">]</span></code></pre><p>As shown in the example above, keyword lists are mostly used as optional arguments to functions.</p><p>As the name implies, keyword lists are simply lists. In particular, they are lists consisting of 2-item tuples where the first element (the key) is an atom and the second element can be any value. Both representations are the same:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8103746485-1">[</span><span class="p" data-group-id="8103746485-2">{</span><span class="ss">:trim</span><span class="p">,</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="8103746485-2">}</span><span class="p" data-group-id="8103746485-1">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="8103746485-3">[</span><span class="ss">trim</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="8103746485-3">]</span><span class="w">
+</span><span class="no">true</span></code></pre><p>Since keyword lists are lists, we can use all operations available to lists. For example, we can use <code class="inline">++</code> to add new values to a keyword list:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="8722270856-1">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="8722270856-1">]</span><span class="w">
+</span><span class="p" data-group-id="8722270856-2">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="8722270856-2">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">list</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="p" data-group-id="8722270856-3">[</span><span class="ss">c</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8722270856-3">]</span><span class="w">
+</span><span class="p" data-group-id="8722270856-4">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="ss">c</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8722270856-4">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="8722270856-5">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="8722270856-5">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">list</span><span class="w">
+</span><span class="p" data-group-id="8722270856-6">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="8722270856-6">]</span></code></pre><p>You can read the value of a keyword list using the brackets syntax. This is also known as the access syntax, as it is defined by the <a href="Access.html"><code class="inline">Access</code></a> module:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">list</span><span class="p" data-group-id="6492489057-1">[</span><span class="ss">:a</span><span class="p" data-group-id="6492489057-1">]</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">list</span><span class="p" data-group-id="6492489057-2">[</span><span class="ss">:b</span><span class="p" data-group-id="6492489057-2">]</span><span class="w">
+</span><span class="mi">2</span></code></pre><p>In case of duplicate keys, values added to the front are the ones fetched:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">new_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5241056219-1">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p" data-group-id="5241056219-1">]</span><span class="w"> </span><span class="o">++</span><span class="w"> </span><span class="n">list</span><span class="w">
+</span><span class="p" data-group-id="5241056219-2">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="5241056219-2">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">new_list</span><span class="p" data-group-id="5241056219-3">[</span><span class="ss">:a</span><span class="p" data-group-id="5241056219-3">]</span><span class="w">
+</span><span class="mi">0</span></code></pre><p>Keyword lists are important because they have three special characteristics:</p><ul><li>Keys must be atoms.</li><li>Keys are ordered, as specified by the developer.</li><li>Keys can be given more than once.</li></ul><p>For example, <a href="https://github.com/elixir-lang/ecto">the Ecto library</a> makes use of these features to provide an elegant DSL for writing database queries:</p><pre><code class="makeup elixir" translate="no"><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w">
+  </span><span class="n">from</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="nc">Weather</span><span class="p">,</span><span class="w">
+    </span><span class="ss">where</span><span class="p">:</span><span class="w"> </span><span class="n">w</span><span class="o">.</span><span class="n">prcp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="ss">where</span><span class="p">:</span><span class="w"> </span><span class="n">w</span><span class="o">.</span><span class="n">temp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+    </span><span class="ss">select</span><span class="p">:</span><span class="w"> </span><span class="n">w</span></code></pre><p>Although we can pattern match on keyword lists, it is not done in practice since pattern matching on lists requires the number of items and their order to match:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9797095208-1">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="p" data-group-id="9797095208-1">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="9797095208-2">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="9797095208-2">]</span><span class="w">
+</span><span class="p" data-group-id="9797095208-3">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="9797095208-3">]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">a</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9797095208-4">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="p" data-group-id="9797095208-4">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="9797095208-5">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="9797095208-5">]</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: [a: 1, b: 2]</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9797095208-6">[</span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="p" data-group-id="9797095208-6">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="9797095208-7">[</span><span class="ss">a</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">b</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="9797095208-7">]</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: [a: 1, b: 2]</span></code></pre><p>Furthermore, given keyword lists are often used as optional arguments, they are used in situations where not all keys may be present, which would make it impossible to match on them. In a nutshell, do not pattern match on keyword lists.</p><p>In order to manipulate keyword lists, Elixir provides the <a href="Keyword.html"><code class="inline">Keyword</code></a> module. Remember, though, keyword lists are simply lists, and as such they provide the same linear performance characteristics as them: the longer the list, the longer it will take to find a key, to count the number of items, and so on. If you need to store a large amount of keys in a key-value data structure, Elixir offers maps, which we will soon learn.</p><h3 id="do-blocks-and-keywords" class="section-heading">
+  <a href="#do-blocks-and-keywords" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text"><code class="inline">do</code>-blocks and keywords</span>
+</h3>
+<p>As we have seen, keywords are mostly used in the language to pass optional values. In fact, we have used keywords in earlier chapters. For example, we have seen:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="k">if</span><span class="w"> </span><span class="no">true</span><span class="w"> </span><span class="k" data-group-id="9406240808-1">do</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="s">&quot;This will be seen&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="9406240808-1">else</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="w">  </span><span class="s">&quot;This won&#39;t&quot;</span><span class="w">
+</span><span class="gp unselectable">...&gt; </span><span class="k" data-group-id="9406240808-1">end</span><span class="w">
+</span><span class="s">&quot;This will be seen&quot;</span></code></pre><p>It happens that <code class="inline">do</code> blocks are nothing more than a syntax convenience on top of keywords. We can rewrite the above to:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="k">if</span><span class="w"> </span><span class="no">true</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;This will be seen&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">else</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;This won&#39;t&quot;</span><span class="w">
+</span><span class="s">&quot;This will be seen&quot;</span></code></pre><p>Pay close attention to both syntaxes. In the keyword list format, we separate each key-value pair with commas, and each key is followed by <code class="inline">:</code>. In the <code class="inline">do</code>-blocks, we get rid of the colons, the commas, and separate each keyword by a newline. They are useful exactly because they remove the verbosity when writing blocks of code. Most of the time, you will use the block syntax, but it is good to know they are equivalent.</p><p>This plays an important role in the language as it allows Elixir syntax to stay small but still expressive. We only need few data structures to represent the language, a topic we will come back to when talking about <a href="optional-syntax.html">optional syntax</a> and go in-depth when discussing <a href="quote-and-unquote.html">meta-programming</a>.</p><p>With this out of the way, let's talk about maps.</p><h2 id="maps-as-key-value-pairs" class="section-heading">
+  <a href="#maps-as-key-value-pairs" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Maps as key-value pairs</span>
+</h2>
+<p>Whenever you need to store key-value pairs, maps are the &quot;go to&quot; data structure in Elixir. A map is created using the <code class="inline">%{}</code> syntax:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="3342745103-1">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="3342745103-1">}</span><span class="w">
+</span><span class="p" data-group-id="3342745103-2">%{</span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p">,</span><span class="w"> </span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="3342745103-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="p" data-group-id="3342745103-3">[</span><span class="ss">:a</span><span class="p" data-group-id="3342745103-3">]</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="p" data-group-id="3342745103-4">[</span><span class="mi">2</span><span class="p" data-group-id="3342745103-4">]</span><span class="w">
+</span><span class="ss">:b</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="p" data-group-id="3342745103-5">[</span><span class="ss">:c</span><span class="p" data-group-id="3342745103-5">]</span><span class="w">
+</span><span class="no">nil</span></code></pre><p>Compared to keyword lists, we can already see two differences:</p><ul><li>Maps allow any value as a key.</li><li>Maps' keys do not follow any ordering.</li></ul><p>In contrast to keyword lists, maps are very useful with pattern matching. When a map is used in a pattern, it will always match on a subset of the given value:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1993864181-1">%{</span><span class="p" data-group-id="1993864181-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="1993864181-2">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="1993864181-2">}</span><span class="w">
+</span><span class="p" data-group-id="1993864181-3">%{</span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p">,</span><span class="w"> </span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="1993864181-3">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1993864181-4">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">a</span><span class="p" data-group-id="1993864181-4">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="1993864181-5">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="1993864181-5">}</span><span class="w">
+</span><span class="p" data-group-id="1993864181-6">%{</span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p">,</span><span class="w"> </span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="1993864181-6">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">a</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="1993864181-7">%{</span><span class="ss">:c</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="n">c</span><span class="p" data-group-id="1993864181-7">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="1993864181-8">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="1993864181-8">}</span><span class="w">
+</span><span class="gt">** (MatchError) no match of right hand side value: %{2 =&gt; :b, :a =&gt; 1}</span></code></pre><p>As shown above, a map matches as long as the keys in the pattern exist in the given map. Therefore, an empty map matches all maps.</p><p>The <a href="Map.html"><code class="inline">Map</code></a> module provides a very similar API to the <a href="Keyword.html"><code class="inline">Keyword</code></a> module with convenience functions to add, remove, and update maps keys:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="nc">Map</span><span class="o">.</span><span class="n">get</span><span class="p" data-group-id="8282904232-1">(</span><span class="p" data-group-id="8282904232-2">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="8282904232-2">}</span><span class="p">,</span><span class="w"> </span><span class="ss">:a</span><span class="p" data-group-id="8282904232-1">)</span><span class="w">
+</span><span class="mi">1</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Map</span><span class="o">.</span><span class="n">put</span><span class="p" data-group-id="8282904232-3">(</span><span class="p" data-group-id="8282904232-4">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="8282904232-4">}</span><span class="p">,</span><span class="w"> </span><span class="ss">:c</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8282904232-3">)</span><span class="w">
+</span><span class="p" data-group-id="8282904232-5">%{</span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p">,</span><span class="w"> </span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="ss">:c</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">3</span><span class="p" data-group-id="8282904232-5">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="nc">Map</span><span class="o">.</span><span class="n">to_list</span><span class="p" data-group-id="8282904232-6">(</span><span class="p" data-group-id="8282904232-7">%{</span><span class="ss">:a</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="8282904232-7">}</span><span class="p" data-group-id="8282904232-6">)</span><span class="w">
+</span><span class="p" data-group-id="8282904232-8">[</span><span class="p" data-group-id="8282904232-9">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="ss">:b</span><span class="p" data-group-id="8282904232-9">}</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8282904232-10">{</span><span class="ss">:a</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p" data-group-id="8282904232-10">}</span><span class="p" data-group-id="8282904232-8">]</span></code></pre><h2 id="maps-of-predefined-keys" class="section-heading">
+  <a href="#maps-of-predefined-keys" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Maps of predefined keys</span>
+</h2>
+<p>In the previous section, we have used maps as a key-value data structure where keys can be added or removed at any time. However, it is also common to create maps with a pre-defined set of keys. Their values may be updated, but new keys are never added nor removed. This is useful when we know the shape of the data we are working with and, if we get a different key, it likely means a mistake was done elsewhere.</p><p>We define such maps using the same syntax as in the previous section, except that all keys must be atoms:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="2198167037-1">%{</span><span class="ss">:name</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">:age</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="mi">23</span><span class="p" data-group-id="2198167037-1">}</span><span class="w">
+</span><span class="p" data-group-id="2198167037-2">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p" data-group-id="2198167037-2">}</span></code></pre><p>As you can see from the printed result above, Elixir also allows you to write maps of atom keys using the same <code class="inline">key: value</code> syntax as keyword lists.</p><p>When the keys are atoms, in particular when working with maps of predefined keys, we can also access them using the <code class="inline">map.key</code> syntax:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="6082046922-1">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p" data-group-id="6082046922-1">}</span><span class="w">
+</span><span class="p" data-group-id="6082046922-2">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p" data-group-id="6082046922-2">}</span><span class="w">
+
+</span><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="o">.</span><span class="n">name</span><span class="w">
+</span><span class="s">&quot;John&quot;</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="n">map</span><span class="o">.</span><span class="n">agee</span><span class="w">
+</span><span class="gt">** (KeyError) key :agee not found in: %{name: &quot;John&quot;, age: 23}</span></code></pre><p>There is also syntax for updating keys, which also raises if the key has not yet been defined:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9946037249-1">%{</span><span class="n">map</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mary&quot;</span><span class="p" data-group-id="9946037249-1">}</span><span class="w">
+</span><span class="p" data-group-id="9946037249-2">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mary&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p" data-group-id="9946037249-2">}</span><span class="w">
+</span><span class="gp unselectable">iex&gt; </span><span class="p" data-group-id="9946037249-3">%{</span><span class="n">map</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="ss">agee</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p" data-group-id="9946037249-3">}</span><span class="w">
+</span><span class="gt">** (KeyError) key :agee not found in: %{name: &quot;John&quot;, age: 23}</span></code></pre><p>These operations have one large benefit in that they raise if the key does not exist in the map and the compiler may even detect and warn when possible. This makes them useful to get quick feedback and spot bugs and typos early on. This is also the syntax used to power another Elixir feature called &quot;Structs&quot;, which we will learn later on.</p><p>Elixir developers typically prefer to use the <code class="inline">map.key</code> syntax and pattern matching instead of the functions in the <a href="Map.html"><code class="inline">Map</code></a> module when working with maps because they lead to an assertive style of programming. <a href="https://dashbit.co/blog/writing-assertive-code-with-elixir">This blog post by José Valim</a> provides insight and examples on how you get more concise and faster software by writing assertive code in Elixir.</p><h2 id="nested-data-structures" class="section-heading">
+  <a href="#nested-data-structures" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Nested data structures</span>
+</h2>
+<p>Often we will have maps inside maps, or even keywords lists inside maps, and so forth. Elixir provides conveniences for manipulating nested data structures via the <a href="Kernel.html#get_in/1"><code class="inline">get_in/1</code></a>, <a href="Kernel.html#put_in/2"><code class="inline">put_in/2</code></a>, <a href="Kernel.html#update_in/2"><code class="inline">update_in/2</code></a>, and other macros giving the same conveniences you would find in imperative languages while keeping the immutable properties of the language.</p><p>Imagine you have the following structure:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p" data-group-id="5394703630-1">[</span><span class="w">
+  </span><span class="ss">john</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-2">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-3">[</span><span class="s">&quot;Erlang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ruby&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elixir&quot;</span><span class="p" data-group-id="5394703630-3">]</span><span class="p" data-group-id="5394703630-2">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">mary</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-4">%{</span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mary&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-5">[</span><span class="s">&quot;Elixir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;F#&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Clojure&quot;</span><span class="p" data-group-id="5394703630-5">]</span><span class="p" data-group-id="5394703630-4">}</span><span class="w">
+</span><span class="p" data-group-id="5394703630-1">]</span><span class="w">
+</span><span class="p" data-group-id="5394703630-6">[</span><span class="w">
+  </span><span class="ss">john</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-7">%{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-8">[</span><span class="s">&quot;Erlang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ruby&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elixir&quot;</span><span class="p" data-group-id="5394703630-8">]</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="5394703630-7">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">mary</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-9">%{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5394703630-10">[</span><span class="s">&quot;Elixir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;F#&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Clojure&quot;</span><span class="p" data-group-id="5394703630-10">]</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mary&quot;</span><span class="p" data-group-id="5394703630-9">}</span><span class="w">
+</span><span class="p" data-group-id="5394703630-6">]</span></code></pre><p>We have a keyword list of users where each value is a map containing the name, age and a list of programming languages each user likes. If we wanted to access the age for john, we could write:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">users</span><span class="p" data-group-id="1879674834-1">[</span><span class="ss">:john</span><span class="p" data-group-id="1879674834-1">]</span><span class="o">.</span><span class="n">age</span><span class="w">
+</span><span class="mi">27</span></code></pre><p>It happens we can also use this same syntax for updating the value:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">put_in</span><span class="w"> </span><span class="n">users</span><span class="p" data-group-id="4285487602-1">[</span><span class="ss">:john</span><span class="p" data-group-id="4285487602-1">]</span><span class="o">.</span><span class="n">age</span><span class="p">,</span><span class="w"> </span><span class="mi">31</span><span class="w">
+</span><span class="p" data-group-id="4285487602-2">[</span><span class="w">
+  </span><span class="ss">john</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4285487602-3">%{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4285487602-4">[</span><span class="s">&quot;Erlang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ruby&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elixir&quot;</span><span class="p" data-group-id="4285487602-4">]</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="4285487602-3">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">mary</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4285487602-5">%{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="4285487602-6">[</span><span class="s">&quot;Elixir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;F#&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Clojure&quot;</span><span class="p" data-group-id="4285487602-6">]</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mary&quot;</span><span class="p" data-group-id="4285487602-5">}</span><span class="w">
+</span><span class="p" data-group-id="4285487602-2">]</span></code></pre><p>The <a href="Kernel.html#update_in/2"><code class="inline">update_in/2</code></a> macro is similar but allows us to pass a function that controls how the value changes. For example, let's remove &quot;Clojure&quot; from Mary's list of languages:</p><pre><code class="makeup elixir" translate="no"><span class="gp unselectable">iex&gt; </span><span class="n">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">update_in</span><span class="w"> </span><span class="n">users</span><span class="p" data-group-id="9672968271-1">[</span><span class="ss">:mary</span><span class="p" data-group-id="9672968271-1">]</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span><span class="w"> </span><span class="k" data-group-id="9672968271-2">fn</span><span class="w"> </span><span class="n">languages</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="nc">List</span><span class="o">.</span><span class="n">delete</span><span class="p" data-group-id="9672968271-3">(</span><span class="n">languages</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Clojure&quot;</span><span class="p" data-group-id="9672968271-3">)</span><span class="w"> </span><span class="k" data-group-id="9672968271-2">end</span><span class="w">
+</span><span class="p" data-group-id="9672968271-4">[</span><span class="w">
+  </span><span class="ss">john</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9672968271-5">%{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9672968271-6">[</span><span class="s">&quot;Erlang&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Ruby&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Elixir&quot;</span><span class="p" data-group-id="9672968271-6">]</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John&quot;</span><span class="p" data-group-id="9672968271-5">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">mary</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9672968271-7">%{</span><span class="ss">age</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w"> </span><span class="ss">languages</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="9672968271-8">[</span><span class="s">&quot;Elixir&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;F#&quot;</span><span class="p" data-group-id="9672968271-8">]</span><span class="p">,</span><span class="w"> </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Mary&quot;</span><span class="p" data-group-id="9672968271-7">}</span><span class="w">
+</span><span class="p" data-group-id="9672968271-4">]</span></code></pre><p>There is more to learn about <a href="Kernel.html#get_in/1"><code class="inline">get_in/1</code></a>, <a href="Kernel.html#pop_in/1"><code class="inline">pop_in/1</code></a> and others, including the <a href="Kernel.html#get_and_update_in/2"><code class="inline">get_and_update_in/2</code></a> that allows us to extract a value and update the data structure at once. There are also <code class="inline">get_in/3</code>, <a href="Kernel.html#put_in/3"><code class="inline">put_in/3</code></a>, <a href="Kernel.html#update_in/3"><code class="inline">update_in/3</code></a>, <a href="Kernel.html#get_and_update_in/3"><code class="inline">get_and_update_in/3</code></a>, <a href="Kernel.html#pop_in/2"><code class="inline">pop_in/2</code></a> which allow dynamic access into the data structure.</p><h2 id="summary" class="section-heading">
+  <a href="#summary" class="hover-link">
+    <i class="ri-link-m" aria-hidden="true"></i>
+  </a>
+  <span class="text">Summary</span>
+</h2>
+<p>There are two different data structures for working with key-value stores in Elixir. Alongside the <a href="Access.html"><code class="inline">Access</code></a> module and pattern matching, they provide a rich set of tools for manipulating complex, potentially nested, data structures.</p><p>As we conclude this chapter, remember that you should:</p><ul><li><p>Use keyword lists for passing optional values to functions</p></li><li><p>Use maps for general key-value data structures</p></li><li><p>Use maps when working with data that has a predefined set of keys</p></li></ul><p>Now let's talk about modules and functions.</p>
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="binaries-strings-and-charlists.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+Binaries, strings, and charlists
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="modules-and-functions.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+Modules and functions
+        </span>
+      </a>
+
+  </div>
+</div>
+    <footer class="footer">
+      <p>
+
+        <span class="line">
+          <button class="a-main footer-button display-quick-switch" title="Search HexDocs packages">
+            Search HexDocs
+          </button>
+
+            <a href="Elixir.epub" title="ePub version">
+              Download ePub version
+            </a>
+
+        </span>
+      </p>
+
+      <p class="built-using">
+        Built using
+        <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.34.2) for the
+
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+
+      </p>
+
+    </footer>
+  </div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.2.3/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: document.body.className.includes("dark") ? "dark" : "default"
+    });
+    let id = 0;
+    for (const codeEl of document.querySelectorAll("pre code.mermaid")) {
+      const preEl = codeEl.parentElement;
+      const graphDefinition = codeEl.textContent;
+      const graphEl = document.createElement("div");
+      const graphId = "mermaid-graph-" + id++;
+      mermaid.render(graphId, graphDefinition).then(({svg, bindFunctions}) => {
+        graphEl.innerHTML = svg;
+        bindFunctions?.(graphEl);
+        preEl.insertAdjacentElement("afterend", graphEl);
+        preEl.remove();
+      });
+    }
+  });
+</script>
+
+  </body>
+</html>
