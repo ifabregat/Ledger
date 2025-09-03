@@ -4,10 +4,10 @@ defmodule LedgerTest do
   alias Ledger.Parser, as: Parser
 
   test "Comprobar sub-comando validos" do
-    arg = ["transacciones"]
+    arg = "transacciones"
     assert {:ok, "transacciones"} = Parser.obtener_subcomando(arg)
 
-    arg = ["balance"]
+    arg = "balance"
     assert {:ok, "balance"} = Parser.obtener_subcomando(arg)
   end
 
