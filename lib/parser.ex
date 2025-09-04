@@ -39,4 +39,23 @@ defmodule Ledger.Parser do
       {:ok, mapa}
     end
   end
+
+  def leer_transacciones(path) do
+    case File.read(path) do
+      {:ok, contenido} -> {:ok, contenido}
+      {:error, error} -> {:error, error}
+    end
+  end
+
+  def escribir_salida(path, contenido) do
+    if path != nil do
+      case File.write(path, contenido) do
+        :ok -> {:ok, contenido}
+        {:error, error} -> {:error, error}
+      end
+    else
+      IO.puts(contenido)
+      {:ok, contenido}
+    end
+  end
 end
