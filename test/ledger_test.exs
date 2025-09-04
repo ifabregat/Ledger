@@ -5,33 +5,75 @@ defmodule LedgerTest do
 
   test "Comprobar sub-comando validos" do
     arg = "transacciones"
-    assert {:ok, _mensaje} = Parser.obtener_subcomando(arg)
+    assert {:ok, "transacciones"} = Parser.obtener_subcomando(arg)
 
     arg = "balance"
-    assert {:ok, _mensaje} = Parser.obtener_subcomando(arg)
+    assert {:ok, "balance"} = Parser.obtener_subcomando(arg)
   end
 
   test "Comprobar sub-comando invalidos" do
     arg = ["otra cosa"]
-    assert {:error, _mensaje} = Parser.obtener_subcomando(arg)
+    assert {:error, "sub comando desconocido"} = Parser.obtener_subcomando(arg)
+
+    arg = "otra cosa"
+    assert {:error, "sub comando desconocido"} = Parser.obtener_subcomando(arg)
   end
 
   test "Comprobar parametros validos" do
-    flag = ["-c1=A"]
-    assert {:ok, _mensaje} = Parser.obtener_flags(flag)
-
-    flag = ["-t=/home/ifabregat/Escritorio/prueba.csv", "-c1=A"]
-    assert {:ok, _mensaje} = Parser.obtener_flags(flag)
+    flag = ["-t=/home/ifabregat/Escritorio/prueba.csv", "-o=salida.txt", "-c1=A", "-c2=B", "-m=USD"]
+    {:ok, mapa} = Parser.obtener_flags(flag)
+    assert mapa == %{
+      archivo_input: "/home/ifabregat/Escritorio/prueba.csv",
+      archivo_output: "salida.txt",
+      cuenta_origen: "A",
+      cuenta_destino: "B",
+      moneda: "USD"
+    }
 
     flag = []
-    assert {:ok, _mensaje} = Parser.obtener_flags(flag)
+    {:ok, mapa} = Parser.obtener_flags(flag)
+    assert mapa == %{
+      archivo_input: "test/fixtures/transacciones.csv",
+      archivo_output: nil,
+      cuenta_origen: nil,
+      cuenta_destino: nil,
+      moneda: nil
+    }
+
+    {:ok, mapa} = Parser.obtener_flags(["archivo_suelto.csv"])
+    assert mapa.archivo_input == "test/fixtures/transacciones.csv"
   end
 
   test "Comprobar parametros invalidos" do
     flag = ["-c3=B"]
-    assert {:error, _mensaje} = Parser.obtener_flags(flag)
+    assert {:error, "parametro invalido"} = Parser.obtener_flags(flag)
 
     flag = ["-c1=A", "-c3=A"]
-    assert {:error, _mensaje} = Parser.obtener_flags(flag)
+    assert {:error, "parametro invalido"} = Parser.obtener_flags(flag)
+  end
+
+  test "Comprobar lectura de archivo valido" do
+    path = "test/fixtures/transacciones.csv"
+    assert {:ok, _contenido} = Parser.leer_transacciones(path)
+  end
+
+  test "Comprobar lectura de archivo invalido" do
+    path = "/home/ifabregat/Escritorio/prueba.csv"
+    assert {:error, _error} = Parser.leer_transacciones(path)
+  end
+
+  test "Comprobar escritura en archivo" do
+    path = "test/fixtures/salida_prueba.txt"
+    contenido = "Hola mundo"
+    assert {:ok, _mensaje} = Parser.escribir_salida(path, contenido)
+
+    path = nil
+    assert {:ok, _mensaje} = Parser.escribir_salida(path, contenido)
+  end
+
+  test "Comprobar escritura en archivo invalido" do
+    path = "/root/salida_prueba.txt"
+    contenido = "Hola mundo"
+    assert {:error, _mensaje} = Parser.escribir_salida(path, contenido)
   end
   end
