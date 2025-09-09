@@ -21,7 +21,7 @@ defmodule LedgerTest do
 
   test "Comprobar parametros validos" do
     flag = ["-t=/home/ifabregat/Escritorio/prueba.csv", "-o=salida.txt", "-c1=A", "-c2=B", "-m=USD"]
-    {:ok, mapa} = Parser.obtener_flags(flag)
+    {:ok, mapa} = Parser.obtener_flags(flag, :transacciones)
     assert mapa == %{
       archivo_input: "/home/ifabregat/Escritorio/prueba.csv",
       archivo_output: "salida.txt",
@@ -31,25 +31,30 @@ defmodule LedgerTest do
     }
 
     flag = []
-    {:ok, mapa} = Parser.obtener_flags(flag)
+    {:ok, mapa} = Parser.obtener_flags(flag, :transacciones)
     assert mapa == %{
-      archivo_input: "test/fixtures/transacciones.csv",
+      archivo_input: "transacciones.csv",
       archivo_output: nil,
       cuenta_origen: nil,
       cuenta_destino: nil,
       moneda: nil
     }
 
-    {:ok, mapa} = Parser.obtener_flags(["archivo_suelto.csv"])
-    assert mapa.archivo_input == "test/fixtures/transacciones.csv"
+    {:ok, mapa} = Parser.obtener_flags(["archivo_suelto.csv"], :transacciones)
+    assert mapa.archivo_input == "transacciones.csv"
+
+    {:ok, mapa} = Parser.obtener_flags(["-c1=A"], :balance)
+    assert mapa.archivo_input == "transacciones.csv"
   end
 
   test "Comprobar parametros invalidos" do
     flag = ["-c3=B"]
-    assert {:error, "parametro invalido"} = Parser.obtener_flags(flag)
+    assert {:error, :parametro_invalido} = Parser.obtener_flags(flag, nil)
 
     flag = ["-c1=A", "-c3=A"]
-    assert {:error, "parametro invalido"} = Parser.obtener_flags(flag)
+    assert {:error, :parametro_invalido} = Parser.obtener_flags(flag, nil)
+
+    assert {:error, :c1_obligatorio} = Parser.obtener_flags([], :balance)
   end
 
   test "Comprobar lectura de archivo valido" do

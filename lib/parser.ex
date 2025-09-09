@@ -11,7 +11,7 @@ defmodule Ledger.Parser do
     end
   end
 
-  def obtener_flags(flags) do
+  def obtener_flags(flags, sub_comando) do
     # flags = ["-c2=userA", "-c1=userB"]
 
     flags = Enum.map(flags, fn
@@ -26,17 +26,22 @@ defmodule Ledger.Parser do
     )
 
     if invalidos != [] do
-      {:error, "parametro invalido"}
+      {:error, :parametro_invalido}
     else
       mapa = %{
-      archivo_input: opciones[:t] || "test/fixtures/transacciones.csv",
+      archivo_input: opciones[:t] || "transacciones.csv",
       archivo_output: opciones[:o],
       cuenta_origen: opciones[:c1],
       cuenta_destino: opciones[:c2],
       moneda: opciones[:m]
       }
 
-      {:ok, mapa}
+      if sub_comando == :balance and mapa.cuenta_origen == nil do
+        {:error, :c1_obligatorio}
+      else
+        {:ok, mapa}
+      end
+
     end
   end
 
