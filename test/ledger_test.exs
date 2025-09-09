@@ -5,18 +5,18 @@ defmodule LedgerTest do
 
   test "Comprobar sub-comando validos" do
     arg = "transacciones"
-    assert {:ok, "transacciones"} = Parser.obtener_subcomando(arg)
+    assert {:ok, :transacciones} = Parser.obtener_subcomando(arg)
 
     arg = "balance"
-    assert {:ok, "balance"} = Parser.obtener_subcomando(arg)
+    assert {:ok, :balance} = Parser.obtener_subcomando(arg)
   end
 
   test "Comprobar sub-comando invalidos" do
     arg = ["otra cosa"]
-    assert {:error, "sub comando desconocido"} = Parser.obtener_subcomando(arg)
+    assert {:error, :sub_comando_invalido} = Parser.obtener_subcomando(arg)
 
     arg = "otra cosa"
-    assert {:error, "sub comando desconocido"} = Parser.obtener_subcomando(arg)
+    assert {:error, :sub_comando_invalido} = Parser.obtener_subcomando(arg)
   end
 
   test "Comprobar parametros validos" do

@@ -5,9 +5,9 @@ defmodule Ledger.Parser do
 
   def obtener_subcomando(sub_comando) do
     case sub_comando do
-      "transacciones" -> {:ok, "transacciones"}
-      "balance" -> {:ok, "balance"}
-      _ -> {:error, "sub comando desconocido"}
+      "transacciones" -> {:ok, :transacciones}
+      "balance" -> {:ok, :balance}
+      _ -> {:error, :sub_comando_invalido}
     end
   end
 
