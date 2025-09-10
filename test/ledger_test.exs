@@ -23,4 +23,9 @@ defmodule LedgerTest do
     assert {:error, :parametro_invalido} = Parser.validar_opciones(["dadada"], :transacciones)
     assert {:error, :falta_cuenta_origen} = Parser.validar_opciones([], :balance)
   end
+
+  test "Leer csv" do
+    assert {:ok, "Hola mundo"} = Parser.leer_csv("test/fixtures/leer1.csv")
+    assert {:error, :error_leer_csv} = Parser.leer_csv("test/fixtures/inexistente.csv")
+  end
 end

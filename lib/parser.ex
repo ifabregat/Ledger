@@ -38,4 +38,11 @@ defmodule Ledger.Parser do
         {:error, :parametro_invalido}
     end
   end
+
+  def leer_csv(path) do
+    case File.read(path) do
+      {:ok, contenido} -> {:ok, contenido}
+      {:error, _error} -> {:error, :error_leer_csv}
+    end
+  end
 end
