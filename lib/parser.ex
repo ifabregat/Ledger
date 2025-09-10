@@ -45,4 +45,24 @@ defmodule Ledger.Parser do
       {:error, _error} -> {:error, :error_leer_csv}
     end
   end
+
+  def parsear_moneda(contenido) do
+    contenido
+    |> String.split("\n", trim: true)
+    |> Enum.with_index(1) #agregar numero de linea
+    |> Enum.reduce_while([], fn {linea, nro_linea}, acc ->
+      case String.split(linea, ";") do #separar por ;
+        [nombre, precio_str] ->
+          case Float.parse(precio_str) do #parsear a float
+            {precio_float, ""} -> {:cont, [%Ledger.Moneda{nombre_moneda: nombre, precio_usd: precio_float} | acc]}
+            _ -> {:halt, {:error, {:precio_invalido, nro_linea}}} #Si ocurrio algun error -> error
+          end
+        _ -> {:halt, {:error, {:formato_invalido, nro_linea}}} #Si no tiene 2 partes -> error
+      end
+    end)
+    |> case do
+      {:error, _} = err -> err
+      lista -> {:ok, Enum.reverse(lista)}
+    end
+  end
 end
