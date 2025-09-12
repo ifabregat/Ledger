@@ -137,6 +137,8 @@ defmodule LedgerTest do
     assert {:error, {:monto_invalido, 5}} = Parser.parsear_transaccion(contenido3)
     {:ok, contenido4} = Parser.leer_csv("test/fixtures/transacciones_mal3.csv")
     assert {:error, {:tipo_invalido, 4}} = Parser.parsear_transaccion(contenido4)
+    {:ok, contenido5} = Parser.leer_csv("test/fixtures/transacciones_mal4.csv")
+    assert {:error, {:moneda_desconocida, 2}} = Parser.parsear_transaccion(contenido5, ["BTC", "USDT", "ETH", "ARS", "EUR"])
   end
 
   test "Mostrar salida" do
@@ -204,5 +206,13 @@ defmodule LedgerTest do
       }
     ]
     assert "1;1754937004;USDT;USDT;100.500000;userA;userB;transferencia\n2;1755541804;BTC;USDT;0.100000;userB;;swap\n3;1756751404;BTC;;50000.000000;userC;;alta_cuenta" = Parser.string_transacciones(transacciones)
+  end
+
+  test "Filtrar cuenta origen" do
+    {:ok, contenido} = Parser.leer_csv("test/fixtures/transacciones.csv")
+    {:ok, transacciones} = Parser.parsear_transaccion(contenido)
+    Ledger.filtrar_cuenta_origen(transacciones, "userA")
+    |> Parser.string_transacciones()
+    |> Parser.mostrar_salida()
   end
 end
