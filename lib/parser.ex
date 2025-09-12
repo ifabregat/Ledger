@@ -104,5 +104,15 @@ defmodule Ledger.Parser do
     end
   end
 
+  def mostrar_salida(contenido) do
+    IO.puts(contenido)
+    {:ok, :mostrado}
+  end
 
+  def escribir_salida(path, contenido) do
+    case File.write(path, contenido) do
+      :ok -> {:ok, :escrito}
+      {:error, _error} -> {:error, :error_escribir_csv}
+    end
+  end
 end

@@ -138,4 +138,13 @@ defmodule LedgerTest do
     {:ok, contenido4} = Parser.leer_csv("test/fixtures/transacciones_mal3.csv")
     assert {:error, {:tipo_invalido, 4}} = Parser.parsear_transaccion(contenido4)
   end
+
+  test "Mostrar salida" do
+    assert {:ok, :mostrado} = Parser.mostrar_salida("Esto es una prueba")
+  end
+
+  test "Escribir salida" do
+    assert {:ok, :escrito} = Parser.escribir_salida("test/fixtures/salida_test.csv", "Esto es una prueba")
+    assert {:error, :error_escribir_csv} = Parser.escribir_salida("/ruta/invalida/salida_test.csv", "Esto es una prueba")
+  end
 end
