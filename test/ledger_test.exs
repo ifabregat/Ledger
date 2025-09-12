@@ -147,4 +147,62 @@ defmodule LedgerTest do
     assert {:ok, :escrito} = Parser.escribir_salida("test/fixtures/salida_test.csv", "Esto es una prueba")
     assert {:error, :error_escribir_csv} = Parser.escribir_salida("/ruta/invalida/salida_test.csv", "Esto es una prueba")
   end
+
+  test "String moneda" do
+    moneda = %Ledger.Moneda{nombre_moneda: "BTC", precio_usd: 55000.0}
+    assert "BTC;55000.000000" = Parser.string_moneda(moneda)
+    monedas = [
+      %Ledger.Moneda{nombre_moneda: "BTC", precio_usd: 55000.0},
+      %Ledger.Moneda{nombre_moneda: "ETH", precio_usd: 3000.0},
+      %Ledger.Moneda{nombre_moneda: "ARS", precio_usd: 0.0012}
+    ]
+    assert "BTC;55000.000000\nETH;3000.000000\nARS;0.001200" = Parser.string_monedas(monedas)
+  end
+
+  test "String transaccion" do
+    transaccion = %Ledger.Transaccion{
+      id_transaccion: "1",
+      timestamp: "1754937004",
+      moneda_origen: "USDT",
+      moneda_destino: "USDT",
+      monto: 100.50,
+      cuenta_origen: "userA",
+      cuenta_destino: "userB",
+      tipo: "transferencia"
+    }
+    assert "1;1754937004;USDT;USDT;100.500000;userA;userB;transferencia" = Parser.string_transaccion(transaccion)
+    transacciones = [
+      %Ledger.Transaccion{
+        id_transaccion: "1",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        tipo: "transferencia"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "2",
+        timestamp: "1755541804",
+        moneda_origen: "BTC",
+        moneda_destino: "USDT",
+        monto: 0.1,
+        cuenta_origen: "userB",
+        cuenta_destino: "",
+        tipo: "swap"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "3",
+        timestamp: "1756751404",
+        moneda_origen: "BTC",
+        moneda_destino: "",
+        monto: 50000.0,
+        cuenta_origen: "userC",
+        cuenta_destino: "",
+        tipo: "alta_cuenta"
+      }
+    ]
+    assert "1;1754937004;USDT;USDT;100.500000;userA;userB;transferencia\n2;1755541804;BTC;USDT;0.100000;userB;;swap\n3;1756751404;BTC;;50000.000000;userC;;alta_cuenta" = Parser.string_transacciones(transacciones)
+  end
 end

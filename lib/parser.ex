@@ -104,6 +104,38 @@ defmodule Ledger.Parser do
     end
   end
 
+  def string_moneda(%Ledger.Moneda{nombre_moneda: nombre, precio_usd: precio}) do
+    precio_str = :erlang.float_to_binary(precio, decimals: 6)
+    Enum.join([nombre, precio_str], ";")
+  end
+
+  def string_monedas(monedas) do
+    monedas
+    |> Enum.map(&string_moneda/1)
+    |> Enum.join("\n")
+  end
+
+  def string_transaccion(%Ledger.Transaccion{
+      id_transaccion: id,
+      timestamp: fecha,
+      moneda_origen: moneda_origen,
+      moneda_destino: moneda_destino,
+      monto: monto,
+      cuenta_origen: cuenta_origen,
+      cuenta_destino: cuenta_destino,
+      tipo: tipo
+    }) do
+    monto_str = :erlang.float_to_binary(monto, decimals: 6)
+
+    Enum.join([id, fecha, moneda_origen, moneda_destino, monto_str, cuenta_origen, cuenta_destino, tipo], ";")
+  end
+
+  def string_transacciones(transacciones) do
+    transacciones
+    |> Enum.map(&string_transaccion/1)
+    |> Enum.join("\n")
+  end
+
   def mostrar_salida(contenido) do
     IO.puts(contenido)
     {:ok, :mostrado}
