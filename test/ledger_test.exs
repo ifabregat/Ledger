@@ -46,4 +46,96 @@ defmodule LedgerTest do
     {:ok, contenido3} = Parser.leer_csv("test/fixtures/moneda_mal2.csv")
     assert {:error, {:formato_invalido, 2}} = Parser.parsear_moneda(contenido3)
   end
+
+  test "Parsear transaccion" do
+    {:ok, contenido} = Parser.leer_csv("test/fixtures/transacciones.csv")
+    assert {:ok, [
+      %Ledger.Transaccion{
+        id_transaccion: "1",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        tipo: "transferencia"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "2",
+        timestamp: "1755541804",
+        moneda_origen: "BTC",
+        moneda_destino: "USDT",
+        monto: 0.1,
+        cuenta_origen: "userB",
+        cuenta_destino: "",
+        tipo: "swap"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "3",
+        timestamp: "1756751404",
+        moneda_origen: "BTC",
+        moneda_destino: "",
+        monto: 50000.0,
+        cuenta_origen: "userC",
+        cuenta_destino: "",
+        tipo: "alta_cuenta"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "4",
+        timestamp: "1757002204",
+        moneda_origen: "ETH",
+        moneda_destino: "BTC",
+        monto: 1.25,
+        cuenta_origen: "userA",
+        cuenta_destino: "userC",
+        tipo: "swap"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "5",
+        timestamp: "1757105804",
+        moneda_origen: "EUR",
+        moneda_destino: "USDT",
+        monto: 250.0,
+        cuenta_origen: "userD",
+        cuenta_destino: "userB",
+        tipo: "transferencia"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "6",
+        timestamp: "1757209404",
+        moneda_origen: "ARS",
+        moneda_destino: "",
+        monto: 150000.0,
+        cuenta_origen: "userE",
+        cuenta_destino: "",
+        tipo: "alta_cuenta"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "7",
+        timestamp: "1757303004",
+        moneda_origen: "USDT",
+        moneda_destino: "ETH",
+        monto: 75.0,
+        cuenta_origen: "userB",
+        cuenta_destino: "userD",
+        tipo: "swap"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "8",
+        timestamp: "1757406604",
+        moneda_origen: "BTC",
+        moneda_destino: "BTC",
+        monto: 0.005,
+        cuenta_origen: "userC",
+        cuenta_destino: "userA",
+        tipo: "transferencia"
+      }
+    ]} = Parser.parsear_transaccion(contenido)
+    {:ok, contenido2} = Parser.leer_csv("test/fixtures/transacciones_mal.csv")
+    assert {:error, {:formato_invalido, 3}} = Parser.parsear_transaccion(contenido2)
+    {:ok, contenido3} = Parser.leer_csv("test/fixtures/transacciones_mal2.csv")
+    assert {:error, {:monto_invalido, 5}} = Parser.parsear_transaccion(contenido3)
+    {:ok, contenido4} = Parser.leer_csv("test/fixtures/transacciones_mal3.csv")
+    assert {:error, {:tipo_invalido, 4}} = Parser.parsear_transaccion(contenido4)
+  end
 end

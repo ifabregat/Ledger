@@ -61,8 +61,48 @@ defmodule Ledger.Parser do
       end
     end)
     |> case do
-      {:error, _} = err -> err
+      {:error, _} = error -> error
       lista -> {:ok, Enum.reverse(lista)}
     end
   end
+
+  def parsear_transaccion(contenido) do
+    contenido
+    |> String.split("\n", trim: true)
+    |> Enum.with_index(1)
+    |> Enum.reduce_while([], fn {linea, nro_linea}, acc ->
+      case String.split(linea, ";") do
+        [id, fecha, moneda_origen, moneda_destino, monto_str, cuenta_origen, cuenta_destino, tipo] ->
+          case Float.parse(monto_str) do
+            {monto_float, ""} when monto_float >= 0 ->
+              if tipo in ["transferencia", "swap", "alta_cuenta"] do
+                transaccion = %Ledger.Transaccion{
+                  id_transaccion: id,
+                  timestamp: fecha,
+                  moneda_origen: moneda_origen,
+                  moneda_destino: moneda_destino,
+                  monto: monto_float,
+                  cuenta_origen: cuenta_origen,
+                  cuenta_destino: cuenta_destino,
+                  tipo: tipo
+                }
+
+                {:cont, [transaccion | acc]}
+              else
+                {:halt, {:error, {:tipo_invalido, nro_linea}}}
+              end
+
+            _ -> {:halt, {:error, {:monto_invalido, nro_linea}}}
+          end
+
+        _ -> {:halt, {:error, {:formato_invalido, nro_linea}}}
+      end
+    end)
+    |> case do
+      {:error, _} = error -> error
+      lista -> {:ok, Enum.reverse(lista)}
+    end
+  end
+
+
 end
