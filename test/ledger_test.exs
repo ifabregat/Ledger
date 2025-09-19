@@ -532,4 +532,159 @@ defmodule LedgerTest do
 
     assert {:ok, []} = {:ok, todas}
   end
+
+  test "Calcular balances" do
+    monedas = [
+      %Ledger.Moneda{nombre_moneda: "BTC", precio_usd: 55000.0},
+      %Ledger.Moneda{nombre_moneda: "ETH", precio_usd: 3000.0},
+      %Ledger.Moneda{nombre_moneda: "ARS", precio_usd: 0.0012},
+      %Ledger.Moneda{nombre_moneda: "USDT", precio_usd: 1.0},
+    ]
+
+    balance = Ledger.calcular_balances([], "userA", monedas)
+    assert %{} = balance
+
+    transacciones = [
+      %Ledger.Transaccion{
+        id_transaccion: "1",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        tipo: "transferencia"
+      },
+      %{
+        id_transaccion: "2",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userA",
+        cuenta_destino: "userC",
+        tipo: "transferencia"
+      },
+      %{
+        id_transaccion: "3",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userB",
+        cuenta_destino: "userA",
+        tipo: "transferencia"
+      }
+    ]
+
+    balance = Ledger.calcular_balances(transacciones, "userA", monedas)
+    assert %{"USDT" => -100.5} = balance
+
+    balance = Ledger.calcular_balances(transacciones, "userB", monedas)
+    assert %{"USDT" => 0.0} = balance
+
+    balance = Ledger.calcular_balances(transacciones, "userD", monedas)
+    assert %{} = balance
+
+    transacciones = [
+      %Ledger.Transaccion{
+        id_transaccion: "1",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        tipo: "transferencia"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "2",
+        timestamp: "1755541804",
+        moneda_origen: "BTC",
+        moneda_destino: "USDT",
+        monto: 0.1,
+        cuenta_origen: "userB",
+        cuenta_destino: "",
+        tipo: "swap"
+      }
+    ]
+
+    balance = Ledger.calcular_balances(transacciones, "userB", monedas)
+    assert %{"USDT" => 5600.5} = balance
+
+    balance = Ledger.calcular_balances(transacciones, "userC", monedas)
+    assert %{} = balance
+
+    transacciones = [
+      %Ledger.Transaccion{
+        id_transaccion: "1",
+        timestamp: "1754000000",
+        moneda_origen: "BTC",
+        moneda_destino: "BTC",
+        monto: 1000.0,
+        cuenta_origen: "otra_cuenta",
+        cuenta_destino: "userC",
+        tipo: "transferencia"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "2",
+        timestamp: "1756751404",
+        moneda_origen: "BTC",
+        moneda_destino: "BTC",
+        monto: 50000.0,
+        cuenta_origen: "userC",
+        cuenta_destino: "",
+        tipo: "alta_cuenta"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "3",
+        timestamp: "1754937004",
+        moneda_origen: "USDT",
+        moneda_destino: "USDT",
+        monto: 100.50,
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        tipo: "transferencia"
+      },
+      %Ledger.Transaccion{
+        id_transaccion: "4",
+        timestamp: "1755541804",
+        moneda_origen: "BTC",
+        moneda_destino: "USDT",
+        monto: 0.1,
+        cuenta_origen: "userB",
+        cuenta_destino: "",
+        tipo: "swap"
+      }
+    ]
+
+    balance = Ledger.calcular_balances(transacciones, "userA", monedas)
+    assert %{} = balance
+
+    balance = Ledger.calcular_balances(transacciones, "userC", monedas)
+    assert %{} = balance
+
+    balance = Ledger.calcular_balance(transacciones, "userA", nil, monedas)
+    assert "USDT=-100.500000" = balance
+
+    balance = Ledger.calcular_balance(transacciones, "userA", "USDT", monedas)
+    assert "USDT=-100.500000" = balance
+
+    transacciones = [
+      %Ledger.Transaccion{
+        tipo: "transferencia",
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        moneda_origen: "PEPE",
+        moneda_destino: "USDT",
+        monto: 100.0
+      }
+    ]
+
+    balance = Ledger.calcular_balance(transacciones, "userA", "USDT", monedas)
+    assert "USDT=0.000000" = balance
+
+    balance = Ledger.calcular_balance(transacciones, "userA", "EUR", monedas)
+    assert {:error, :moneda_no_existente} = balance
+  end
 end
