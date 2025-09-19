@@ -129,7 +129,7 @@ defmodule Ledger do
 
     balances
     |> Enum.map(fn {moneda, balance} ->
-      "#{moneda}=#{:erlang.float_to_binary(balance, decimals: 6)}"
+      "#{moneda}=#{:erlang.float_to_binary(balance * 1.0, decimals: 6)}"
     end)
     |> Enum.join("\n")
   end
@@ -153,7 +153,7 @@ defmodule Ledger do
           end
         end)
 
-      "#{moneda_objetivo}=#{:erlang.float_to_binary(total_en_objetivo, decimals: 6)}"
+      "#{moneda_objetivo}=#{:erlang.float_to_binary(total_en_objetivo * 1.0, decimals: 6)}"
     else
       {:error, :moneda_no_existente}
     end
