@@ -1,18 +1,37 @@
 defmodule Ledger do
-  @moduledoc """
-  Documentation for `Ledger`.
-  """
+  def filtrar_cuenta_origen(transacciones, nil), do: {:ok, transacciones}
 
-  @doc """
-  Hello world.
+  def filtrar_cuenta_origen(transacciones, cuenta) do
+    filtradas =
+      Enum.filter(transacciones, fn transaccion -> transaccion.cuenta_origen == cuenta end)
 
-  ## Examples
+    case filtradas do
+      [] -> {:ok, []}
+      _ -> {:ok, filtradas}
+    end
+  end
 
-      iex> Ledger.hello()
-      :world
+  def filtrar_cuenta_destino(transacciones, nil), do: {:ok, transacciones}
 
-  """
-  def hello do
-    :world
+  def filtrar_cuenta_destino(transacciones, cuenta) do
+    filtradas =
+      Enum.filter(transacciones, fn transaccion -> transaccion.cuenta_destino == cuenta end)
+
+    case filtradas do
+      [] -> {:ok, []}
+      _ -> {:ok, filtradas}
+    end
+  end
+
+  def filtrar_moneda(transacciones, moneda) do
+    filtradas =
+      Enum.filter(transacciones, fn transaccion ->
+        transaccion.moneda_origen == moneda || transaccion.moneda_destino == moneda
+      end)
+
+    case filtradas do
+      [] -> {:ok, []}
+      _ -> {:ok, filtradas}
+    end
   end
 end
