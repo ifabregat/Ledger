@@ -42,6 +42,11 @@ defmodule Ledger do
       Enum.filter(transacciones, fn transaccion ->
         transaccion.tipo == tipo
       end)
+
+    case filtradas do
+      [] -> {:ok, []}
+      _ -> {:ok, filtradas}
+    end
   end
 
   def calcular_balances(transacciones, cuenta, monedas) do

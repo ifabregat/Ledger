@@ -695,16 +695,19 @@ defmodule LedgerTest do
       %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "3"}
     ]
 
-    filtradas = Ledger.filtrar_tipo(transacciones, "transferencia")
+    {:ok, filtradas} = Ledger.filtrar_tipo(transacciones, "transferencia")
+
     assert [
              %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "1"},
              %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "3"}
            ] = filtradas
 
-    filtradas = Ledger.filtrar_tipo(transacciones, "alta_cuenta")
+    {:ok, filtradas} = Ledger.filtrar_tipo(transacciones, "alta_cuenta")
+
     assert [%Ledger.Transaccion{tipo: "alta_cuenta", id_transaccion: "2"}] = filtradas
 
-    filtradas = Ledger.filtrar_tipo(transacciones, "swap")
+    {:ok, filtradas} = Ledger.filtrar_tipo(transacciones, "swap")
+
     assert [] = filtradas
   end
 end
