@@ -10,14 +10,21 @@ defmodule Ledger.Parser do
   def validar_opciones(opciones, subcomando) do
     # opciones = ["-c1=userA", "-c2=userB"]
 
-    opciones = Enum.map(opciones,
-    fn "-" <> resto -> "--" <> resto
-    other -> other end)
+    opciones =
+      Enum.map(
+        opciones,
+        fn
+          "-" <> resto -> "--" <> resto
+          other -> other
+        end
+      )
 
     # opciones = ["--c1=userA", "--c2=userB"]
 
-    {opciones, resto, invalidos} = OptionParser.parse(opciones,
-      strict: [t: :string, o: :string, c1: :string, c2: :string, m: :string])
+    {opciones, resto, invalidos} =
+      OptionParser.parse(opciones,
+        strict: [t: :string, o: :string, c1: :string, c2: :string, m: :string]
+      )
 
     case {resto, invalidos} do
       {[], []} ->
@@ -49,15 +56,25 @@ defmodule Ledger.Parser do
   def parsear_moneda(contenido) do
     contenido
     |> String.split("\n", trim: true)
-    |> Enum.with_index(1) #agregar numero de linea
+    # agregar numero de linea
+    |> Enum.with_index(1)
     |> Enum.reduce_while([], fn {linea, nro_linea}, acc ->
-      case String.split(linea, ";") do #separar por ;
+      # separar por ;
+      case String.split(linea, ";") do
         [nombre, precio_str] ->
-          case Float.parse(precio_str) do #parsear a float
-            {precio_float, ""} -> {:cont, [%Ledger.Moneda{nombre_moneda: nombre, precio_usd: precio_float} | acc]}
-            _ -> {:halt, {:error, {:precio_invalido, nro_linea}}} #Si ocurrio algun error -> error
+          # parsear a float
+          case Float.parse(precio_str) do
+            {precio_float, ""} ->
+              {:cont, [%Ledger.Moneda{nombre_moneda: nombre, precio_usd: precio_float} | acc]}
+
+            # Si ocurrio algun error -> error
+            _ ->
+              {:halt, {:error, {:precio_invalido, nro_linea}}}
           end
-        _ -> {:halt, {:error, {:formato_invalido, nro_linea}}} #Si no tiene 2 partes -> error
+
+        # Si no tiene 2 partes -> error
+        _ ->
+          {:halt, {:error, {:formato_invalido, nro_linea}}}
       end
     end)
     |> case do
@@ -77,7 +94,8 @@ defmodule Ledger.Parser do
             {monto_float, ""} when monto_float >= 0 ->
               if tipo in ["transferencia", "swap", "alta_cuenta"] do
                 if monedas_disponibles != [] and
-                  not (moneda_origen in monedas_disponibles and moneda_destino in monedas_disponibles) do
+                     not (moneda_origen in monedas_disponibles and
+                            moneda_destino in monedas_disponibles) do
                   {:halt, {:error, {:moneda_desconocida, nro_linea}}}
                 else
                   transaccion = %Ledger.Transaccion{
@@ -90,14 +108,19 @@ defmodule Ledger.Parser do
                     cuenta_destino: cuenta_destino,
                     tipo: tipo
                   }
+
                   {:cont, [transaccion | acc]}
                 end
               else
                 {:halt, {:error, {:tipo_invalido, nro_linea}}}
               end
-            _ -> {:halt, {:error, {:monto_invalido, nro_linea}}}
+
+            _ ->
+              {:halt, {:error, {:monto_invalido, nro_linea}}}
           end
-        _ -> {:halt, {:error, {:formato_invalido, nro_linea}}}
+
+        _ ->
+          {:halt, {:error, {:formato_invalido, nro_linea}}}
       end
     end)
     |> case do
@@ -118,18 +141,21 @@ defmodule Ledger.Parser do
   end
 
   def string_transaccion(%Ledger.Transaccion{
-      id_transaccion: id,
-      timestamp: fecha,
-      moneda_origen: moneda_origen,
-      moneda_destino: moneda_destino,
-      monto: monto,
-      cuenta_origen: cuenta_origen,
-      cuenta_destino: cuenta_destino,
-      tipo: tipo
-    }) do
+        id_transaccion: id,
+        timestamp: fecha,
+        moneda_origen: moneda_origen,
+        moneda_destino: moneda_destino,
+        monto: monto,
+        cuenta_origen: cuenta_origen,
+        cuenta_destino: cuenta_destino,
+        tipo: tipo
+      }) do
     monto_str = :erlang.float_to_binary(monto, decimals: 6)
 
-    Enum.join([id, fecha, moneda_origen, moneda_destino, monto_str, cuenta_origen, cuenta_destino, tipo], ";")
+    Enum.join(
+      [id, fecha, moneda_origen, moneda_destino, monto_str, cuenta_origen, cuenta_destino, tipo],
+      ";"
+    )
   end
 
   def string_transacciones(transacciones) do
