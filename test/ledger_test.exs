@@ -538,7 +538,7 @@ defmodule LedgerTest do
       %Ledger.Moneda{nombre_moneda: "BTC", precio_usd: 55000.0},
       %Ledger.Moneda{nombre_moneda: "ETH", precio_usd: 3000.0},
       %Ledger.Moneda{nombre_moneda: "ARS", precio_usd: 0.0012},
-      %Ledger.Moneda{nombre_moneda: "USDT", precio_usd: 1.0},
+      %Ledger.Moneda{nombre_moneda: "USDT", precio_usd: 1.0}
     ]
 
     balance = Ledger.calcular_balances([], "userA", monedas)
@@ -686,5 +686,25 @@ defmodule LedgerTest do
 
     balance = Ledger.calcular_balance(transacciones, "userA", "EUR", monedas)
     assert {:error, :moneda_no_existente} = balance
+  end
+
+  test "Filtrar tipo" do
+    transacciones = [
+      %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "1"},
+      %Ledger.Transaccion{tipo: "alta_cuenta", id_transaccion: "2"},
+      %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "3"}
+    ]
+
+    filtradas = Ledger.filtrar_tipo(transacciones, "transferencia")
+    assert [
+             %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "1"},
+             %Ledger.Transaccion{tipo: "transferencia", id_transaccion: "3"}
+           ] = filtradas
+
+    filtradas = Ledger.filtrar_tipo(transacciones, "alta_cuenta")
+    assert [%Ledger.Transaccion{tipo: "alta_cuenta", id_transaccion: "2"}] = filtradas
+
+    filtradas = Ledger.filtrar_tipo(transacciones, "swap")
+    assert [] = filtradas
   end
 end

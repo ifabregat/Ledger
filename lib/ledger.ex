@@ -37,6 +37,13 @@ defmodule Ledger do
     end
   end
 
+  def filtrar_tipo(transacciones, tipo) do
+    filtradas =
+      Enum.filter(transacciones, fn transaccion ->
+        transaccion.tipo == tipo
+      end)
+  end
+
   def calcular_balances(transacciones, cuenta, monedas) do
     # [%Moneda{nombre_moneda: "BTC", precio_usd: 30000.0}] -> %{"BTC" => 30000.0}
     precios =
