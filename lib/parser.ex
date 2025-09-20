@@ -26,25 +26,25 @@ defmodule Ledger.Parser do
         strict: [t: :string, o: :string, c1: :string, c2: :string, m: :string, tipo: :string]
       )
 
-      case {resto, invalidos} do
-        {[], []} ->
-          mapa_opciones = %{
-            archivo_input: opciones[:t] || "test/fixtures/transacciones.csv",
-            archivo_output: opciones[:o],
-            cuenta_origen: opciones[:c1],
-            cuenta_destino: opciones[:c2],
-            moneda: opciones[:m],
-            tipo: opciones[:tipo]
-          }
+    case {resto, invalidos} do
+      {[], []} ->
+        mapa_opciones = %{
+          archivo_input: opciones[:t] || "test/fixtures/transacciones.csv",
+          archivo_output: opciones[:o],
+          cuenta_origen: opciones[:c1],
+          cuenta_destino: opciones[:c2],
+          moneda: opciones[:m],
+          tipo: opciones[:tipo]
+        }
 
-          case {subcomando, mapa_opciones.cuenta_origen} do
-            {:balance, nil} -> {:error, :falta_cuenta_origen}
-            _ -> {:ok, mapa_opciones}
-          end
+        case {subcomando, mapa_opciones.cuenta_origen} do
+          {:balance, nil} -> {:error, :falta_cuenta_origen}
+          _ -> {:ok, mapa_opciones}
+        end
 
-        _ ->
-          {:error, :parametro_invalido}
-      end
+      _ ->
+        {:error, :parametro_invalido}
+    end
   end
 
   def leer_csv(path) do
