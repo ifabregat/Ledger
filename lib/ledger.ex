@@ -89,16 +89,17 @@ defmodule Ledger do
           acc =
             if transaccion.cuenta_origen == cuenta do
               precio_origen = Map.get(precios, transaccion.moneda_origen, 0)
-
               precio_destino = Map.get(precios, transaccion.moneda_destino, 0)
 
               monto_usd = transaccion.monto * precio_origen
-
               monto_destino = if precio_destino > 0, do: monto_usd / precio_destino, else: 0
 
+              origen_actual = Map.get(acc, transaccion.moneda_origen, 0)
+              destino_actual = Map.get(acc, transaccion.moneda_destino, 0)
+
               acc
-              |> Map.update(transaccion.moneda_origen, 0, &(&1 - transaccion.monto))
-              |> Map.update(transaccion.moneda_destino, 0, &(&1 + monto_destino))
+              |> Map.put(transaccion.moneda_origen, origen_actual - transaccion.monto)
+              |> Map.put(transaccion.moneda_destino, destino_actual + monto_destino)
             else
               acc
             end
@@ -106,16 +107,17 @@ defmodule Ledger do
           acc =
             if transaccion.cuenta_destino == cuenta do
               precio_origen = Map.get(precios, transaccion.moneda_origen, 0)
-
               precio_destino = Map.get(precios, transaccion.moneda_destino, 0)
 
               monto_usd = transaccion.monto * precio_origen
-
               monto_destino = if precio_destino > 0, do: monto_usd / precio_destino, else: 0
 
+              origen_actual = Map.get(acc, transaccion.moneda_origen, 0)
+              destino_actual = Map.get(acc, transaccion.moneda_destino, 0)
+
               acc
-              |> Map.update(transaccion.moneda_origen, 0, &(&1 + transaccion.monto))
-              |> Map.update(transaccion.moneda_destino, 0, &(&1 - monto_destino))
+              |> Map.put(transaccion.moneda_origen, origen_actual + transaccion.monto)
+              |> Map.put(transaccion.moneda_destino, destino_actual - monto_destino)
             else
               acc
             end
@@ -156,17 +158,18 @@ defmodule Ledger do
       end)
 
     if Map.has_key?(precios, moneda_objetivo) do
-      total_en_objetivo =
+      total_usd =
         Enum.reduce(balances, 0.0, fn {moneda, balance}, acc ->
-          if Map.has_key?(precios, moneda) do
-            usd = balance * precios[moneda]
-            acc + usd / precios[moneda_objetivo]
-          else
-            acc
-          end
+          precio = Map.get(precios, moneda, 0)
+
+          acc + balance * precio
         end)
 
-      "#{moneda_objetivo}=#{:erlang.float_to_binary(total_en_objetivo * 1.0, decimals: 6)}"
+      precio_objetivo = precios[moneda_objetivo]
+
+      total_en_objetivo = if precio_objetivo > 0, do: total_usd / precio_objetivo, else: 0
+
+      "#{moneda_objetivo}=#{:erlang.float_to_binary(total_en_objetivo, decimals: 6)}"
     else
       {:error, :moneda_no_existente}
     end
