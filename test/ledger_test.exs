@@ -2,6 +2,8 @@ defmodule LedgerTest do
   use ExUnit.Case
   doctest Ledger
   alias Ledger.Parser, as: Parser
+  alias ExampleApp.CLI
+  import ExUnit.CaptureIO
 
   test "Validar subcomandos" do
     assert {:ok, :transacciones} == Parser.validar_subcomando("transacciones")
@@ -725,5 +727,130 @@ defmodule LedgerTest do
     {:ok, filtradas} = Ledger.filtrar_tipo(transacciones, "swap")
 
     assert [] = filtradas
+  end
+
+  test "Probar main" do
+    _output1 =
+      capture_io(fn ->
+        assert {:error, :faltan_argumentos} = CLI.main([])
+      end)
+
+    _output2 =
+      capture_io(fn ->
+        assert {:error, :subcomando_invalido} = CLI.main(["invalido"])
+      end)
+
+    _output3 =
+      capture_io(fn ->
+        assert {:ok, :exito} = CLI.main(["transacciones", "-t=test/fixtures/transacciones.csv"])
+      end)
+
+    _output4 =
+      capture_io(fn ->
+        assert {:ok, :exito} =
+                 CLI.main([
+                   "balance",
+                   "-t=test/fixtures/transacciones.csv",
+                   "-c1=userA",
+                   "-m=USDT"
+                 ])
+      end)
+
+    _output5 =
+      capture_io(fn ->
+        assert {:error, :parametro_invalido} =
+                 CLI.main([
+                   "transacciones",
+                   "-t=test/fixtures/transacciones.csv",
+                   "-x=algo"
+                 ])
+      end)
+
+    _output6 =
+      capture_io(fn ->
+        assert {:error, :error_leer_csv} =
+                 CLI.main([
+                   "transacciones",
+                   "-t=inexistente.csv"
+                 ])
+      end)
+
+    _output7 =
+      capture_io(fn ->
+        assert {:error, {:formato_invalido, _linea}} =
+                 CLI.main([
+                   "transacciones",
+                   "-t=test/fixtures/transacciones_mal.csv"
+                 ])
+      end)
+
+    _output8 =
+      capture_io(fn ->
+        assert {:error, :parametro_invalido} =
+                 CLI.main([
+                   "transacciones",
+                   "-i=test/fixtures/transacciones.csv",
+                   "-c1=cuentaX"
+                 ])
+      end)
+
+    _output9 =
+      capture_io(fn ->
+        assert {:error, :parametro_invalido} =
+                 CLI.main([
+                   "transacciones",
+                   "-t=test/fixtures/transacciones.csv",
+                   "-c3=cuentaX"
+                 ])
+      end)
+
+    _output10 =
+      capture_io(fn ->
+        assert {:error, :parametro_invalido} =
+                 CLI.main([
+                   "transacciones",
+                   "-t=test/fixtures/transacciones.csv",
+                   "-tip=tipoX"
+                 ])
+      end)
+
+    _output11 =
+      capture_io(fn ->
+        assert {:error, :moneda_no_existente} =
+                 CLI.main([
+                   "balance",
+                   "-t=test/fixtures/transacciones.csv",
+                   "-c1=userA",
+                   "-m=MONEDA_INEXISTENTE"
+                 ])
+      end)
+
+    _output12 =
+      capture_io(fn ->
+        result =
+          CLI.main([
+            "transacciones",
+            "-t=test/fixtures/transacciones.csv",
+            "-o=/ruta/invalida/salida.csv"
+          ])
+
+        assert {:ok, :exito} = result
+      end)
+
+    _output13 =
+      capture_io(fn ->
+        assert {:ok, :exito} = CLI.main(["transacciones", "-t=test/fixtures/transacciones.csv"])
+      end)
+
+    _output14 =
+      capture_io(fn ->
+        assert {:ok, :exito} =
+                 CLI.main([
+                   "balance",
+                   "-t=test/fixtures/transacciones.csv",
+                   "-c1=userA",
+                   "-m=USDT"
+                 ])
+      end)
   end
 end
