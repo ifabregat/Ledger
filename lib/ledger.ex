@@ -83,43 +83,56 @@ defmodule Ledger do
               acc
             end
 
-          # IO.inspect(acc)
           acc
 
         "swap" ->
-          if transaccion.cuenta_origen == cuenta do
-            precio_origen = Map.get(precios, transaccion.moneda_origen)
-            precio_destino = Map.get(precios, transaccion.moneda_destino)
-
-            monto_usd = transaccion.monto * precio_origen
-            monto_destino = monto_usd / precio_destino
-
-            acc =
-              acc
-              |> Map.update(transaccion.moneda_origen, 0, &(&1 - transaccion.monto))
-
-            nuevo_valor_destino = Map.get(acc, transaccion.moneda_destino, 0) + monto_destino
-
-            Map.put(acc, transaccion.moneda_destino, nuevo_valor_destino)
-          else
-            acc
-          end
-
-        "alta_cuenta" ->
           acc =
             if transaccion.cuenta_origen == cuenta do
-              Map.update(
-                acc,
-                transaccion.moneda_destino,
-                transaccion.monto,
-                &(&1 + transaccion.monto)
-              )
+              precio_origen = Map.get(precios, transaccion.moneda_origen, 0)
+
+              precio_destino = Map.get(precios, transaccion.moneda_destino, 0)
+
+              monto_usd = transaccion.monto * precio_origen
+
+              monto_destino = if precio_destino > 0, do: monto_usd / precio_destino, else: 0
+
+              acc
+              |> Map.update(transaccion.moneda_origen, 0, &(&1 - transaccion.monto))
+              |> Map.update(transaccion.moneda_destino, 0, &(&1 + monto_destino))
             else
               acc
             end
 
-          # IO.inspect(acc)
+          acc =
+            if transaccion.cuenta_destino == cuenta do
+              precio_origen = Map.get(precios, transaccion.moneda_origen, 0)
+
+              precio_destino = Map.get(precios, transaccion.moneda_destino, 0)
+
+              monto_usd = transaccion.monto * precio_origen
+
+              monto_destino = if precio_destino > 0, do: monto_usd / precio_destino, else: 0
+
+              acc
+              |> Map.update(transaccion.moneda_origen, 0, &(&1 + transaccion.monto))
+              |> Map.update(transaccion.moneda_destino, 0, &(&1 - monto_destino))
+            else
+              acc
+            end
+
           acc
+
+        "alta_cuenta" ->
+          if transaccion.cuenta_origen == cuenta do
+            Map.update(
+              acc,
+              transaccion.moneda_destino,
+              transaccion.monto,
+              &(&1 + transaccion.monto)
+            )
+          else
+            acc
+          end
       end
     end)
   end

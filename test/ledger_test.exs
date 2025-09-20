@@ -686,6 +686,22 @@ defmodule LedgerTest do
 
     balance = Ledger.calcular_balance(transacciones, "userA", "EUR", monedas)
     assert {:error, :moneda_no_existente} = balance
+
+    transacciones = [
+      %Ledger.Transaccion{
+        id_transaccion: "swap1",
+        timestamp: "1755541804",
+        moneda_origen: "BTC",
+        moneda_destino: "USDT",
+        monto: 0.1,
+        cuenta_origen: "userA",
+        cuenta_destino: "userB",
+        tipo: "swap"
+      }
+    ]
+
+    balance = Ledger.calcular_balances(transacciones, "userB", monedas)
+    assert balance == %{"BTC" => 0.1, "USDT" => -5500.0}
   end
 
   test "Filtrar tipo" do
