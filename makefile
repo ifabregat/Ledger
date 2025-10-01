@@ -1,4 +1,4 @@
-.PHONY: start-db stop-db setup-db reset-db migraciones
+.PHONY: start-db stop-db setup-db reset-db migraciones format
 
 start-db:
 	docker compose up -d
@@ -17,3 +17,7 @@ reset-db:
 
 migraciones:
 	mix ecto.migrate
+
+
+format:
+	mix format
