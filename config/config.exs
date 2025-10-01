@@ -6,4 +6,4 @@ config :ledger, Ledger.Repo,
   password: "admin123",
   hostname: "localhost"
 
-  config :ledger, ecto_repos: [Ledger.Repo]
+config :ledger, ecto_repos: [Ledger.Repo]

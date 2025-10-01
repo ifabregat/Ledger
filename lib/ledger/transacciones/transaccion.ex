@@ -14,8 +14,22 @@ defmodule Ledger.Transacciones.Transaccion do
 
   def changeset(transaccion, attrs) do
     transaccion
-    |> cast(attrs, [:monto, :tipo, :cuenta_origen_id, :cuenta_destino_id, :moneda_origen_id, :moneda_destino_id])
-    |> validate_required([:monto, :tipo, :cuenta_origen_id, :cuenta_destino_id, :moneda_origen_id, :moneda_destino_id])
+    |> cast(attrs, [
+      :monto,
+      :tipo,
+      :cuenta_origen_id,
+      :cuenta_destino_id,
+      :moneda_origen_id,
+      :moneda_destino_id
+    ])
+    |> validate_required([
+      :monto,
+      :tipo,
+      :cuenta_origen_id,
+      :cuenta_destino_id,
+      :moneda_origen_id,
+      :moneda_destino_id
+    ])
     |> validate_number(:monto, greater_than: 0)
     |> foreign_key_constraint(:cuenta_origen_id)
     |> foreign_key_constraint(:cuenta_destino_id)

@@ -8,7 +8,7 @@ defmodule Ledger.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      Ledger.Repo,
+      Ledger.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

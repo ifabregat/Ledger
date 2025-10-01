@@ -19,7 +19,9 @@ defmodule Ledger.Usuarios.Usuario do
 
   defp validar_mayor_edad(changeset, field) do
     case get_field(changeset, field) do
-      nil -> changeset
+      nil ->
+        changeset
+
       fecha ->
         if Date.diff(Date.utc_today(), fecha) / 365 >= 18 do
           changeset
