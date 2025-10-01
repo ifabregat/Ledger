@@ -10,7 +10,7 @@ defmodule Ledger.Monedas.Moneda do
 
   def changeset(moneda, attrs) do
     moneda
-    |> cast(attrs, {:nombre, :precio})
+    |> cast(attrs, [:nombre, :precio])
     |> validate_required([:nombre, :precio])
     |> validate_number(:precio, greater_than_or_equal_to: 0)
     |> validate_length(:nombre, min: 3, max: 4)
