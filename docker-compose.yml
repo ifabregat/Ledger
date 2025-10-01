@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: ledger_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: ledger
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.volumes/postgres/data/pgdata:/var/lib/postgresql/data/pgdata
