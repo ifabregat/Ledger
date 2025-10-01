@@ -1,4 +1,4 @@
-.PHONY: start-db stop-db setup-db reset-db migraciones format
+.PHONY: start-db stop-db setup-db reset-db migraciones format compilar dev
 
 start-db:
 	docker compose up -d
@@ -18,6 +18,11 @@ reset-db:
 migraciones:
 	mix ecto.migrate
 
-
 format:
 	mix format
+
+compilar:
+	mix escript.build
+
+dev:
+	iex -S mix
