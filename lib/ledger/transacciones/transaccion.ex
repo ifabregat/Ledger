@@ -2,7 +2,7 @@ defmodule Ledger.Transacciones.Transaccion do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "transcciones" do
+  schema "transacciones" do
     field :monto, :float
     field :tipo, :string
     belongs_to :cuenta_origen, Ledger.Usuarios.Usuario
