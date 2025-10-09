@@ -2,7 +2,7 @@ defmodule Ledger.Repo.Migrations.CrearTransacciones do
   use Ecto.Migration
 
   def change do
-    create tabler(:transacciones) do
+    create table(:transacciones) do
       add :monto, :float, null: false
       add :tipo, :string, null: false
 
