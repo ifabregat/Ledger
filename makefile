@@ -21,7 +21,7 @@ migrate:
 format:
 	mix format
 
-compile:
+compile: format
 	mix escript.build
 
 dev:
