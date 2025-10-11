@@ -7,7 +7,6 @@ defmodule Ledger.Usuarios.Usuarios do
     %Usuario{}
     |> Usuario.changeset(attrs)
     |> Repo.insert()
-    |> handle_result()
   end
 
   def ver_usuario(id) do
@@ -18,11 +17,14 @@ defmodule Ledger.Usuarios.Usuarios do
   end
 
   def editar_usuario(id, attrs) do
-    with {:ok, usuario} <- ver_usuario(id) do
-      usuario
-      |> Usuario.changeset(attrs)
-      |> Repo.update()
-      |> handle_result()
+    case ver_usuario(id) do
+      {:ok, usuario} ->
+        usuario
+        |> Usuario.changeset(attrs)
+        |> Repo.update()
+
+      {:error, msg} ->
+        {:error, msg}
     end
   end
 
@@ -41,21 +43,5 @@ defmodule Ledger.Usuarios.Usuarios do
       true ->
         Repo.delete(usuario)
     end
-  end
-
-  defp handle_result({:ok, usuario}), do: {:ok, usuario}
-
-  defp handle_result({:error, changeset}) do
-    {:error, format_errors(changeset)}
-  end
-
-  defp format_errors(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, fn {msg, opts} ->
-      Regex.replace(~r"%{(\w+)}", msg, fn _, key ->
-        opts |> Keyword.get(String.to_existing_atom(key), key) |> to_string()
-      end)
-    end)
-    |> Enum.map(fn {field, errors} -> "#{field}: #{Enum.join(errors, ", ")}" end)
-    |> Enum.join("; ")
   end
 end
