@@ -4,7 +4,7 @@ defmodule Ledger.Repo.Migrations.CrearMonedas do
   def change do
     create table(:monedas) do
       add :nombre, :string, null: false
-      add :precio_dolares, :float, null: false
+      add :precio_dolares, :decimal, precision: 20, scale: 6, null: false
 
       timestamps()
     end
