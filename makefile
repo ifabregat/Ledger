@@ -30,3 +30,4 @@ dev:
 insert-db:
 	./usuarios.sh
 	./monedas.sh
+	./transacciones.sh
