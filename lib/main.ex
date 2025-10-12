@@ -1,11 +1,10 @@
 defmodule ExampleApp.CLI do
   alias Ledger.Usuarios.Usuarios
   alias Ledger.Monedas.Monedas
+  alias Ledger.Transacciones.Transacciones
 
   def main(args \\ []) do
     args = normalizar_args(args)
-
-    IO.inspect(args, label: "Args normalizados")
 
     case args do
       [comando | flags] ->
@@ -15,7 +14,12 @@ defmodule ExampleApp.CLI do
               n: :string,
               b: :string,
               id: :integer,
-              p: :string
+              p: :string,
+              u: :integer,
+              m: :integer,
+              a: :float,
+              o: :integer,
+              d: :integer
             ]
           )
 
@@ -100,7 +104,7 @@ defmodule ExampleApp.CLI do
     resultado =
       case Keyword.get(opts, :id) do
         nil ->
-          {:error, "Falta el parámetro id (-id)"}
+          {:error, "Falta el id (-id)"}
 
         id ->
           Usuarios.borrar_usuario(id)
@@ -110,8 +114,6 @@ defmodule ExampleApp.CLI do
   end
 
   defp ejecutar_comando("crear_moneda", opts) do
-    IO.inspect(opts, label: "Opciones para crear_moneda")
-
     precio = Keyword.get(opts, :p)
     precio_decimal = Decimal.new(precio)
 
@@ -170,13 +172,69 @@ defmodule ExampleApp.CLI do
     resultado =
       case Keyword.get(opts, :id) do
         nil ->
-          {:error, "Falta el parámetro id (-id)"}
+          {:error, "Falta el id (-id)"}
 
         id ->
           Monedas.borrar_moneda(id)
       end
 
     handle_response(resultado, :borrar_moneda)
+  end
+
+  defp ejecutar_comando("alta_cuenta", opts) do
+    attrs = %{
+      monto: Keyword.get(opts, :a),
+      tipo: "alta",
+      cuenta_destino_id: Keyword.get(opts, :u),
+      moneda_destino_id: Keyword.get(opts, :m)
+    }
+
+    resultado =
+      case attrs do
+        %{cuenta_destino_id: nil} ->
+          {:error, "Falta el id de usuario (-u)"}
+
+        %{moneda_destino_id: nil} ->
+          {:error, "Falta el id de moneda (-m)"}
+
+        %{monto: nil} ->
+          {:error, "Falta el monto inicial (-a)"}
+
+        _ ->
+          Transacciones.alta_cuenta(attrs)
+      end
+
+    handle_response(resultado, :alta_cuenta)
+  end
+
+  defp ejecutar_comando("realizar_transferencia", opts) do
+    attrs = %{
+      cuenta_origen_id: Keyword.get(opts, :o),
+      cuenta_destino_id: Keyword.get(opts, :d),
+      moneda_origen_id: Keyword.get(opts, :m),
+      monto: Keyword.get(opts, :a),
+      tipo: "transferencia"
+    }
+
+    resultado =
+      case attrs do
+        %{cuenta_origen_id: nil} ->
+          {:error, "Falta el id de la cuenta origen (-o)"}
+
+        %{cuenta_destino_id: nil} ->
+          {:error, "Falta el id de la cuenta destino (-d)"}
+
+        %{moneda_origen_id: nil} ->
+          {:error, "Falta el id de la moneda (-m)"}
+
+        %{monto: nil} ->
+          {:error, "Falta el monto a transferir (-a)"}
+
+        _ ->
+          Transacciones.realizar_transferencia(attrs)
+      end
+
+    handle_response(resultado, :realizar_transferencia)
   end
 
   defp handle_response({:ok, usuario}, :ver_usuario) do
