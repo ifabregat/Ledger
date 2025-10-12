@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Tabla de usuarios
 ./ledger crear_usuario -n="Isabella Cruz" -b=1992-12-28
 ./ledger crear_usuario -n="Mateo García" -b=1988-07-14
 ./ledger crear_usuario -n="Sofía López" -b=1995-03-22

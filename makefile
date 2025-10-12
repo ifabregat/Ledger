@@ -28,4 +28,5 @@ dev:
 	iex -S mix
 
 insert-db:
-	./insert.sh
+	./usuarios.sh
+	./monedas.sh
