@@ -1,10 +1,11 @@
 defmodule Ledger.Monedas.Moneda do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Decimal
 
   schema "monedas" do
     field :nombre, :string
-    field :precio_dolares, :float
+    field :precio_dolares, :decimal
 
     has_many :transacciones_origen, Ledger.Transacciones.Transaccion,
       foreign_key: :moneda_origen_id
