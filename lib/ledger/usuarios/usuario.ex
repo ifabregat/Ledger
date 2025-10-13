@@ -28,6 +28,9 @@ defmodule Ledger.Usuarios.Usuario do
 
   defp validar_mayor_edad(changeset) do
     case fetch_field(changeset, :fecha_nacimiento) do
+      {_, nil} ->
+        changeset
+
       {_, fecha_nacimiento} ->
         edad = div(Date.diff(Date.utc_today(), fecha_nacimiento), 365)
 
