@@ -19,7 +19,9 @@ defmodule ExampleApp.CLI do
               m: :integer,
               a: :float,
               o: :integer,
-              d: :integer
+              d: :integer,
+              mo: :integer,
+              md: :integer
             ]
           )
 
@@ -237,6 +239,70 @@ defmodule ExampleApp.CLI do
     handle_response(resultado, :realizar_transferencia)
   end
 
+  defp ejecutar_comando("realizar_swap", opts) do
+    attrs = %{
+      cuenta_destino_id: Keyword.get(opts, :u),
+      moneda_origen_id: Keyword.get(opts, :mo),
+      moneda_destino_id: Keyword.get(opts, :md),
+      monto: Keyword.get(opts, :a),
+      tipo: "swap"
+    }
+
+    resultado =
+      case attrs do
+        %{cuenta_origen_id: nil} ->
+          {:error, "Falta el id de la cuenta origen (-u)"}
+
+        %{moneda_origen_id: nil} ->
+          {:error, "Falta el id de la moneda de origen (-mo)"}
+
+        %{moneda_destino_id: nil} ->
+          {:error, "Falta el id de la moneda de destino (-md)"}
+
+        %{monto: nil} ->
+          {:error, "Falta el monto a swapear (-a)"}
+
+        _ ->
+          Transacciones.realizar_swap(attrs)
+      end
+
+    handle_response(resultado, :realizar_swap)
+  end
+
+  defp ejecutar_comando("deshacer_transaccion", opts) do
+    attrs = %{
+      id: Keyword.get(opts, :id)
+    }
+
+    resultado =
+      case attrs do
+        %{id: nil} ->
+          {:error, "Falta el id de la transacción (-id)"}
+
+        _ ->
+          Transacciones.deshacer_transaccion(attrs)
+      end
+
+    handle_response(resultado, :deshacer_transaccion)
+  end
+
+  defp ejecutar_comando("ver_transaccion", opts) do
+    attrs = %{
+      id: Keyword.get(opts, :id)
+    }
+
+    resultado =
+      case attrs do
+        %{id: nil} ->
+          {:error, "Falta el id de la transacción (-id)"}
+
+        _ ->
+          Transacciones.ver_transaccion(attrs)
+      end
+
+    handle_response(resultado, :ver_transaccion)
+  end
+
   defp handle_response({:ok, usuario}, :ver_usuario) do
     IO.puts("--- Detalles del Usuario ---")
     IO.puts("ID: #{usuario.id}")
@@ -275,6 +341,19 @@ defmodule ExampleApp.CLI do
     IO.puts("Creada en: #{moneda.inserted_at}")
     IO.puts("Última actualización: #{moneda.updated_at}")
     IO.puts("------------------------")
+  end
+
+  defp handle_response({:ok, transaccion}, :ver_transaccion) do
+    IO.puts("--- Detalles de la Transacción ---")
+    IO.puts("ID: #{transaccion.id}")
+    IO.puts("Tipo de Transacción: #{transaccion.tipo}")
+    IO.puts("Monto: #{transaccion.monto}")
+    IO.puts("Cuenta Origen ID: #{transaccion.cuenta_origen_id || "N/A"}")
+    IO.puts("Moneda Origen ID: #{transaccion.moneda_origen_id || "N/A"}")
+    IO.puts("Cuenta Destino ID: #{transaccion.cuenta_destino_id || "N/A"}")
+    IO.puts("Moneda Destino ID: #{transaccion.moneda_destino_id || "N/A"}")
+    IO.puts("Realizada en: #{transaccion.inserted_at}")
+    IO.puts("----------------------------------")
   end
 
   defp handle_response({:ok, _result}, _comando) do
