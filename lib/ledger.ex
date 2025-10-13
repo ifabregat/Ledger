@@ -1,51 +1,51 @@
 defmodule Ledger do
-  import Ecto.Query
   alias Ledger.Repo
   alias Ledger.Monedas.Monedas
   alias Ledger.Monedas.Moneda
   alias Ledger.Transacciones.Transacciones
   alias Ledger.Transacciones.Transaccion
 
-  def filtrar_cuenta_origen(nil), do: Repo.all(Transacciones)
+  def listar_transacciones(filtros) do
+    transacciones = Repo.all(Transaccion)
 
-  def filtrar_cuenta_origen(cuenta_id) do
-    query =
-      from t in Transaccion,
-        where: t.cuenta_origen_id == ^cuenta_id,
-        select: t
-
-    Repo.all(query)
+    transacciones
+    |> filtrar_cuenta_origen(Map.get(filtros, :cuenta_origen_id))
+    |> filtrar_cuenta_destino(Map.get(filtros, :cuenta_destino_id))
+    |> filtrar_moneda_por_nombre(Map.get(filtros, :moneda_nombre))
+    |> filtrar_tipo(Map.get(filtros, :tipo))
   end
 
-  def filtrar_cuenta_destino(nil), do: Repo.all(Transacciones)
+  def filtrar_cuenta_origen(transacciones, nil), do: transacciones
 
-  def filtrar_cuenta_destino(cuenta_id) do
-    query =
-      from t in Transaccion,
-        where: t.cuenta_destino_id == ^cuenta_id,
-        select: t
-
-    Repo.all(query)
+  def filtrar_cuenta_origen(transacciones, cuenta_id) do
+    Enum.filter(transacciones, fn t -> t.cuenta_origen_id == cuenta_id end)
   end
 
-  def filtrar_moneda(nil), do: Repo.all(Transacciones)
+  def filtrar_cuenta_destino(transacciones, nil), do: transacciones
 
-  def filtrar_moneda(moneda_id) do
-    query =
-      from t in Transaccion,
-        where: t.moneda_origen_id == ^moneda_id or t.moneda_destino_id == ^moneda_id,
-        select: t
-
-    Repo.all(query)
+  def filtrar_cuenta_destino(transacciones, cuenta_id) do
+    Enum.filter(transacciones, fn t -> t.cuenta_destino_id == cuenta_id end)
   end
 
-  def filtrar_tipo(tipo) do
-    query =
-      from t in Transaccion,
-        where: t.tipo == ^tipo,
-        select: t
+  def filtrar_moneda_por_nombre(transacciones, nil), do: transacciones
 
-    Repo.all(query)
+  def filtrar_moneda_por_nombre(transacciones, nombre) do
+    mapa_monedas =
+      Repo.all(Moneda)
+      |> Enum.into(%{}, fn m -> {m.id, m.nombre} end)
+
+    Enum.filter(transacciones, fn t ->
+      moneda_origen = mapa_monedas[t.moneda_origen_id]
+      moneda_destino = mapa_monedas[t.moneda_destino_id]
+
+      moneda_origen == nombre || moneda_destino == nombre
+    end)
+  end
+
+  def filtrar_tipo(transacciones, nil), do: transacciones
+
+  def filtrar_tipo(transacciones, tipo) do
+    Enum.filter(transacciones, fn t -> t.tipo == tipo end)
   end
 
   def calcular_balances(cuenta_id) do
