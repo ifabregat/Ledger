@@ -1,5 +1,4 @@
 defmodule Ledger.Monedas.Monedas do
-  import Ecto.Query
   alias Ledger.Repo
   alias Ledger.Monedas.Moneda
 

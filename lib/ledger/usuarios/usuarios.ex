@@ -1,5 +1,4 @@
 defmodule Ledger.Usuarios.Usuarios do
-  import Ecto.Query
   alias Ledger.Repo
   alias Ledger.Usuarios.Usuario
 
