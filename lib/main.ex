@@ -116,27 +116,21 @@ defmodule ExampleApp.CLI do
   end
 
   defp ejecutar_comando("crear_moneda", opts) do
-    precio = Keyword.get(opts, :p)
-    precio_decimal = Decimal.new(precio)
+    if Keyword.get(opts, :p) == nil do
+      {:error, "Falta el precio de la moneda (-p)"}
+    else
+      precio_decimal = Decimal.new(Keyword.get(opts, :p))
 
-    attrs = %{
-      nombre: Keyword.get(opts, :n),
-      precio_dolares: precio_decimal
-    }
+      attrs = %{
+        nombre: Keyword.get(opts, :n),
+        precio_dolares: precio_decimal
+      }
 
-    resultado =
       case attrs do
-        %{nombre: nil} ->
-          {:error, "Falta el nombre de la moneda (-n)"}
-
-        %{precio_dolares: nil} ->
-          {:error, "Falta el precio de la moneda (-p)"}
-
-        _ ->
-          Monedas.crear_moneda(attrs)
+        %{nombre: nil} -> {:error, "Falta el nombre de la moneda (-n)"}
+        _ -> Monedas.crear_moneda(attrs)
       end
-
-    handle_response(resultado, :crear_moneda)
+    end
   end
 
   defp ejecutar_comando("ver_moneda", opts) do
@@ -250,8 +244,8 @@ defmodule ExampleApp.CLI do
 
     resultado =
       case attrs do
-        %{cuenta_origen_id: nil} ->
-          {:error, "Falta el id de la cuenta origen (-u)"}
+        %{cuenta_destino_id: nil} ->
+          {:error, "Falta el id de la cuenta (-u)"}
 
         %{moneda_origen_id: nil} ->
           {:error, "Falta el id de la moneda de origen (-mo)"}
