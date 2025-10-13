@@ -101,6 +101,10 @@ defmodule Ledger.Transacciones.Transacciones do
         Repo.rollback("La moneda de origen y destino no pueden ser la misma")
       end
 
+      if not saldo_suficiente?(usuario.id, moneda_origen.id, attrs.monto) do
+        Repo.rollback("Saldo insuficiente para realizar el swap")
+      end
+
       %Transaccion{}
       |> Transaccion.swap_changeset(%{
         tipo: "swap",
@@ -115,39 +119,72 @@ defmodule Ledger.Transacciones.Transacciones do
 
   def deshacer_transaccion(attrs) do
     Repo.transaction(fn ->
-      transaccion = Repo.get!(Transaccion, attrs.id)
+      case Repo.get(Transaccion, attrs.id) do
+        nil ->
+          Repo.rollback("La transacción con id #{attrs.id} no existe")
 
-      if ultima_transaccion?(String.to_existing_atom(transaccion.tipo), transaccion) do
-        inversa =
-          case transaccion.tipo do
-            "transferencia" ->
-              %Transaccion{
-                tipo: "transferencia",
-                monto: transaccion.monto,
-                cuenta_origen_id: transaccion.cuenta_destino_id,
-                moneda_origen_id: transaccion.moneda_destino_id,
-                cuenta_destino_id: transaccion.cuenta_origen_id,
-                moneda_destino_id: transaccion.moneda_origen_id
-              }
+        transaccion ->
+          tipo = normalizar_tipo(transaccion.tipo)
 
-            "swap" ->
-              %Transaccion{
-                tipo: "swap",
-                monto: transaccion.monto,
-                cuenta_destino_id: transaccion.cuenta_destino_id,
-                moneda_origen_id: transaccion.moneda_destino_id,
-                moneda_destino_id: transaccion.moneda_origen_id
-              }
+          if ultima_transaccion?(tipo, transaccion) do
+            case tipo do
+              :alta ->
+                Repo.delete!(transaccion)
 
-            _ ->
-              Repo.rollback("Tipo de transacción no soportado para deshacer")
+              _ ->
+                inversa = construir_inversa(tipo, transaccion)
+                Repo.insert!(inversa)
+            end
+          else
+            Repo.rollback("Solo se puede deshacer la última transacción de las cuentas")
           end
-
-        Repo.insert!(inversa)
-      else
-        Repo.rollback("Solo se puede deshacer la última transacción de las cuentas involucradas")
       end
     end)
+  end
+
+  defp normalizar_tipo(tipo) when is_binary(tipo) do
+    case tipo do
+      "transferencia" -> :transferencia
+      "swap" -> :swap
+      "alta" -> :alta
+      _ -> :desconocido
+    end
+  end
+
+  defp normalizar_tipo(tipo) when is_atom(tipo), do: tipo
+
+  defp construir_inversa(:transferencia, t) do
+    %Transaccion{
+      tipo: "transferencia",
+      monto: t.monto,
+      cuenta_origen_id: t.cuenta_destino_id,
+      moneda_origen_id: t.moneda_destino_id,
+      cuenta_destino_id: t.cuenta_origen_id,
+      moneda_destino_id: t.moneda_origen_id
+    }
+  end
+
+  defp construir_inversa(:swap, t) do
+    %Transaccion{
+      tipo: "swap",
+      monto: t.monto,
+      cuenta_destino_id: t.cuenta_destino_id,
+      moneda_origen_id: t.moneda_destino_id,
+      moneda_destino_id: t.moneda_origen_id
+    }
+  end
+
+  defp ultima_transaccion?(:alta, transaccion) do
+    from(t in Transaccion,
+      where: t.cuenta_destino_id == ^transaccion.cuenta_destino_id,
+      order_by: [desc: t.inserted_at],
+      limit: 1
+    )
+    |> Repo.one()
+    |> case do
+      nil -> false
+      ultima -> ultima.id == transaccion.id
+    end
   end
 
   defp ultima_transaccion?(:transferencia, transaccion) do
