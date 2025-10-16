@@ -2,6 +2,8 @@ defmodule ExampleApp.CLI do
   alias Ledger.Usuarios.Usuarios
   alias Ledger.Monedas.Monedas
   alias Ledger.Transacciones.Transacciones
+  alias Ledger.Repo
+  alias Ledger
 
   def main(args \\ []) do
     args = normalizar_args(args)
@@ -21,7 +23,12 @@ defmodule ExampleApp.CLI do
               o: :integer,
               d: :integer,
               mo: :integer,
-              md: :integer
+              md: :integer,
+              c1: :integer,
+              c2: :integer,
+              t: :string,
+              f: :string,
+              mb: :string
             ]
           )
 
@@ -297,6 +304,20 @@ defmodule ExampleApp.CLI do
     handle_response(resultado, :ver_transaccion)
   end
 
+  defp ejecutar_comando("transacciones", opts) do
+    attrs = %{
+      cuenta_origen_id: Keyword.get(opts, :c1),
+      cuenta_destino_id: Keyword.get(opts, :c2),
+      tipo: Keyword.get(opts, :t),
+      moneda_nombre: Keyword.get(opts, :mb),
+      archivo: Keyword.get(opts, :f)
+    }
+
+    resultado = Ledger.listar_transacciones(attrs)
+
+    handle_response_transacciones(resultado, :filtrar_transacciones, attrs.archivo)
+  end
+
   defp handle_response({:ok, usuario}, :ver_usuario) do
     IO.puts("--- Detalles del Usuario ---")
     IO.puts("ID: #{usuario.id}")
@@ -338,14 +359,34 @@ defmodule ExampleApp.CLI do
   end
 
   defp handle_response({:ok, transaccion}, :ver_transaccion) do
+    transaccion =
+      Repo.preload(transaccion, [
+        :cuenta_origen,
+        :cuenta_destino,
+        :moneda_origen,
+        :moneda_destino
+      ])
+
+    cuenta_origen_nombre =
+      if transaccion.cuenta_origen, do: transaccion.cuenta_origen.nombre, else: "null"
+
+    moneda_origen_nombre =
+      if transaccion.moneda_origen, do: transaccion.moneda_origen.nombre, else: "null"
+
+    cuenta_destino_nombre =
+      if transaccion.cuenta_destino, do: transaccion.cuenta_destino.nombre, else: "null"
+
+    moneda_destino_nombre =
+      if transaccion.moneda_destino, do: transaccion.moneda_destino.nombre, else: "null"
+
     IO.puts("--- Detalles de la Transacción ---")
     IO.puts("ID: #{transaccion.id}")
     IO.puts("Tipo de Transacción: #{transaccion.tipo}")
     IO.puts("Monto: #{transaccion.monto}")
-    IO.puts("Cuenta Origen ID: #{transaccion.cuenta_origen_id || "N/A"}")
-    IO.puts("Moneda Origen ID: #{transaccion.moneda_origen_id || "N/A"}")
-    IO.puts("Cuenta Destino ID: #{transaccion.cuenta_destino_id || "N/A"}")
-    IO.puts("Moneda Destino ID: #{transaccion.moneda_destino_id || "N/A"}")
+    IO.puts("Cuenta Origen: #{cuenta_origen_nombre}")
+    IO.puts("Moneda Origen: #{moneda_origen_nombre}")
+    IO.puts("Cuenta Destino: #{cuenta_destino_nombre}")
+    IO.puts("Moneda Destino: #{moneda_destino_nombre}")
     IO.puts("Realizada en: #{transaccion.inserted_at}")
     IO.puts("----------------------------------")
   end
@@ -365,5 +406,43 @@ defmodule ExampleApp.CLI do
 
   defp handle_response({:error, reason}, comando) do
     IO.puts("{:error, #{comando}: #{inspect(reason)}}")
+  end
+
+  defp handle_response_transacciones(transacciones, :filtrar_transacciones, archivo) do
+    transacciones =
+      Repo.preload(transacciones, [
+        :cuenta_origen,
+        :cuenta_destino,
+        :moneda_origen,
+        :moneda_destino
+      ])
+
+    lineas =
+      Enum.map(transacciones, fn t ->
+        Enum.join(
+          [
+            t.id,
+            t.inserted_at,
+            t.moneda_origen && t.moneda_origen.nombre,
+            t.moneda_destino && t.moneda_destino.nombre,
+            t.monto,
+            t.cuenta_origen && t.cuenta_origen.nombre,
+            t.cuenta_destino && t.cuenta_destino.nombre,
+            t.tipo
+          ],
+          ";"
+        )
+      end)
+
+    contenido =
+      lineas
+      |> Enum.join("\n")
+
+    if archivo do
+      File.write!(archivo, contenido)
+      IO.puts("Archivo generado: #{archivo}")
+    else
+      IO.puts(contenido)
+    end
   end
 end
