@@ -1,6 +1,5 @@
 defmodule Ledger do
   alias Ledger.Repo
-  alias Ledger.Monedas.Monedas
   alias Ledger.Monedas.Moneda
   alias Ledger.Transacciones.Transaccion
 
@@ -132,8 +131,8 @@ defmodule Ledger do
   end
 
   defp actualizar_balance_swap(acc, t, cuenta_id, precios) do
-    moneda_origen = Repo.get(Monedas, t.moneda_origen_id)
-    moneda_destino = Repo.get(Monedas, t.moneda_destino_id)
+    moneda_origen = Repo.get(Ledger.Monedas.Moneda, t.moneda_origen_id)
+    moneda_destino = Repo.get(Ledger.Monedas.Moneda, t.moneda_destino_id)
 
     precio_origen = precios[moneda_origen.nombre] || 0.0
     precio_destino = precios[moneda_destino.nombre] || 0.0
