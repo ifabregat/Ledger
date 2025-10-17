@@ -39,18 +39,15 @@ defmodule Ledger.Usuarios.Usuario do
         else
           changeset
         end
-
-      :error ->
-        changeset
     end
   end
 
   defp validar_cambio_nombre(changeset) do
     if changeset.data.id do
-      nuevo_nombre = Map.get(changeset.params, "nombre")
+      nuevo_nombre = Map.get(changeset.params || %{}, "nombre")
       nombre_actual = changeset.data.nombre
 
-      if nuevo_nombre == nombre_actual do
+      if nuevo_nombre && nuevo_nombre == nombre_actual do
         add_error(changeset, :nombre, "El nuevo nombre debe ser diferente al actual")
       else
         changeset
