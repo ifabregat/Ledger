@@ -93,16 +93,16 @@ for attrs <- transferencias_attrs do
 end
 
 swaps_attrs = [
-  %{cuenta_destino_id: 1, moneda_origen_id: 1, moneda_destino_id: 2, monto: 0.10},  # BTC → ETH
-  %{cuenta_destino_id: 2, moneda_origen_id: 2, moneda_destino_id: 3, monto: 1.0},   # ETH → ADA
-  %{cuenta_destino_id: 3, moneda_origen_id: 3, moneda_destino_id: 4, monto: 50},    # ADA → SOL
-  %{cuenta_destino_id: 4, moneda_origen_id: 4, moneda_destino_id: 5, monto: 10},    # SOL → DOT
-  %{cuenta_destino_id: 5, moneda_origen_id: 5, moneda_destino_id: 6, monto: 20},    # DOT → LTC
-  %{cuenta_destino_id: 6, moneda_origen_id: 6, moneda_destino_id: 7, monto: 1.0},   # LTC → DOGE
-  %{cuenta_destino_id: 7, moneda_origen_id: 7, moneda_destino_id: 8, monto: 100},   # DOGE → XRP
-  %{cuenta_destino_id: 8, moneda_origen_id: 8, moneda_destino_id: 9, monto: 50},    # XRP → AVAX
-  %{cuenta_destino_id: 9, moneda_origen_id: 9, moneda_destino_id: 10, monto: 0.2},  # AVAX → LINK
-  %{cuenta_destino_id: 10, moneda_origen_id: 10, moneda_destino_id: 1, monto: 10}   # LINK → BTC
+  %{cuenta_destino_id: 1, moneda_origen_id: 1, moneda_destino_id: 2, monto: 0.10},
+  %{cuenta_destino_id: 2, moneda_origen_id: 2, moneda_destino_id: 3, monto: 1.0},
+  %{cuenta_destino_id: 3, moneda_origen_id: 3, moneda_destino_id: 4, monto: 50},
+  %{cuenta_destino_id: 4, moneda_origen_id: 4, moneda_destino_id: 5, monto: 10},
+  %{cuenta_destino_id: 5, moneda_origen_id: 5, moneda_destino_id: 6, monto: 20},
+  %{cuenta_destino_id: 6, moneda_origen_id: 6, moneda_destino_id: 7, monto: 1.0},
+  %{cuenta_destino_id: 7, moneda_origen_id: 7, moneda_destino_id: 8, monto: 100},
+  %{cuenta_destino_id: 8, moneda_origen_id: 8, moneda_destino_id: 9, monto: 50},
+  %{cuenta_destino_id: 9, moneda_origen_id: 9, moneda_destino_id: 10, monto: 0.2},
+  %{cuenta_destino_id: 10, moneda_origen_id: 10, moneda_destino_id: 1, monto: 10}
 ]
 
 for attrs <- swaps_attrs do
