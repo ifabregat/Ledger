@@ -318,6 +318,22 @@ defmodule ExampleApp.CLI do
     handle_response_transacciones(resultado, :filtrar_transacciones, attrs.archivo)
   end
 
+  defp ejecutar_comando("balance", opts) do
+    cuenta_id = Keyword.get(opts, :c1)
+    moneda_id = Keyword.get(opts, :m) || Keyword.get(opts, :mb)
+
+    resultado =
+      cond do
+        cuenta_id == nil ->
+          {:error, "Falta el id de la cuenta (-c1)"}
+
+        true ->
+          {:ok, Ledger.calcular_balance(cuenta_id, moneda_id)}
+      end
+
+    handle_response(resultado, :balance)
+  end
+
   defp handle_response({:ok, usuario}, :ver_usuario) do
     IO.puts("--- Detalles del Usuario ---")
     IO.puts("ID: #{usuario.id}")
@@ -389,6 +405,22 @@ defmodule ExampleApp.CLI do
     IO.puts("Moneda Destino: #{moneda_destino_nombre}")
     IO.puts("Realizada en: #{transaccion.inserted_at}")
     IO.puts("----------------------------------")
+  end
+
+  defp handle_response({:ok, balance}, :balance) when is_binary(balance) do
+    IO.puts("--- Detalles del Balance ---")
+    IO.puts(balance)
+    IO.puts("-----------------------------")
+  end
+
+  defp handle_response({:ok, balance}, :balance) when is_map(balance) do
+    IO.puts("--- Detalles del Balance ---")
+
+    Enum.each(balance, fn {moneda, monto} ->
+      IO.puts("Moneda: #{moneda}, Balance: #{:erlang.float_to_binary(monto * 1.0, decimals: 6)}")
+    end)
+
+    IO.puts("---------------------------")
   end
 
   defp handle_response({:ok, _result}, _comando) do

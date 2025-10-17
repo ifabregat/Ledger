@@ -2,7 +2,6 @@ defmodule Ledger do
   alias Ledger.Repo
   alias Ledger.Monedas.Monedas
   alias Ledger.Monedas.Moneda
-  alias Ledger.Transacciones.Transacciones
   alias Ledger.Transacciones.Transaccion
 
   def listar_transacciones(filtros) do
@@ -49,8 +48,8 @@ defmodule Ledger do
   end
 
   def calcular_balances(cuenta_id) do
-    transacciones = Repo.all(Transacciones)
-    monedas = Repo.all(Monedas)
+    transacciones = Repo.all(Transaccion)
+    monedas = Repo.all(Moneda)
 
     precios =
       Enum.into(monedas, %{}, fn %Moneda{nombre: nombre, precio_dolares: precio} ->
@@ -94,24 +93,26 @@ defmodule Ledger do
 
   def calcular_balance(cuenta_id, moneda_id) do
     balances = calcular_balances(cuenta_id)
-    monedas = Repo.all(Monedas)
 
-    precios =
-      Enum.into(monedas, %{}, fn %Moneda{nombre: nombre, precio_dolares: precio} ->
-        {nombre, Decimal.to_float(precio)}
-      end)
+    moneda =
+      cond do
+        is_integer(moneda_id) -> Repo.get(Moneda, moneda_id)
+        is_binary(moneda_id) -> Repo.get_by(Moneda, nombre: moneda_id)
+        true -> nil
+      end
 
-    if Map.has_key?(precios, moneda_id) do
+    if moneda do
       total_usd =
-        Enum.reduce(balances, 0.0, fn {moneda_id, balance}, acc ->
-          moneda = Repo.get(Moneda, moneda_id)
-          precio = if moneda, do: Decimal.to_float(moneda.precio_dolares), else: 0.0
-          acc + balance * precio
+        Enum.reduce(balances, 0.0, fn {mid, monto}, acc ->
+          m = Repo.get(Moneda, mid)
+          precio = if m, do: Decimal.to_float(m.precio_dolares), else: 0.0
+          acc + monto * precio
         end)
 
-      precio_objetivo = precios[moneda_id]
+      precio_objetivo = Decimal.to_float(moneda.precio_dolares)
       total_en_objetivo = if precio_objetivo > 0, do: total_usd / precio_objetivo, else: 0.0
-      "#{moneda_id}=#{:erlang.float_to_binary(total_en_objetivo, decimals: 6)}"
+
+      "#{moneda.nombre}=#{:erlang.float_to_binary(total_en_objetivo, decimals: 6)}"
     else
       {:error, "Moneda no encontrada"}
     end
