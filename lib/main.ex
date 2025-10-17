@@ -66,10 +66,10 @@ defmodule ExampleApp.CLI do
     resultado =
       case attrs do
         %{nombre: nil} ->
-          handle_response({:error, "Falta el nombre de usuario (-n)"}, :crear_usuario)
+          {:error, "Falta el nombre de usuario (-n)"}
 
         %{fecha_nacimiento: nil} ->
-          handle_response({:error, "Falta la fecha de nacimiento (-b)"}, :crear_usuario)
+          {:error, "Falta la fecha de nacimiento (-b)"}
 
         _ ->
           Usuarios.crear_usuario(attrs)
@@ -93,12 +93,12 @@ defmodule ExampleApp.CLI do
     resultado =
       case Keyword.get(opts, :id) do
         nil ->
-          handle_response({:error, "Falta el id (-id)"}, :editar_usuario)
+          {:error, "Falta el id (-id)"}
 
         id ->
           case Keyword.get(opts, :n) do
             nil ->
-              handle_response({:error, "Falta el nombre (-n)"}, :editar_usuario)
+              {:error, "Falta el nombre (-n)"}
 
             nombre ->
               attrs = %{nombre: nombre}
@@ -113,7 +113,7 @@ defmodule ExampleApp.CLI do
     resultado =
       case Keyword.get(opts, :id) do
         nil ->
-          handle_response({:error, "Falta el id (-id)"}, :borrar_usuario)
+          {:error, "Falta el id (-id)"}
 
         id ->
           Usuarios.borrar_usuario(id)
@@ -123,47 +123,54 @@ defmodule ExampleApp.CLI do
   end
 
   defp ejecutar_comando("crear_moneda", opts) do
-    if Keyword.get(opts, :p) == nil do
-      handle_response({:error, "Falta el precio de la moneda (-p)"}, :crear_moneda)
-    else
-      precio_decimal = Decimal.new(Keyword.get(opts, :p))
+    resultado =
+      cond do
+        Keyword.get(opts, :p) == nil ->
+          {:error, "Falta el precio de la moneda (-p)"}
 
-      attrs = %{
-        nombre: Keyword.get(opts, :n),
-        precio_dolares: precio_decimal
-      }
+        true ->
+          precio_decimal = Decimal.new(Keyword.get(opts, :p))
 
-      case attrs do
-        %{nombre: nil} ->
-          handle_response({:error, "Falta el nombre de la moneda (-n)"}, :crear_moneda)
+          attrs = %{
+            nombre: Keyword.get(opts, :n),
+            precio_dolares: precio_decimal
+          }
 
-        _ ->
-          Monedas.crear_moneda(attrs)
+          case attrs do
+            %{nombre: nil} ->
+              {:error, "Falta el nombre de la moneda (-n)"}
+
+            _ ->
+              Monedas.crear_moneda(attrs)
+          end
       end
-    end
+
+    handle_response(resultado, :crear_moneda)
   end
 
   defp ejecutar_comando("ver_moneda", opts) do
-    case Keyword.get(opts, :id) do
-      nil ->
-        handle_response({:error, "Falta el id (-id)"}, :ver_moneda)
+    resultado =
+      case Keyword.get(opts, :id) do
+        nil ->
+          {:error, "Falta el id (-id)"}
 
-      id ->
-        Monedas.ver_moneda(id)
-        |> handle_response(:ver_moneda)
-    end
+        id ->
+          Monedas.ver_moneda(id)
+      end
+
+    handle_response(resultado, :ver_moneda)
   end
 
   defp ejecutar_comando("editar_moneda", opts) do
     resultado =
       case Keyword.get(opts, :id) do
         nil ->
-          handle_response({:error, "Falta el id (-id)"}, :editar_moneda)
+          {:error, "Falta el id (-id)"}
 
         id ->
           case Keyword.get(opts, :p) do
             nil ->
-              handle_response({:error, "Falta el nuevo precio (-p)"}, :editar_moneda)
+              {:error, "Falta el nuevo precio (-p)"}
 
             precio ->
               case Decimal.cast(precio) do
@@ -172,10 +179,7 @@ defmodule ExampleApp.CLI do
                   Monedas.editar_moneda(id, attrs)
 
                 :error ->
-                  handle_response(
-                    {:error, "Formato de precio inválido (usa un número, ej. 1.23)"},
-                    :editar_moneda
-                  )
+                  {:error, "Formato de precio inválido (usa un número, ej. 1.23)"}
               end
           end
       end
@@ -184,16 +188,14 @@ defmodule ExampleApp.CLI do
   end
 
   defp ejecutar_comando("borrar_moneda", opts) do
-    resultado =
-      case Keyword.get(opts, :id) do
-        nil ->
-          handle_response({:error, "Falta el id (-id)"}, :borrar_moneda)
+    case Keyword.get(opts, :id) do
+      nil ->
+        handle_response({:error, "Falta el id (-id)"}, :borrar_moneda)
 
-        id ->
-          Monedas.borrar_moneda(id)
-      end
-
-    handle_response(resultado, :borrar_moneda)
+      id ->
+        resultado = Monedas.borrar_moneda(id)
+        handle_response(resultado, :borrar_moneda)
+    end
   end
 
   defp ejecutar_comando("alta_cuenta", opts) do
@@ -205,17 +207,17 @@ defmodule ExampleApp.CLI do
     }
 
     resultado =
-      case attrs do
-        %{cuenta_destino_id: nil} ->
-          handle_response({:error, "Falta el id de usuario (-u)"}, :alta_cuenta)
+      cond do
+        attrs.cuenta_destino_id == nil ->
+          {:error, "Falta el id de usuario (-u)"}
 
-        %{moneda_destino_id: nil} ->
-          handle_response({:error, "Falta el id de moneda (-m)"}, :alta_cuenta)
+        attrs.moneda_destino_id == nil ->
+          {:error, "Falta el id de moneda (-m)"}
 
-        %{monto: nil} ->
-          handle_response({:error, "Falta el monto inicial (-a)"}, :alta_cuenta)
+        attrs.monto == nil ->
+          {:error, "Falta el monto inicial (-a)"}
 
-        _ ->
+        true ->
           Transacciones.alta_cuenta(attrs)
       end
 
@@ -232,26 +234,20 @@ defmodule ExampleApp.CLI do
     }
 
     resultado =
-      case attrs do
-        %{cuenta_origen_id: nil} ->
-          handle_response(
-            {:error, "Falta el id de la cuenta origen (-o)"},
-            :realizar_transferencia
-          )
+      cond do
+        attrs.cuenta_origen_id == nil ->
+          {:error, "Falta el id de la cuenta origen (-o)"}
 
-        %{cuenta_destino_id: nil} ->
-          handle_response(
-            {:error, "Falta el id de la cuenta destino (-d)"},
-            :realizar_transferencia
-          )
+        attrs.cuenta_destino_id == nil ->
+          {:error, "Falta el id de la cuenta destino (-d)"}
 
-        %{moneda_origen_id: nil} ->
-          handle_response({:error, "Falta el id de la moneda (-m)"}, :realizar_transferencia)
+        attrs.moneda_origen_id == nil ->
+          {:error, "Falta el id de la moneda (-m)"}
 
-        %{monto: nil} ->
-          handle_response({:error, "Falta el monto a transferir (-a)"}, :realizar_transferencia)
+        attrs.monto == nil ->
+          {:error, "Falta el monto a transferir (-a)"}
 
-        _ ->
+        true ->
           Transacciones.realizar_transferencia(attrs)
       end
 
@@ -268,20 +264,20 @@ defmodule ExampleApp.CLI do
     }
 
     resultado =
-      case attrs do
-        %{cuenta_destino_id: nil} ->
-          handle_response({:error, "Falta el id de la cuenta (-u)"}, :realizar_swap)
+      cond do
+        attrs.cuenta_destino_id == nil ->
+          {:error, "Falta el id de la cuenta (-u)"}
 
-        %{moneda_origen_id: nil} ->
-          handle_response({:error, "Falta el id de la moneda de origen (-mo)"}, :realizar_swap)
+        attrs.moneda_origen_id == nil ->
+          {:error, "Falta el id de la moneda de origen (-mo)"}
 
-        %{moneda_destino_id: nil} ->
-          handle_response({:error, "Falta el id de la moneda de destino (-md)"}, :realizar_swap)
+        attrs.moneda_destino_id == nil ->
+          {:error, "Falta el id de la moneda de destino (-md)"}
 
-        %{monto: nil} ->
-          handle_response({:error, "Falta el monto a swapear (-a)"}, :realizar_swap)
+        attrs.monto == nil ->
+          {:error, "Falta el monto a swapear (-a)"}
 
-        _ ->
+        true ->
           Transacciones.realizar_swap(attrs)
       end
 
@@ -294,12 +290,10 @@ defmodule ExampleApp.CLI do
     }
 
     resultado =
-      case attrs do
-        %{id: nil} ->
-          handle_response({:error, "Falta el id de la transacción (-id)"}, :deshacer_transaccion)
-
-        _ ->
-          Transacciones.deshacer_transaccion(attrs)
+      if attrs.id == nil do
+        {:error, "Falta el id de la transacción (-id)"}
+      else
+        Transacciones.deshacer_transaccion(attrs)
       end
 
     handle_response(resultado, :deshacer_transaccion)
@@ -313,7 +307,7 @@ defmodule ExampleApp.CLI do
     resultado =
       case attrs do
         %{id: nil} ->
-          handle_response({:error, "Falta el id de la transacción (-id)"}, :ver_transaccion)
+          {:error, "Falta el id de la transacción (-id)"}
 
         _ ->
           Transacciones.ver_transaccion(attrs)
@@ -343,7 +337,7 @@ defmodule ExampleApp.CLI do
     resultado =
       cond do
         cuenta_id == nil ->
-          handle_response({:error, "Falta el id de la cuenta (-c1)"}, :balance)
+          {:error, "Falta el id de la cuenta (-c1)"}
 
         true ->
           {:ok, Ledger.calcular_balance(cuenta_id, moneda_id)}
@@ -442,6 +436,7 @@ defmodule ExampleApp.CLI do
   end
 
   defp handle_response({:ok, _result}, _comando) do
+    :ok
   end
 
   defp handle_response({:error, %Ecto.Changeset{} = changeset}, comando) do
@@ -490,7 +485,6 @@ defmodule ExampleApp.CLI do
 
     if archivo do
       File.write!(archivo, contenido)
-      IO.puts("Archivo generado: #{archivo}")
     else
       IO.puts(contenido)
     end
