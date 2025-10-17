@@ -1,5 +1,6 @@
 defmodule Ledger.UsuariosTest do
   use ExUnit.Case, async: false
+  import ExUnit.CaptureIO
   alias Ledger.Repo
   alias Ledger.Usuarios.Usuarios
   alias Ledger.Usuarios.Usuario
@@ -753,5 +754,490 @@ defmodule Ledger.UsuariosTest do
     balances = Ledger.calcular_balances(cuenta_id)
 
     assert balances[moneda_id] != 9999
+  end
+
+  test "crear usuario sin nombre muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["crear_usuario", "-b=1990-01-01"])
+      end)
+
+    assert output == "{:error, crear_usuario: \"Falta el nombre de usuario (-n)\"}\n"
+  end
+
+  test "crear usuario sin fecha muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["crear_usuario", "-n=Naruto Uzumaki"])
+      end)
+
+    assert output == "{:error, crear_usuario: \"Falta la fecha de nacimiento (-b)\"}\n"
+  end
+
+  test "crear usuario" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["crear_usuario", "-n=Naruto Uzumaki", "-b=1990-01-01"])
+      end)
+
+    assert output == ""
+  end
+
+  test "ver usuario sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["ver_usuario"])
+      end)
+
+    assert output == "{:error, ver_usuario: \"Falta el id (-id)\"}\n"
+  end
+
+  test "ver usuario (main) existente" do
+    usuario = Usuarios.ver_usuario(1) |> elem(1)
+
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["ver_usuario", "-id=1"])
+      end)
+
+    assert output =~ "--- Detalles del Usuario ---"
+    assert output =~ "ID: #{usuario.id}"
+    assert output =~ "Nombre de Usuario: #{usuario.nombre}"
+    assert output =~ "Fecha de Nacimiento: #{usuario.fecha_nacimiento}"
+  end
+
+  test "editar usuario sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_usuario", "-n=Naruto Uzumaki"])
+      end)
+
+    assert output == "{:error, editar_usuario: \"Falta el id (-id)\"}\n"
+  end
+
+  test "editar usuario sin nombre muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_usuario", "-id=1"])
+      end)
+
+    assert output == "{:error, editar_usuario: \"Falta el nombre (-n)\"}\n"
+  end
+
+  test "editar usuario correctamente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_usuario", "-id=1", "-n=Sasuke Uchiha"])
+      end)
+
+    assert output =~ "--- Usuario modificado ---"
+    assert output =~ "ID: 1"
+    assert output =~ "Nombre de Usuario: Sasuke Uchiha"
+  end
+
+  test "borrar usuario sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["borrar_usuario"])
+      end)
+
+    assert output == "{:error, borrar_usuario: \"Falta el id (-id)\"}\n"
+  end
+
+  test "borrar usuario exitosamente" do
+    {:ok, usuario} =
+      Usuarios.crear_usuario(%{nombre: "TestDelete", fecha_nacimiento: "2000-01-01"})
+
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["borrar_usuario", "-id=#{usuario.id}"])
+      end)
+
+    assert output == ""
+  end
+
+  test "crear moneda sin nombre muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["crear_moneda", "-p=1.23"])
+      end)
+
+    assert output == "{:error, crear_moneda: \"Falta el nombre de la moneda (-n)\"}\n"
+  end
+
+  test "crear moneda sin precio muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["crear_moneda", "-n=BTC"])
+      end)
+
+    assert output == "{:error, crear_moneda: \"Falta el precio de la moneda (-p)\"}\n"
+  end
+
+  test "crear moneda exitosamente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["crear_moneda", "-n=IEF", "-p=1.23"])
+      end)
+
+    assert output == ""
+  end
+
+  test "ver moneda sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["ver_moneda"])
+      end)
+
+    assert output == "{:error, ver_moneda: \"Falta el id (-id)\"}\n"
+  end
+
+  test "ver moneda (main) existente" do
+    moneda = Monedas.ver_moneda(1) |> elem(1)
+
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["ver_moneda", "-id=1"])
+      end)
+
+    assert output =~ "--- Detalles de la Moneda ---"
+    assert output =~ moneda.nombre
+  end
+
+  test "editar moneda sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_moneda", "-p=10.5"])
+      end)
+
+    assert output == "{:error, editar_moneda: \"Falta el id (-id)\"}\n"
+  end
+
+  test "editar moneda sin precio muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_moneda", "-id=1"])
+      end)
+
+    assert output == "{:error, editar_moneda: \"Falta el nuevo precio (-p)\"}\n"
+  end
+
+  test "editar moneda con precio inválido" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_moneda", "-id=1", "-p=abc"])
+      end)
+
+    assert output ==
+             "{:error, editar_moneda: \"Formato de precio inválido (usa un número, ej. 1.23)\"}\n"
+  end
+
+  test "editar moneda correctamente" do
+    {:ok, moneda} =
+      Monedas.crear_moneda(%{nombre: "TEST", precio_dolares: Decimal.new("1.0")})
+
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["editar_moneda", "-id=#{moneda.id}", "-p=2.5"])
+      end)
+
+    assert output =~
+             "--- Moneda modificada ---\nID: #{moneda.id}\nNombre de la Moneda: TEST\nPrecio en Dólares: $2.5\nCreada en: #{moneda.inserted_at}\nÚltima actualización: #{moneda.updated_at}\n------------------------\n"
+
+    updated_moneda = Monedas.ver_moneda(moneda.id) |> elem(1)
+    assert Decimal.to_float(updated_moneda.precio_dolares) == 2.5
+  end
+
+  test "borrar moneda sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["borrar_moneda"])
+      end)
+
+    assert output == "{:error, borrar_moneda: \"Falta el id (-id)\"}\n"
+  end
+
+  test "borrar moneda correctamente" do
+    {:ok, moneda} =
+      Monedas.crear_moneda(%{nombre: "POR", precio_dolares: Decimal.new("1.0")})
+
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["borrar_moneda", "-id=#{moneda.id}"])
+      end)
+
+    assert output == ""
+
+    assert Monedas.ver_moneda(moneda.id) == {:error, "Moneda no encontrada"}
+  end
+
+  test "alta de cuenta sin usuario muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["alta_cuenta", "-m=1", "-a=100"])
+      end)
+
+    assert output == "{:error, alta_cuenta: \"Falta el id de usuario (-u)\"}\n"
+  end
+
+  test "alta de cuenta correctamente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["alta_cuenta", "-u=1", "-m=1", "-a=100"])
+      end)
+
+    assert output =~ "{:error, alta_cuenta: \"El usuario ya tiene una cuenta en esta moneda\"}\n"
+  end
+
+  test "realizar transferencia sin cuenta origen muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_transferencia",
+          "-d=2",
+          "-m=1",
+          "-a=10"
+        ])
+      end)
+
+    assert output ==
+             "{:error, realizar_transferencia: \"Falta el id de la cuenta origen (-o)\"}\n"
+  end
+
+  test "realizar transferencia sin cuenta destino muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_transferencia",
+          "-o=1",
+          "-m=1",
+          "-a=10"
+        ])
+      end)
+
+    assert output ==
+             "{:error, realizar_transferencia: \"Falta el id de la cuenta destino (-d)\"}\n"
+  end
+
+  test "realizar transferencia sin moneda muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_transferencia",
+          "-o=1",
+          "-d=2",
+          "-a=10"
+        ])
+      end)
+
+    assert output == "{:error, realizar_transferencia: \"Falta el id de la moneda (-m)\"}\n"
+  end
+
+  test "realizar transferencia sin monto muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_transferencia",
+          "-o=1",
+          "-d=2",
+          "-m=1"
+        ])
+      end)
+
+    assert output == "{:error, realizar_transferencia: \"Falta el monto a transferir (-a)\"}\n"
+  end
+
+  test "realizar transferencia exitosamente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_transferencia",
+          "-o=10",
+          "-d=2",
+          "-m=10",
+          "-a=10"
+        ])
+      end)
+
+    assert output =~ ""
+  end
+
+  test "realizar swap sin id de cuenta muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_swap",
+          "-mo=1",
+          "-md=2",
+          "-a=10"
+        ])
+      end)
+
+    assert output == "{:error, realizar_swap: \"Falta el id de la cuenta (-u)\"}\n"
+  end
+
+  test "realizar swap sin moneda de origen muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_swap",
+          "-u=1",
+          "-md=2",
+          "-a=10"
+        ])
+      end)
+
+    assert output == "{:error, realizar_swap: \"Falta el id de la moneda de origen (-mo)\"}\n"
+  end
+
+  test "realizar swap sin moneda de destino muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_swap",
+          "-u=1",
+          "-mo=1",
+          "-a=10"
+        ])
+      end)
+
+    assert output == "{:error, realizar_swap: \"Falta el id de la moneda de destino (-md)\"}\n"
+  end
+
+  test "realizar swap sin monto muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_swap",
+          "-u=1",
+          "-mo=1",
+          "-md=2"
+        ])
+      end)
+
+    assert output == "{:error, realizar_swap: \"Falta el monto a swapear (-a)\"}\n"
+  end
+
+  test "realizar swap correctamente" do
+    Transacciones.alta_cuenta(%{
+      cuenta_destino_id: 1,
+      moneda_destino_id: 1,
+      monto: 100,
+      tipo: "alta"
+    })
+
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main([
+          "realizar_swap",
+          "-u=10",
+          "-mo=10",
+          "-md=1",
+          "-a=1"
+        ])
+      end)
+
+    assert output =~ ""
+  end
+
+  test "deshacer transaccion sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["deshacer_transaccion"])
+      end)
+
+    assert output == "{:error, deshacer_transaccion: \"Falta el id de la transacción (-id)\"}\n"
+  end
+
+  test "deshacer transaccion correctamente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["deshacer_transaccion", "-id=30"])
+      end)
+
+    assert output =~ ""
+  end
+
+  test "ver transaccion sin id muestra error" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["ver_transaccion"])
+      end)
+
+    assert output == "{:error, ver_transaccion: \"Falta el id de la transacción (-id)\"}\n"
+  end
+
+  test "ver transaccion correctamente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["ver_transaccion", "-id=1"])
+      end)
+
+    assert output =~ "--- Detalles de la Transacción ---\nID: 1"
+  end
+
+  test "listar transacciones sin filtros" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["transacciones"])
+      end)
+
+    assert output =~ "transferencia"
+  end
+
+  test "listar transacciones filtrando por tipo" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["transacciones", "-t", "transferencia"])
+      end)
+
+    assert output =~ "transferencia"
+  end
+
+  test "listar transacciones filtrando por cuenta origen" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["transacciones", "-c1", "1"])
+      end)
+
+    assert output =~ "BTC"
+    assert output =~ "transferencia"
+  end
+
+  test "listar transacciones filtrando por cuenta destino" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["transacciones", "-c2", "1"])
+      end)
+
+    assert output =~ "BTC"
+    assert output =~ "transferencia"
+  end
+
+  test "balance de cuenta con ID faltante" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["balance"])
+      end)
+
+    assert output == "{:error, balance: \"Falta el id de la cuenta (-c1)\"}\n"
+  end
+
+  test "balance de cuenta existente" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["balance", "-c1=1"])
+      end)
+
+    assert output =~ "--- Detalles del Balance ---"
+  end
+
+  test "guardar en archivo" do
+    output =
+      capture_io(fn ->
+        ExampleApp.CLI.main(["transacciones", "-f=transacciones.csv"])
+      end)
+
+    assert output == ""
   end
 end
