@@ -28,6 +28,4 @@ dev:
 	iex -S mix
 
 insert-db:
-	./usuarios.sh
-	./monedas.sh
-	./transacciones.sh
+	mix run priv/repo/seeds.exs
