@@ -121,19 +121,26 @@ defmodule Ledger.Transacciones.Transacciones do
     Repo.transaction(fn ->
       case Repo.get(Transaccion, attrs.id) do
         nil ->
-          Repo.rollback("La transacción con id #{attrs.id} no existe")
+          Repo.rollback("Transacción no encontrada")
 
         transaccion ->
           tipo = normalizar_tipo(transaccion.tipo)
 
-          if ultima_transaccion?(tipo, transaccion) do
+          if ultima_transaccion?(transaccion) do
             case tipo do
               :alta ->
                 Repo.delete!(transaccion)
 
-              _ ->
-                inversa = construir_inversa(tipo, transaccion)
+              :transferencia ->
+                inversa = construir_inversa(:transferencia, transaccion)
                 Repo.insert!(inversa)
+
+              :swap ->
+                inversa = construir_inversa(:swap, transaccion)
+                Repo.insert!(inversa)
+
+              _ ->
+                Repo.rollback("No se puede deshacer este tipo de transacción")
             end
           else
             Repo.rollback("Solo se puede deshacer la última transacción de las cuentas")
@@ -150,8 +157,6 @@ defmodule Ledger.Transacciones.Transacciones do
       _ -> :desconocido
     end
   end
-
-  defp normalizar_tipo(tipo) when is_atom(tipo), do: tipo
 
   defp construir_inversa(:transferencia, t) do
     %Transaccion{
@@ -174,39 +179,27 @@ defmodule Ledger.Transacciones.Transacciones do
     }
   end
 
-  defp ultima_transaccion?(:alta, transaccion) do
-    from(t in Transaccion,
-      where: t.cuenta_destino_id == ^transaccion.cuenta_destino_id,
-      order_by: [desc: t.inserted_at],
-      limit: 1
-    )
-    |> Repo.one()
-    |> case do
+  defp ultima_transaccion?(transaccion) do
+    origen = transaccion.cuenta_origen_id
+    destino = transaccion.cuenta_destino_id
+
+    query =
+      if origen do
+        from t in Transaccion,
+          where: t.cuenta_origen_id == ^origen or t.cuenta_destino_id == ^destino,
+          order_by: [desc: t.id],
+          limit: 1
+      else
+        from t in Transaccion,
+          where: t.cuenta_destino_id == ^destino,
+          order_by: [desc: t.id],
+          limit: 1
+      end
+
+    case Repo.one(query) do
       nil -> false
       ultima -> ultima.id == transaccion.id
     end
-  end
-
-  defp ultima_transaccion?(:transferencia, transaccion) do
-    ultima_origen =
-      Repo.one(
-        from t in Transaccion,
-          where: t.cuenta_origen_id == ^transaccion.cuenta_origen_id,
-          select: max(t.inserted_at)
-      )
-
-    ultima_origen == transaccion.inserted_at
-  end
-
-  defp ultima_transaccion?(:swap, transaccion) do
-    ultima_destino =
-      Repo.one(
-        from tr in Transaccion,
-          where: tr.cuenta_destino_id == ^transaccion.cuenta_destino_id,
-          select: max(tr.inserted_at)
-      )
-
-    ultima_destino == transaccion.inserted_at
   end
 
   def ver_transaccion(attrs) do
