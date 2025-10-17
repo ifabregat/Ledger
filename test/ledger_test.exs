@@ -674,4 +674,84 @@ defmodule Ledger.UsuariosTest do
     assert {:error, "Transacción no encontrada"} =
              Ledger.Transacciones.Transacciones.ver_transaccion(%{id: -1})
   end
+
+  test "sin filtros devuelve todas las transacciones" do
+    result = Ledger.listar_transacciones(%{})
+    assert length(result) == 30
+  end
+
+  test "filtra por cuenta_origen_id correctamente" do
+    result = Ledger.listar_transacciones(%{cuenta_origen_id: 1})
+    assert Enum.all?(result, &(&1.cuenta_origen_id == 1))
+    assert length(result) == 1
+  end
+
+  test "filtra por cuenta_destino_id correctamente" do
+    result = Ledger.listar_transacciones(%{cuenta_destino_id: 2})
+    assert Enum.all?(result, &(&1.cuenta_destino_id == 2))
+    assert length(result) == 4
+  end
+
+  test "filtra por moneda_nombre correctamente" do
+    result = Ledger.listar_transacciones(%{moneda_nombre: "BTC"})
+
+    assert Enum.all?(result, fn t ->
+             ids = [t.moneda_origen_id, t.moneda_destino_id] |> Enum.reject(&is_nil/1)
+
+             Enum.any?(ids, fn id ->
+               Ledger.Repo.get(Ledger.Monedas.Moneda, id).nombre == "BTC"
+             end)
+           end)
+
+    assert length(result) == 4
+  end
+
+  test "filtra por tipo correctamente" do
+    result_alta = Ledger.listar_transacciones(%{tipo: "alta"})
+    result_transf = Ledger.listar_transacciones(%{tipo: "transferencia"})
+
+    assert length(result_alta) == 10
+    assert length(result_transf) == 10
+  end
+
+  test "calcula el balance total de la cuenta 1 (en todas las monedas)" do
+    result = Ledger.calcular_balance(1, nil)
+    assert String.contains?(result, "BTC=")
+  end
+
+  test "calcula el balance de una cuenta en una moneda específica" do
+    result = Ledger.calcular_balance(1, "BTC")
+    assert String.starts_with?(result, "BTC=")
+  end
+
+  test "calcular balance con id como entero" do
+    result = Ledger.calcular_balance(2, 2)
+    assert String.starts_with?(result, "ETH=")
+  end
+
+  test "calcular balance con moneda no valida" do
+    result = Ledger.calcular_balance(1, :moneda_invalida)
+    assert result == {:error, "Moneda no encontrada"}
+  end
+
+  test "calcular_balances ignora transacciones de tipo desconocido" do
+    cuenta_id = 1
+    moneda_id = 1
+
+    %Ledger.Transacciones.Transaccion{}
+    |> Ecto.Changeset.cast(
+      %{
+        tipo: "desconocido",
+        cuenta_destino_id: cuenta_id,
+        moneda_destino_id: moneda_id,
+        monto: 9999
+      },
+      [:tipo, :cuenta_destino_id, :moneda_destino_id, :monto]
+    )
+    |> Ledger.Repo.insert!()
+
+    balances = Ledger.calcular_balances(cuenta_id)
+
+    assert balances[moneda_id] != 9999
+  end
 end
