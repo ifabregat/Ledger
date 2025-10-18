@@ -1,4 +1,4 @@
-.PHONY: up-db down-db setup-db reset-db migrate format compile dev
+.PHONY: up-db down-db setup-db reset-db migrate format compile dev insert-db test
 
 up-db:
 	docker compose up -d
@@ -27,5 +27,9 @@ compile: format
 dev:
 	iex -S mix
 
-insert-db:
+insert-db: reset-db
 	mix run priv/repo/seeds.exs
+
+test: reset-db insert-db
+	MIX_ENV=test mix test --cover
+	
